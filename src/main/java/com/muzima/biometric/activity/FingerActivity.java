@@ -134,7 +134,7 @@ public final class FingerActivity extends Activity implements LicensingManager.L
         NSubject subject = new NSubject();
         NFinger finger = new NFinger();
 
-        mBiometricClient.setUseDeviceManager(false);
+        mBiometricClient.setUseDeviceManager(true);
         NDeviceManager deviceManager = mBiometricClient.getDeviceManager();
         deviceManager.setDeviceTypes(EnumSet.of(NDeviceType.FINGER_SCANNER));
         mBiometricClient.initialize();
