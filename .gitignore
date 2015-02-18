@@ -1,5 +1,5 @@
-Bin
 *.DS_STORE
 target
 .idea
 *.iml
+gen-external-apklibs
