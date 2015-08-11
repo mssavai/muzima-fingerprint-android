@@ -23,7 +23,7 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.7.0</version>
+                <!--<version>3.7.0</version>-->
                 <extensions>true</extensions>
                 <configuration>
                     <dex>
@@ -467,21 +467,6 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-integratedbiometrics-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-integratedbiometrics-android</artifactId>
-                            <version>5.0.0.0</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install neurotec-devices-irisscanners-iritech-irishield-android</id>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <phase>validate</phase>
-                        <configuration>
-                            <file>${product.bin.android.directory}/neurotec-devices-irisscanners-iritech-irishield-android.jar</file>
-                            <groupId>com.neurotec</groupId>
-                            <artifactId>neurotec-devices-irisscanners-iritech-irishield-android</artifactId>
                             <version>5.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
