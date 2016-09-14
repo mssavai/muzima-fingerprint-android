@@ -9,6 +9,7 @@ extern "C"
 {
 #endif
 
+
 N_DECLARE_OBJECT_TYPE(ANRecord, NObject)
 
 #define AN_RECORD_MAX_FIELD_NUMBER 999
@@ -21,6 +22,16 @@ N_DECLARE_OBJECT_TYPE(ANRecord, NObject)
 
 #define ANR_MERGE_DUPLICATE_FIELDS   0x00000100
 #define ANR_RECOVER_FROM_BINARY_DATA 0x00000200
+
+typedef enum ANValidationLevel_
+{
+	anvlMinimal = 0,
+	anvlStandard = 1
+} ANValidationLevel;
+
+N_DECLARE_TYPE(ANValidationLevel)
+
+NResult N_API ANRecordCreate(HANRecordType hRecordType, NVersion_ version, NInt idc, NUInt flagEs, HANRecord * phRecord);
 
 NResult N_API ANRecordGetFieldCount(HANRecord hRecord, NInt * pValue);
 NResult N_API ANRecordGetFieldEx(HANRecord hRecord, NInt index, HANField * phValue);
@@ -51,17 +62,22 @@ NResult N_API ANRecordInsertField(HANRecord hRecord, NInt index, NInt fieldNumbe
 #endif
 #define ANRecordInsertField N_FUNC_AW(ANRecordInsertField)
 
-NResult N_API ANRecordRemoveField(HANRecord hRecord, NInt index);
+NResult N_API ANRecordRemoveFieldAt(HANRecord hRecord, NInt index);
 
 NResult N_API ANRecordGetFieldByNumberEx(HANRecord hRecord, NInt fieldNumber, HANField * phField);
 NResult N_API ANRecordGetFieldIndexByNumber(HANRecord hRecord, NInt fieldNumber, NInt * pValue);
 
 NResult N_API ANRecordBeginUpdate(HANRecord hRecord);
 NResult N_API ANRecordEndUpdate(HANRecord hRecord);
+NResult N_API ANRecordValidate(HANRecord hRecord);
 
 NResult N_API ANRecordGetRecordTypeEx(HANRecord hRecord, HANRecordType * phValue);
+
 NResult N_API ANRecordIsValidated(HANRecord hRecord, NBool * pValue);
 NResult N_API ANRecordGetLength(HANRecord hRecord, NSizeType * pValue);
+
+NResult N_API ANRecordGetValidationLevel(HANRecord hRecord, ANValidationLevel * pValue);
+NResult N_API ANRecordGetVersion(HANRecord hRecord, NVersion_ * pValue);
 NResult N_API ANRecordGetIdc(HANRecord hRecord, NInt * pValue);
 NResult N_API ANRecordSetIdc(HANRecord hRecord, NInt value);
 NResult N_API ANRecordGetDataN(HANRecord hRecord, HNBuffer * phValue);

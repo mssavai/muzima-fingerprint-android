@@ -36,7 +36,9 @@ NResult N_API NLTemplateSetRecordCapacity(HNLTemplate hTemplate, NInt value);
 NResult N_API NLTemplateSetRecord(HNLTemplate hTemplate, NInt index, HNLRecord hValue);
 NResult N_API NLTemplateAddRecordEx(HNLTemplate hTemplate, HNLRecord hValue, NInt * pIndex);
 NResult N_API NLTemplateInsertRecord(HNLTemplate hTemplate, NInt index, HNLRecord hValue);
+N_DEPRECATED("function is deprecated, use NLTemplateRemoveRecordAt instead")
 NResult N_API NLTemplateRemoveRecord(HNLTemplate hTemplate, NInt index);
+NResult N_API NLTemplateRemoveRecordAt(HNLTemplate hTemplate, NInt index);
 NResult N_API NLTemplateClearRecords(HNLTemplate hTemplate);
 
 #ifdef N_CPP

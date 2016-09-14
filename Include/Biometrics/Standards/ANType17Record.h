@@ -105,6 +105,24 @@ NResult N_API ANMakeModelSerialNumberDispose(struct ANMakeModelSerialNumber_ * p
 NResult N_API ANMakeModelSerialNumberCopy(const struct ANMakeModelSerialNumber_ * pSrcValue, struct ANMakeModelSerialNumber_ * pDstValue);
 NResult N_API ANMakeModelSerialNumberSet(const struct ANMakeModelSerialNumber_ * pSrcValue, struct ANMakeModelSerialNumber_ * pDstValue);
 
+NResult N_API ANType17RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType17Record * phRecord);
+
+NResult N_API ANType17RecordCreateFromNImageN(NVersion_ version, NInt idc, HNString hSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType17Record * phRecord);
+#ifndef N_NO_ANSI_FUNC
+NResult ANType17RecordCreateFromNImageA(NVersion_ version, NInt idc, const NAChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType17Record * phRecord);
+#endif
+#ifndef N_NO_UNICODE
+NResult ANType17RecordCreateFromNImageW(NVersion_ version, NInt idc, const NWChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType17Record * phRecord);
+#endif
+#ifdef N_DOCUMENTATION
+NResult ANType17RecordCreateFromNImage(NVersion_ version, NInt idc, const NChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType17Record * phRecord);
+#endif
+#define ANType17RecordCreateFromNImage N_FUNC_AW(ANType17RecordCreateFromNImage)
+
 NResult N_API ANType17RecordGetFeatureIdentifier(HANType17Record hRecord, BdifEyePosition * pValue);
 NResult N_API ANType17RecordSetFeatureIdentifier(HANType17Record hRecord, BdifEyePosition value);
 NResult N_API ANType17RecordGetRotationAngle(HANType17Record hRecord, NInt * pValue);

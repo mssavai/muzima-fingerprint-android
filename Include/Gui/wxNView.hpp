@@ -27,6 +27,9 @@
 namespace Neurotec { namespace Gui
 {
 
+wxDECLARE_EVENT(wxEVT_N_VIEW_ZOOM_CHANGED, wxCommandEvent);
+wxDECLARE_EVENT(wxEVT_N_VIEW_ZOOM_TO_FIT_CHANGED, wxCommandEvent);
+
 class wxNView : public wxScrolledWindow
 {
 public:
@@ -36,11 +39,14 @@ public:
 		m_handClosedCursor(wxImage(HandClosedCursor_xpm))
 	{
 		m_zoomFactor = 1;
+		m_zoomToFit = true;
+		m_enableContextMenu = true;
 		SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 		SetScrollRate(1, 1);
 
 		m_contextMenu = new wxMenu();
-		m_contextMenu->Append(ID_ZOOM_FIT, wxT("Zoom to fit"));
+		m_contextMenu->AppendCheckItem(ID_ZOOM_FIT, wxT("Zoom to fit"));
+		m_contextMenu->Check(ID_ZOOM_FIT, true);
 		m_contextMenu->Append(ID_ZOOM_50, wxT("Zoom 50%"));
 		m_contextMenu->Append(ID_ZOOM_100, wxT("Zoom 100%"));
 		m_contextMenu->Append(ID_ZOOM_200, wxT("Zoom 200%"));
@@ -65,20 +71,52 @@ public:
 		{
 			double newZoomFactor = wxMin((double)(clientSize.x - 10) / (m_viewSize.GetWidth() + 10),
 				(double)(clientSize.y - 10) / (m_viewSize.GetHeight() + 10));
-			//newZoomFactor *= (1.0 - 10.0 / wxMax(m_viewSize.GetWidth(), m_viewSize.GetHeight()));
 			if (newZoomFactor != m_zoomFactor)
 			{
 				Zoom(newZoomFactor);
 			}
 		}
 	}
+	void SetZoom(double value)
+	{
+		if (m_zoomFactor != value)
+		{
+			Zoom(value);
+		}
+	}
+	double GetZoom()
+	{
+		return GetZoomFactor();
+	}
+	void SetZoomToFit(bool value)
+	{
+		if (m_zoomToFit != value)
+		{
+			m_zoomToFit = value;
+			if (value) ZoomToFit();
+			Refresh();
+			m_contextMenu->Check(ID_ZOOM_FIT, value);
 
+			wxCommandEvent evt(wxEVT_N_VIEW_ZOOM_TO_FIT_CHANGED, GetId());
+			wxPostEvent(this, evt);
+		}
+	}
+	bool GetZoomToFit() { return m_zoomToFit; }
+	void EnableContextMenu(bool value = true) { m_enableContextMenu = value; }
+	bool IsContextMenuEnabled() { return m_enableContextMenu; }
 protected:
+	virtual void DoSetSize(int x, int y, int width,int height, int sizeFlags)
+	{
+		wxWindow::DoSetSize(x, y, width, height, sizeFlags);
+		if (m_zoomToFit) ZoomToFit();
+	}
+
 	void SetViewSize(int viewWidth, int viewHeight)
 	{
 		wxRect oldImageRect = GetImageRect();
 
 		m_viewSize = wxSize(viewWidth, viewHeight);
+		if (m_zoomToFit && !(viewWidth == 1 && viewHeight == 1)) ZoomToFit();
 
 		wxSize zoomedSize((int)(viewWidth * m_zoomFactor), (int)(viewHeight * m_zoomFactor));
 		wxSize virtualSize = GetVirtualSize();
@@ -117,9 +155,15 @@ protected:
 	{
 		return m_contextMenu;
 	}
-
 #if wxUSE_GRAPHICS_CONTEXT == 1
+#if defined(N_CLANG)
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 	virtual void OnDraw(wxGraphicsContext *gc) = 0;
+#if defined(N_CLANG)
+	#pragma clang diagnostic pop
+#endif
 #else
 	virtual void OnDraw(wxDC&) = 0;
 #endif
@@ -149,7 +193,7 @@ protected:
 
 	virtual void OnRightDown(wxMouseEvent& event)
 	{
-		PopupMenu(m_contextMenu, event.GetPosition());
+		if (m_enableContextMenu) PopupMenu(m_contextMenu, event.GetPosition());
 	}
 
 	void Zoom(double zoomFactor)
@@ -176,8 +220,11 @@ protected:
 		Scroll(scrollX / 2, scrollY / 2);
 
 		Refresh();
+
+		wxCommandEvent evt(wxEVT_N_VIEW_ZOOM_CHANGED, GetId());
+		wxPostEvent(this, evt);
 	}
-	
+
 	double GetZoomFactor()
 	{
 		return m_zoomFactor;
@@ -246,48 +293,30 @@ private:
 
 	void OnZoom(wxCommandEvent& event)
 	{
-		double newZoomFactor = 1;
 		switch (event.GetId())
 		{
 		case ID_ZOOM_FIT:
-			{
-				wxSize clientSize = GetClientSize();
-
-				if (m_viewSize.GetWidth() == 0
-					|| clientSize.x == 0
-					|| m_viewSize.GetHeight() == 0
-					|| clientSize.y == 0)
-				{
-					newZoomFactor = 1;
-				}
-				else
-				{
-					newZoomFactor = wxMin((double)clientSize.x / (m_viewSize.GetWidth() + 10),
-						(double)clientSize.y / (m_viewSize.GetHeight() + 10));
-				}
-			}
+			SetZoomToFit(m_contextMenu->IsChecked(ID_ZOOM_FIT));
 			break;
-
 		case ID_ZOOM_50:
-			newZoomFactor = 0.5;
+			SetZoomToFit(false);
+			SetZoom(0.5);
 			break;
-
 		case ID_ZOOM_100:
-			newZoomFactor = 1;
+			SetZoomToFit(false);
+			SetZoom(1);
 			break;
-
 		case ID_ZOOM_200:
-			newZoomFactor = 2;
+			SetZoomToFit(false);
+			SetZoom(2);
 			break;
 		}
-
-		Zoom(newZoomFactor);
 		Refresh(false);
 	}
 
 	void OnMouseWheel(wxMouseEvent& event)
 	{
-		if (event.ControlDown())
+		if (event.ControlDown() && !m_zoomToFit)
 		{
 			int wheelDelta = event.GetWheelDelta();
 			if (event.GetWheelRotation() <= -wheelDelta)
@@ -314,6 +343,8 @@ private:
 	wxCursor m_handClosedCursor;
 	wxMenu *m_contextMenu;
 	bool m_handToolActive;
+	bool m_zoomToFit;
+	bool m_enableContextMenu;
 
 	DECLARE_EVENT_TABLE()
 };

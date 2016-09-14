@@ -6,6 +6,7 @@
 namespace Neurotec
 {
 
+#include <Core/NNoDeprecate.h>
 template<typename TOwner> class NObjectPartBase : public NObjectBase
 {
 public:
@@ -51,6 +52,7 @@ public:
 		return this->GetOwnerHandle() != other.GetOwnerHandle();
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }
 

@@ -30,7 +30,7 @@ NInt N_API NInterlockedExchangeAddImpl(NInt volatile * pDst, NInt val);
 #endif
 
 #define NInterlockedCompareExchange(pDst, exch, comp) (NInt)InterlockedCompareExchange((long N_INTERLOCKED_VOLATILE *)pDst, (long)(exch), (long)(comp))
-#define NInterlockedCompareExchangePointer(pDst, exch, comp) InterlockedCompareExchangePointer(pDst, exch, comp)
+#define NInterlockedCompareExchangePointer(pDst, exch, comp) InterlockedCompareExchangePointer((void * N_INTERLOCKED_VOLATILE *)pDst, exch, comp)
 #define NInterlockedIncrement(pDst) (NInt)InterlockedIncrement((long N_INTERLOCKED_VOLATILE *)pDst)
 #define NInterlockedDecrement(pDst) (NInt)InterlockedDecrement((long N_INTERLOCKED_VOLATILE *)pDst)
 #define NInterlockedAdd(pDst, val) ((NInt)InterlockedExchangeAdd((long N_INTERLOCKED_VOLATILE *)pDst, (long)(val)) + (NInt)val)
@@ -59,8 +59,8 @@ NInt N_API NInterlockedExchangeAddImpl(NInt volatile * pDst, NInt val);
 
 #define N_SLOW_INTERLOCKED
 
-#define NInterlockedCompareExchange(pDst, exch, comp) NInterlockedCompareExchangeImpl(pDst, exch, comp)
-#define NInterlockedCompareExchangePointer(pDst, exch, comp) NInterlockedCompareExchangePointerImpl(pDst, exch, comp)
+#define NInterlockedCompareExchange(pDst, exch, comp) NInterlockedCompareExchangeImpl((NInt volatile *)pDst, exch, comp)
+#define NInterlockedCompareExchangePointer(pDst, exch, comp) NInterlockedCompareExchangePointerImpl((void * volatile *)pDst, exch, comp)
 #define NInterlockedIncrement(pDst) NInterlockedIncrementImpl(pDst)
 #define NInterlockedDecrement(pDst) NInterlockedDecrementImpl(pDst)
 #define NInterlockedAdd(pDst, val) NInterlockedAddImpl(pDst, val)

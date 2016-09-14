@@ -15,13 +15,21 @@ extern "C"
 		#define N_MONITOR_SIZE 44
 	#endif
 #elif defined(N_ANDROID)
-	#define N_MONITOR_SIZE N_PTR_SIZE
+	#if defined(N_ARM) || defined(N_X86)
+		#define N_MONITOR_SIZE N_PTR_SIZE
+	#elif defined(N_ARM64) || defined(N_X64)
+		#define N_MONITOR_SIZE 40
+	#else
+		#error Unexpected Android architecture
+	#endif
 #elif defined(N_WINDOWS_CE)
 	#define N_MONITOR_SIZE 20
 #elif defined (N_QNX)
 	#define N_MONITOR_SIZE 8
 #else
-	#ifdef N_64
+	#if defined(N_ARM64)
+		#define N_MONITOR_SIZE 48
+	#elif defined(N_64)
 		#define N_MONITOR_SIZE 40
 	#else
 		#define N_MONITOR_SIZE 24

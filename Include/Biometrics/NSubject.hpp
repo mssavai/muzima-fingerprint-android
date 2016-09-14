@@ -9,6 +9,7 @@
 #include <Biometrics/Standards/FIRecord.hpp>
 #include <Biometrics/Standards/FMRecord.hpp>
 #include <Biometrics/Standards/IIRecord.hpp>
+#include <Biometrics/Standards/CbeffRecord.hpp>
 #include <Biometrics/Standards/BdifTypes.hpp>
 
 #ifndef N_SUBJECT_HPP_INCLUDED
@@ -23,14 +24,16 @@ using ::Neurotec::Biometrics::Standards::HANTemplate;
 using ::Neurotec::Biometrics::Standards::HFCRecord;
 using ::Neurotec::Biometrics::Standards::HFIRecord;
 using ::Neurotec::Biometrics::Standards::HFMRecord;
+using ::Neurotec::Biometrics::Standards::HFMCRecord;
 using ::Neurotec::Biometrics::Standards::HIIRecord;
+using ::Neurotec::Biometrics::Standards::HCbeffRecord;
 using ::Neurotec::Biometrics::Standards::BdifStandard;
+using ::Neurotec::Biometrics::Standards::FmcrMinutiaFormat;
 #include <Biometrics/NSubject.h>
 }}
 
 namespace Neurotec { namespace Biometrics
 {
-
 class NSubject : public NExpandableObject
 {
 	N_DECLARE_OBJECT_CLASS(NSubject, NExpandableObject)
@@ -509,6 +512,11 @@ public:
 		NCheck(NSubjectSetTemplateFM(GetHandle(), value.GetHandle()));
 	}
 
+	void SetTemplate(const ::Neurotec::Biometrics::Standards::FMCRecord & value)
+	{
+		NCheck(NSubjectSetTemplateFMC(GetHandle(), value.GetHandle()));
+	}
+
 	void SetTemplate(const ::Neurotec::Biometrics::Standards::FIRecord & value)
 	{
 		NCheck(NSubjectSetTemplateFI(GetHandle(), value.GetHandle()));
@@ -524,6 +532,11 @@ public:
 		NCheck(NSubjectSetTemplateII(GetHandle(), value.GetHandle()));
 	}
 
+	void SetTemplate(const ::Neurotec::Biometrics::Standards::CbeffRecord & value)
+	{
+		NCheck(NSubjectSetTemplateCbeff(GetHandle(), value.GetHandle()));
+	}
+
 	::Neurotec::IO::NBuffer GetTemplateBuffer() const
 	{
 		HNBuffer hValue;
@@ -531,10 +544,10 @@ public:
 		return FromHandle< ::Neurotec::IO::NBuffer>(hValue);
 	}
 
-	::Neurotec::IO::NBuffer GetTemplateBuffer(NUShort formatOwner, NUShort formatType) const
+	::Neurotec::IO::NBuffer GetTemplateBuffer(NUShort formatOwner, NUShort formatType, NVersion version) const
 	{
 		HNBuffer hValue;
-		NCheck(NSubjectGetTemplateBufferWithFormat(GetHandle(), formatOwner, formatType, &hValue));
+		NCheck(NSubjectGetTemplateBufferWithFormatEx(GetHandle(), formatOwner, formatType, version.GetValue(), &hValue));
 		return FromHandle< ::Neurotec::IO::NBuffer>(hValue);
 	}
 
@@ -574,6 +587,13 @@ public:
 		HFMRecord hValue;
 		NCheck(NSubjectToFMRecord(GetHandle(), standard, version.GetValue(), &hValue));
 		return FromHandle< ::Neurotec::Biometrics::Standards::FMRecord>(hValue);
+	}
+
+	::Neurotec::Biometrics::Standards::FMCRecord ToFMCRecord(BdifStandard standard, const NVersion & version, FmcrMinutiaFormat minutiaFormat) const
+	{
+		HFMCRecord hValue;
+		NCheck(NSubjectToFMCRecord(GetHandle(), standard, version.GetValue(), minutiaFormat, &hValue));
+		return FromHandle< ::Neurotec::Biometrics::Standards::FMCRecord>(hValue);
 	}
 
 	::Neurotec::Biometrics::Standards::IIRecord ToIIRecord(BdifStandard standard, const NVersion & version) const

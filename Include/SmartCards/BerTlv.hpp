@@ -66,7 +66,15 @@ public:
 		return value;
 	}
 
+	N_DEPRECATED("method is deprecated, use GetMinLengthSize() instead.")
 	NInt MinLengthSize() const
+	{
+		NInt value;
+		NCheck(BerTlvGetMinLengthSize(GetHandle(), &value));
+		return value;
+	}
+
+	NInt GetMinLengthSize() const
 	{
 		NInt value;
 		NCheck(BerTlvGetMinLengthSize(GetHandle(), &value));

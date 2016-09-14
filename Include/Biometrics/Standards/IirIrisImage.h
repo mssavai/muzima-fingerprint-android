@@ -38,7 +38,6 @@ extern "C"
 {
 #endif
 
-#define IIRII_MAX_QUALITY_BLOCK_COUNT 255
 #define IIRII_COORDINATE_UNDEFINED 0
 #define IIRII_CAPTURE_DEVICE_VENDOR_UNDEFINED 0
 #define IIRII_CAPTURE_DEVICE_TYPE_UNDEFINED 0
@@ -72,20 +71,14 @@ typedef enum IirPreviousCompression_
 } IirPreviousCompression;
 
 N_DECLARE_TYPE(IirPreviousCompression)
-	
-N_DEPRECATED("function is deprecated")
-NResult N_API IirIrisImageCalculateSize(BdifStandard standard, NSizeType imageDataLength, NSizeType * pSize);
 
 NResult N_API IirIrisImageSetImage(HIirIrisImage hIrisImage, NUInt flags, HNImage hImage);
 NResult N_API IirIrisImageToNImage(HIirIrisImage hIrisImage, NUInt flags, HNImage * phImage);
-
-NResult N_API IirIrisImageCreate(HIirIrisImage * phIrisImage);
+NResult N_API IirIrisImageCreateEx(BdifStandard standard, NVersion_ version, HIirIrisImage * phIrisImage);
 NResult N_API IirIrisImageGetStandard(HIirIrisImage hIrisImage, BdifStandard * pValue);
-NResult N_API IirIrisImageSetStandard(HIirIrisImage hIrisImage, BdifStandard value);
 NResult N_API IirIrisImageGetVersion(HIirIrisImage hIrisImage, NVersion_ * pValue);
-NResult N_API IirIrisImageSetVersion(HIirIrisImage hIrisImage, NVersion_ value);
-NResult N_API IirIrisImageGetCaptureDateAndTime(HIirIrisImage hIrisImage, NDateTime * pValue);
-NResult N_API IirIrisImageSetCaptureDateAndTime(HIirIrisImage hIrisImage, NDateTime value);
+NResult N_API IirIrisImageGetCaptureDateAndTimeEx(HIirIrisImage hIrisImage, struct BdifCaptureDateTime_ * pValue);
+NResult N_API IirIrisImageSetCaptureDateAndTimeEx(HIirIrisImage hIrisImage, struct BdifCaptureDateTime_ value);
 NResult N_API IirIrisImageGetCaptureDeviceTechnology(HIirIrisImage hIrisImage, IirCaptureDeviceTechnology * pValue);
 NResult N_API IirIrisImageSetCaptureDeviceTechnology(HIirIrisImage hIrisImage, IirCaptureDeviceTechnology value);
 NResult N_API IirIrisImageGetCaptureDeviceVendorId(HIirIrisImage hIrisImage, NUShort * pValue);

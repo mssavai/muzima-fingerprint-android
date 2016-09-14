@@ -125,7 +125,7 @@ public:
 	{
 		typename NTypeTraits<T>::NativeType value;
 		NCheck(NCollectionGet(GetHandle(), index, NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &value, sizeof(value)));
-		return NTypeTraits<T>::FromNative(value);
+		return NTypeTraits<T>::FromNative(value, true);
 	}
 
 	NArrayWrapper<NValue> ToArray() const
@@ -147,7 +147,7 @@ public:
 	{
 		typename NTypeTraits<T>::NativeType * arValues;
 		NInt valueCount;
-		NCheck(NCollectionToArray(GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, sizeof(NTypeTraits<T>::NativeType), &arValues, &valueCount));
+		NCheck(NCollectionToArray(GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, sizeof(NTypeTraits<T>::NativeType), (void * *)&arValues, &valueCount));
 		return NArrayWrapper<T>(arValues, valueCount);
 	}
 

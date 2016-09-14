@@ -41,18 +41,15 @@
 #include <Biometrics/Standards/CbeffQualityAlgorithmIdentifiers.hpp>
 #include <Biometrics/Standards/CbeffCompressionAlgorithmIdentifiers.hpp>
 #include <Biometrics/Standards/CbeffSBFormatIdentifiers.hpp>
+#include <Biometrics/Standards/CbeffRecord.hpp>
 #include <Biometrics/Standards/BdifTypes.hpp>
 #include <Biometrics/Standards/FMRecord.hpp>
-#include <Biometrics/Standards/FmrFinger.hpp>
 #include <Biometrics/Standards/FmrFingerView.hpp>
-#include <Biometrics/Standards/FMCard.hpp>
 #include <Biometrics/Standards/FIRecord.hpp>
-#include <Biometrics/Standards/FirFinger.hpp>
 #include <Biometrics/Standards/FirFingerView.hpp>
 #include <Biometrics/Standards/FCRecord.hpp>
 #include <Biometrics/Standards/FcrFaceImage.hpp>
 #include <Biometrics/Standards/IIRecord.hpp>
-#include <Biometrics/Standards/IirIris.hpp>
 #include <Biometrics/Standards/IirIrisImage.hpp>
 #include <Biometrics/Standards/ANTemplate.hpp>
 #include <Biometrics/Standards/ANRecordType.hpp>
@@ -83,6 +80,5 @@
 #include <Biometrics/Standards/ANType16Record.hpp>
 #include <Biometrics/Standards/ANType17Record.hpp>
 #include <Biometrics/Standards/ANType99Record.hpp>
-#include <Biometrics/Tools/Nfiq.hpp>
 
 #endif // !N_BIOMETRICS_LIBRARY_HPP_INCLUDED

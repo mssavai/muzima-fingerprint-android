@@ -161,20 +161,20 @@ template<typename T> void NClearArray(T * pArray, NInt length)
 template<typename T> void * NAlignedAllocArray(NInt length, NSizeType alignment, NInt offset = 0)
 {
 	T * pArray;
-	NCheck(NAlignedOffsetAllocArray(sizeof(T), length, alignment, offset, &pArray));
+	NCheck(NAlignedOffsetAllocArray(sizeof(T), length, alignment, offset, (void**)&pArray));
 	return pArray;
 }
 
 template<typename T> void * NAlignedCAllocArray(NInt length, NSizeType alignment, NInt offset = 0)
 {
 	T * pArray;
-	NCheck(NAlignedOffsetCAllocArray(sizeof(T), length, alignment, offset, &pArray));
+	NCheck(NAlignedOffsetCAllocArray(sizeof(T), length, alignment, offset, (void**)&pArray));
 	return pArray;
 }
 
 template<typename T> void * NAlignedReAllocArray(T * pArray, NInt length, NSizeType alignment, NInt offset = 0)
 {
-	NCheck(NAlignedOffsetReAllocArray(sizeof(T), length, alignment, offset, &pArray));
+	NCheck(NAlignedOffsetReAllocArray(sizeof(T), (void**)&pArray, length, alignment, offset));
 	return pArray;
 }
 
@@ -186,7 +186,7 @@ template<typename T> NInt NArrayFromArray(const T * pSrcArray, NInt srcLength, T
 template<typename T> T * NArrayFromArray(const T * pSrcArray, NInt srcLength, NInt * pDstValueCount)
 {
 	T * pDstArray;
-	NCheck(NGetArray(T, pSrcArray, srcLength, &pDstArray, pDstValueCount));
+	NCheck(NGetArray(T, pSrcArray, srcLength, (void**)&pDstArray, pDstValueCount));
 	return pDstArray;
 }
 

@@ -1,1 +1,0 @@
-%SystemRoot%\SysWOW64\javaw -jar server-sample.jar

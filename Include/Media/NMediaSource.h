@@ -12,8 +12,11 @@ N_DECLARE_OBJECT_TYPE(NMediaSource, NObject)
 
 #define NMS_DO_NOT_USE_DIRECT_SHOW              0x00000001
 #define NMS_DO_NOT_USE_WINDOWS_MEDIA_FOUNDATION 0x00000002
-#define NMS_PREFER_DIRECT_SHOW                  0x00000004
-#define NMS_ALLOW_DUPLICATE_DEVICES             0x00000008
+#define NMS_DO_NOT_USE_WINDOWS_MEDIA            0x00000004
+#define NMS_PREFER_DIRECT_SHOW                  0x00000008
+#define NMS_PREFER_WINDOWS_MEDIA_FOUNDATION     0x00000010
+#define NMS_PREFER_WINDOWS_MEDIA                0x00000020
+#define NMS_ALLOW_DUPLICATE_DEVICES             0x00000040
 
 NResult N_API NMediaSourceEnumDevices(NMediaType mediaType, NUInt flags, HNMediaSource * * parhDevices, NInt * pDeviceCount);
 
@@ -46,32 +49,7 @@ NResult N_API NMediaSourceGetCurrentFormat(HNMediaSource hSource, NMediaType med
 NResult N_API NMediaSourceSetCurrentFormat(HNMediaSource hSource, NMediaType mediaType, HNMediaFormat hFormat);
 
 NResult N_API NMediaSourceGetIdN(HNMediaSource hSource, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NMediaSourceGetIdN instead")
-NResult N_API NMediaSourceGetIdA(HNMediaSource hSource, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NMediaSourceGetIdN instead")
-NResult N_API NMediaSourceGetIdW(HNMediaSource hSource, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NMediaSourceGetId(HNMediaSource hSource, NChar * szValue, NInt valueSize);
-#endif
-#define NMediaSourceGetId N_FUNC_AW(NMediaSourceGetId)
-
 NResult N_API NMediaSourceGetDisplayNameN(HNMediaSource hSource, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NMediaSourceGetDisplayNameN instead")
-NResult N_API NMediaSourceGetDisplayNameA(HNMediaSource hSource, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NMediaSourceGetDisplayNameN instead")
-NResult N_API NMediaSourceGetDisplayNameW(HNMediaSource hSource, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NMediaSourceGetDisplayName(HNMediaSource hSource, NChar * szValue, NInt valueSize);
-#endif
-#define NMediaSourceGetDisplayName N_FUNC_AW(NMediaSourceGetDisplayName)
 
 NResult N_API NMediaSourceGetMediaType(HNMediaSource hSource, NMediaType * pValue);
 

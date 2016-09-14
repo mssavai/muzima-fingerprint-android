@@ -1,4 +1,5 @@
 #include <Core/NValue.h>
+#include <IO/NStream.h>
 #include <Collections/NCollection.h>
 
 #ifndef N_PROPERTY_BAG_H_INCLUDED
@@ -10,6 +11,7 @@ extern "C"
 #endif
 
 NResult N_API NPropertyBagCreate(HNPropertyBag * phPropertyBag);
+NResult N_API NPropertyBagCreateFromStream(HNStream hStream, NUInt flags, HNPropertyBag * phPropertyBag);
 NResult N_API NPropertyBagGetCount(HNPropertyBag hPropertyBag, NInt * pValue);
 NResult N_API NPropertyBagGetAt(HNPropertyBag hPropertyBag, NInt index, struct NNameValuePair_ * pValue);
 NResult N_API NPropertyBagToArray(HNPropertyBag hPropertyBag, struct NNameValuePair_ * * parValues, NInt * pValueCount);

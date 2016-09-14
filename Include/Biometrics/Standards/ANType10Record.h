@@ -89,6 +89,7 @@ N_DECLARE_OBJECT_TYPE(ANType10Record, ANImageAsciiBinaryRecord)
 
 typedef enum ANImageType_
 {
+	anitUnspecified = -1,
 	anitFace = 0,
 	anitScar = 1,
 	anitMark = 2,
@@ -319,6 +320,25 @@ NResult N_API ANImageSourceTypeDispose(struct ANImageSourceType_ * pValue);
 NResult N_API ANImageSourceTypeCopy(const struct ANImageSourceType_ * pSrcValue, struct ANImageSourceType_ * pDstValue);
 NResult N_API ANImageSourceTypeSet(const struct ANImageSourceType_ * pSrcValue, struct ANImageSourceType_ * pDstValue);
 
+
+NResult N_API ANType10RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType10Record * phRecord);
+
+NResult N_API ANType10RecordCreateFromNImageN(NVersion_ version, NInt idc, ANImageType imt, HNString hSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNString hSmt, HNImage hImage, NUInt flags, HANType10Record * phRecord);
+#ifndef N_NO_ANSI_FUNC
+NResult ANType10RecordCreateFromNImageA(NVersion_ version, NInt idc, ANImageType imt, const NAChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const NAChar * szSmt, HNImage hImage, NUInt flags, HANType10Record * phRecord);
+#endif
+#ifndef N_NO_UNICODE
+NResult ANType10RecordCreateFromNImageW(NVersion_ version, NInt idc, ANImageType imt, const NWChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const NWChar * szSmt, HNImage hImage, NUInt flags, HANType10Record * phRecord);
+#endif
+#ifdef N_DOCUMENTATION
+NResult ANType10RecordCreateFromNImage(NVersion_ version, NInt idc, ANImageType imt, const NChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const NChar * szSmt, HNImage hImage, NUInt flags, HANType10Record * phRecord);
+#endif
+#define ANType10RecordCreateFromNImage N_FUNC_AW(ANType10RecordCreateFromNImage)
+
 NResult N_API ANType10RecordGetPhysicalPhotoCharacteristicCount(HANType10Record hRecord, NInt * pValue);
 
 NResult N_API ANType10RecordGetPhysicalPhotoCharacteristicN(HANType10Record hRecord, NInt index, HNString * phValue);
@@ -335,17 +355,17 @@ NResult N_API ANType10RecordSetPhysicalPhotoCharacteristic(HANType10Record hReco
 #endif
 #define ANType10RecordSetPhysicalPhotoCharacteristic N_FUNC_AW(ANType10RecordSetPhysicalPhotoCharacteristic)
 
-NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicN(HANType10Record hRecord, HNString hValue);
+NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicExN(HANType10Record hRecord, HNString hValue, NInt * pIndex);
 #ifndef N_NO_ANSI_FUNC
-NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicA(HANType10Record hRecord, const NAChar * szValue);
+NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicExA(HANType10Record hRecord, const NAChar * szValue, NInt * pIndex);
 #endif
 #ifndef N_NO_UNICODE
-NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicW(HANType10Record hRecord, const NWChar * szValue);
+NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicExW(HANType10Record hRecord, const NWChar * szValue, NInt * pIndex);
 #endif
 #ifdef N_DOCUMENTATION
-NResult N_API ANType10RecordAddPhysicalPhotoCharacteristic(HANType10Record hRecord, const NChar * szValue);
+NResult N_API ANType10RecordAddPhysicalPhotoCharacteristicEx(HANType10Record hRecord, const NChar * szValue, NInt * pIndex);
 #endif
-#define ANType10RecordAddPhysicalPhotoCharacteristic N_FUNC_AW(ANType10RecordAddPhysicalPhotoCharacteristic)
+#define ANType10RecordAddPhysicalPhotoCharacteristicEx N_FUNC_AW(ANType10RecordAddPhysicalPhotoCharacteristicEx)
 
 NResult N_API ANType10RecordInsertPhysicalPhotoCharacteristicN(HANType10Record hRecord, NInt index, HNString hValue);
 #ifndef N_NO_ANSI_FUNC
@@ -359,7 +379,7 @@ NResult N_API ANType10RecordInsertPhysicalPhotoCharacteristic(HANType10Record hR
 #endif
 #define ANType10RecordInsertPhysicalPhotoCharacteristic N_FUNC_AW(ANType10RecordInsertPhysicalPhotoCharacteristic)
 
-NResult N_API ANType10RecordRemovePhysicalPhotoCharacteristic(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemovePhysicalPhotoCharacteristicAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearPhysicalPhotoCharacteristics(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetOtherPhotoCharacteristicCount(HANType10Record hRecord, NInt * pValue);
@@ -378,17 +398,17 @@ NResult N_API ANType10RecordSetOtherPhotoCharacteristic(HANType10Record hRecord,
 #endif
 #define ANType10RecordSetOtherPhotoCharacteristic N_FUNC_AW(ANType10RecordSetOtherPhotoCharacteristic)
 
-NResult N_API ANType10RecordAddOtherPhotoCharacteristicN(HANType10Record hRecord, HNString hValue);
+NResult N_API ANType10RecordAddOtherPhotoCharacteristicExN(HANType10Record hRecord, HNString hValue, NInt * pIndex);
 #ifndef N_NO_ANSI_FUNC
-NResult N_API ANType10RecordAddOtherPhotoCharacteristicA(HANType10Record hRecord, const NAChar * szValue);
+NResult N_API ANType10RecordAddOtherPhotoCharacteristicExA(HANType10Record hRecord, const NAChar * szValue, NInt * pIndex);
 #endif
 #ifndef N_NO_UNICODE
-NResult N_API ANType10RecordAddOtherPhotoCharacteristicW(HANType10Record hRecord, const NWChar * szValue);
+NResult N_API ANType10RecordAddOtherPhotoCharacteristicExW(HANType10Record hRecord, const NWChar * szValue, NInt * pIndex);
 #endif
 #ifdef N_DOCUMENTATION
-NResult N_API ANType10RecordAddOtherPhotoCharacteristic(HANType10Record hRecord, const NChar * szValue);
+NResult N_API ANType10RecordAddOtherPhotoCharacteristicEx(HANType10Record hRecord, const NChar * szValue, NInt * pIndex);
 #endif
-#define ANType10RecordAddOtherPhotoCharacteristic N_FUNC_AW(ANType10RecordAddOtherPhotoCharacteristic)
+#define ANType10RecordAddOtherPhotoCharacteristicEx N_FUNC_AW(ANType10RecordAddOtherPhotoCharacteristicEx)
 
 NResult N_API ANType10RecordInsertOtherPhotoCharacteristicN(HANType10Record hRecord, NInt index, HNString hValue);
 #ifndef N_NO_ANSI_FUNC
@@ -402,16 +422,16 @@ NResult N_API ANType10RecordInsertOtherPhotoCharacteristic(HANType10Record hReco
 #endif
 #define ANType10RecordInsertOtherPhotoCharacteristic N_FUNC_AW(ANType10RecordInsertOtherPhotoCharacteristic)
 
-NResult N_API ANType10RecordRemoveOtherPhotoCharacteristic(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemoveOtherPhotoCharacteristicAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearOtherPhotoCharacteristics(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetSubjectQualityScoreCount(HANType10Record hRecord, NInt * pValue);
 NResult N_API ANType10RecordGetSubjectQualityScore(HANType10Record hRecord, NInt index, struct ANQualityMetric_ * pValue);
-NResult N_API ANType10RecordGetSubjectQualityScoresEx(HANType10Record hRecord, struct ANQualityMetric_ * arValue, NInt valueLength);
+NResult N_API ANType10RecordGetSubjectQualityScores(HANType10Record hRecord, struct ANQualityMetric_ * * parValues, NInt * pValueCount);
 NResult N_API ANType10RecordSetSubjectQualityScore(HANType10Record hRecord, NInt index, const struct ANQualityMetric_ * pValue);
-NResult N_API ANType10RecordAddSubjectQualityScore(HANType10Record hRecord, const struct ANQualityMetric_ * pValue);
+NResult N_API ANType10RecordAddSubjectQualityScoreEx(HANType10Record hRecord, const struct ANQualityMetric_ * pValue, NInt * pIndex);
 NResult N_API ANType10RecordInsertSubjectQualityScore(HANType10Record hRecord, NInt index, const struct ANQualityMetric_ * pValue);
-NResult N_API ANType10RecordRemoveSubjectQualityScore(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemoveSubjectQualityScoreAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearSubjectQualityScores(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetSubjectFacialCharacteristicCount(HANType10Record hRecord, NInt * pValue);
@@ -430,17 +450,17 @@ NResult N_API ANType10RecordSetSubjectFacialCharacteristic(HANType10Record hReco
 #endif
 #define ANType10RecordSetSubjectFacialCharacteristic N_FUNC_AW(ANType10RecordSetSubjectFacialCharacteristic)
 
-NResult N_API ANType10RecordAddSubjectFacialCharacteristicN(HANType10Record hRecord, HNString hValue);
+NResult N_API ANType10RecordAddSubjectFacialCharacteristicExN(HANType10Record hRecord, HNString hValue, NInt * pIndex);
 #ifndef N_NO_ANSI_FUNC
-NResult N_API ANType10RecordAddSubjectFacialCharacteristicA(HANType10Record hRecord, const NAChar * szValue);
+NResult N_API ANType10RecordAddSubjectFacialCharacteristicExA(HANType10Record hRecord, const NAChar * szValue, NInt * pIndex);
 #endif
 #ifndef N_NO_UNICODE
-NResult N_API ANType10RecordAddSubjectFacialCharacteristicW(HANType10Record hRecord, const NWChar * szValue);
+NResult N_API ANType10RecordAddSubjectFacialCharacteristicExW(HANType10Record hRecord, const NWChar * szValue, NInt * pIndex);
 #endif
 #ifdef N_DOCUMENTATION
-NResult N_API ANType10RecordAddSubjectFacialCharacteristic(HANType10Record hRecord, const NChar * szValue);
+NResult N_API ANType10RecordAddSubjectFacialCharacteristicEx(HANType10Record hRecord, const NChar * szValue, NInt * pIndex);
 #endif
-#define ANType10RecordAddSubjectFacialCharacteristic N_FUNC_AW(ANType10RecordAddSubjectFacialCharacteristic)
+#define ANType10RecordAddSubjectFacialCharacteristicEx N_FUNC_AW(ANType10RecordAddSubjectFacialCharacteristicEx)
 
 NResult N_API ANType10RecordInsertSubjectFacialCharacteristicN(HANType10Record hRecord, NInt index, HNString hValue);
 #ifndef N_NO_ANSI_FUNC
@@ -454,16 +474,16 @@ NResult N_API ANType10RecordInsertSubjectFacialCharacteristic(HANType10Record hR
 #endif
 #define ANType10RecordInsertSubjectFacialCharacteristic N_FUNC_AW(ANType10RecordInsertSubjectFacialCharacteristic)
 
-NResult N_API ANType10RecordRemoveSubjectFacialCharacteristic(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemoveSubjectFacialCharacteristicAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearSubjectFacialCharacteristics(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetFacialFeaturePointCount(HANType10Record hRecord, NInt * pValue);
 NResult N_API ANType10RecordGetFacialFeaturePoint(HANType10Record hRecord, NInt index, struct BdifFaceFeaturePoint_ * pValue);
-NResult N_API ANType10RecordGetFacialFeaturePointsEx(HANType10Record hRecord, struct BdifFaceFeaturePoint_ * arValue, NInt valueLength);
+NResult N_API ANType10RecordGetFacialFeaturePoints(HANType10Record hRecord, struct BdifFaceFeaturePoint_ * * parValues, NInt * pValueCount);
 NResult N_API ANType10RecordSetFacialFeaturePoint(HANType10Record hRecord, NInt index, const struct BdifFaceFeaturePoint_ * pValue);
-NResult N_API ANType10RecordAddFacialFeaturePoint(HANType10Record hRecord, const struct BdifFaceFeaturePoint_ * pValue);
+NResult N_API ANType10RecordAddFacialFeaturePointEx(HANType10Record hRecord, const struct BdifFaceFeaturePoint_ * pValue, NInt * pIndex);
 NResult N_API ANType10RecordInsertFacialFeaturePoint(HANType10Record hRecord, NInt index, const struct BdifFaceFeaturePoint_ * pValue);
-NResult N_API ANType10RecordRemoveFacialFeaturePoint(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemoveFacialFeaturePointAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearFacialFeaturePoints(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetNcicDesignationCodeCount(HANType10Record hRecord, NInt * pValue);
@@ -482,17 +502,17 @@ NResult N_API ANType10RecordSetNcicDesignationCode(HANType10Record hRecord, NInt
 #endif
 #define ANType10RecordSetNcicDesignationCode N_FUNC_AW(ANType10RecordSetNcicDesignationCode)
 
-NResult N_API ANType10RecordAddNcicDesignationCodeN(HANType10Record hRecord, HNString hValue);
+NResult N_API ANType10RecordAddNcicDesignationCodeExN(HANType10Record hRecord, HNString hValue, NInt * pIndex);
 #ifndef N_NO_ANSI_FUNC
-NResult N_API ANType10RecordAddNcicDesignationCodeA(HANType10Record hRecord, const NAChar * szValue);
+NResult N_API ANType10RecordAddNcicDesignationCodeExA(HANType10Record hRecord, const NAChar * szValue, NInt * pIndex);
 #endif
 #ifndef N_NO_UNICODE
-NResult N_API ANType10RecordAddNcicDesignationCodeW(HANType10Record hRecord, const NWChar * szValue);
+NResult N_API ANType10RecordAddNcicDesignationCodeExW(HANType10Record hRecord, const NWChar * szValue, NInt * pIndex);
 #endif
 #ifdef N_DOCUMENTATION
-NResult N_API ANType10RecordAddNcicDesignationCode(HANType10Record hRecord, const NChar * szValue);
+NResult N_API ANType10RecordAddNcicDesignationCodeEx(HANType10Record hRecord, const NChar * szValue, NInt * pIndex);
 #endif
-#define ANType10RecordAddNcicDesignationCode N_FUNC_AW(ANType10RecordAddNcicDesignationCode);
+#define ANType10RecordAddNcicDesignationCodeEx N_FUNC_AW(ANType10RecordAddNcicDesignationCodeEx);
 
 NResult N_API ANType10RecordInsertNcicDesignationCodeN(HANType10Record hRecord, NInt index, HNString hValue);
 #ifndef N_NO_ANSI_FUNC
@@ -506,27 +526,28 @@ NResult N_API ANType10RecordInsertNcicDesignationCode(HANType10Record hRecord, N
 #endif
 #define ANType10RecordInsertNcicDesignationCode N_FUNC_AW(ANType10RecordInsertNcicDesignationCode)
 
-NResult N_API ANType10RecordRemoveNcicDesignationCode(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemoveNcicDesignationCodeAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearNcicDesignationCodes(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetSmtCount(HANType10Record hRecord, NInt * pValue);
 NResult N_API ANType10RecordGetSmt(HANType10Record hRecord, NInt index, struct ANSmt_ * pValue);
 NResult N_API ANType10RecordSetSmtEx(HANType10Record hRecord, NInt index, const struct ANSmt_ * pValue);
-NResult N_API ANType10RecordAddSmtEx(HANType10Record hRecord, const struct ANSmt_ * pValue);
+NResult N_API ANType10RecordAddSmt(HANType10Record hRecord, const struct ANSmt_ * pValue, NInt * pIndex);
 NResult N_API ANType10RecordInsertSmtEx(HANType10Record hRecord, NInt index, const struct ANSmt_ * pValue);
-NResult N_API ANType10RecordRemoveSmt(HANType10Record hRecord, NInt index);
+NResult N_API ANType10RecordRemoveSmtAt(HANType10Record hRecord, NInt index);
 NResult N_API ANType10RecordClearSmts(HANType10Record hRecord);
 
 NResult N_API ANType10RecordGetSmtColorCount(HANType10Record hRecord, NInt smtIndex, NInt * pValue);
 NResult N_API ANType10RecordGetSmtColor(HANType10Record hRecord, NInt smtIndex, NInt index, ANColor * pValue);
-NResult N_API ANType10RecordGetSmtColorsEx(HANType10Record hRecord, NInt smtIndex, ANColor * arValue, NInt valueLength);
+NResult N_API ANType10RecordGetSmtColors(HANType10Record hRecord, NInt smtIndex, ANColor * * parValues, NInt * pValueCount);
 NResult N_API ANType10RecordSetSmtColor(HANType10Record hRecord, NInt smtIndex, NInt index, ANColor value);
-NResult N_API ANType10RecordAddSmtColor(HANType10Record hRecord, NInt smtIndex, ANColor value);
+NResult N_API ANType10RecordAddSmtColorEx(HANType10Record hRecord, NInt smtIndex, ANColor value, NInt * pIndex);
 NResult N_API ANType10RecordInsertSmtColor(HANType10Record hRecord, NInt smtIndex, NInt index, ANColor value);
-NResult N_API ANType10RecordRemoveSmtColor(HANType10Record hRecord, NInt smtIndex, NInt index);
+NResult N_API ANType10RecordRemoveSmtColorAt(HANType10Record hRecord, NInt smtIndex, NInt index);
 NResult N_API ANType10RecordClearSmtColors(HANType10Record hRecord, NInt smtIndex);
 
 NResult N_API ANType10RecordGetImageType(HANType10Record hRecord, ANImageType * pValue);
+NResult N_API ANType10RecordSetImageType(HANType10Record hRecord, ANImageType value);
 NResult N_API ANType10RecordGetSubjectAcquisitionProfile(HANType10Record hRecord, NInt * pValue);
 NResult N_API ANType10RecordSetSubjectAcquisitionProfile(HANType10Record hRecord, NInt value);
 NResult N_API ANType10RecordGetSubjectPose(HANType10Record hRecord, ANSubjectPose * pValue);

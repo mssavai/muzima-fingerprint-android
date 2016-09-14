@@ -184,7 +184,7 @@ private:
 	}
 
 public:
-	NError(NResult code, const NStringWrapper & message = NString(), const NStringWrapper & param = NString(), NInt externalError = 0, const NString & externalCallStack = NString(), const HNError * arhInnerErrors = NULL, NInt innerErrorCount = 0)
+	explicit NError(NResult code, const NStringWrapper & message = NString(), const NStringWrapper & param = NString(), NInt externalError = 0, const NString & externalCallStack = NString(), const HNError * arhInnerErrors = NULL, NInt innerErrorCount = 0)
 		: NObject(Create(code, message, param, externalError, externalCallStack, arhInnerErrors, innerErrorCount), true)
 	{
 	}

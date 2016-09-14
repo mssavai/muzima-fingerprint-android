@@ -23,6 +23,7 @@ const NInt AN_F_IMAGE_BINARY_RECORD_FIELD_CA = 8;
 
 const NInt AN_F_IMAGE_BINARY_RECORD_MAX_POSITION_COUNT = 6;
 
+#include <Core/NNoDeprecate.h>
 class ANFImageBinaryRecord : public ANImageBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANFImageBinaryRecord, ANImageBinaryRecord)
@@ -38,11 +39,12 @@ public:
 
 		friend class ANFImageBinaryRecord;
 	public:
-		NInt GetAll(BdifFPPosition * arValues, NInt valuesLength) const
+		NArrayWrapper<BdifFPPosition> GetAll() const
 		{
-			NInt count;
-			NCheck(count = ANFImageBinaryRecordGetPositionsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
+			BdifFPPosition * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(ANFImageBinaryRecordGetPositions(this->GetOwnerHandle(), &arValues, &valueCount));
+			return NArrayWrapper<BdifFPPosition>(arValues, valueCount);
 		}
 
 		void Set(NInt index, BdifFPPosition value)
@@ -52,8 +54,8 @@ public:
 
 		NInt Add(BdifFPPosition value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANFImageBinaryRecordAddPosition(this->GetOwnerHandle(), value));
+			NInt index;
+			NCheck(ANFImageBinaryRecordAddPositionEx(this->GetOwnerHandle(), value, &index));
 			return index;
 		}
 
@@ -64,7 +66,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANFImageBinaryRecordRemovePosition(this->GetOwnerHandle(), index));
+			NCheck(ANFImageBinaryRecordRemovePositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -96,6 +98,7 @@ public:
 		return PositionCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

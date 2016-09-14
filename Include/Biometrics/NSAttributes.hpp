@@ -26,7 +26,19 @@ private:
 		return handle;
 	}
 
+	static HNSAttributes Create()
+	{
+		HNSAttributes handle;
+		NCheck(NSAttributesCreateEx(&handle));
+		return handle;
+	}
+
 public:
+	NSAttributes()
+		: NBiometricAttributes(Create())
+	{
+	}
+
 	explicit NSAttributes(NInt phraseId)
 		: NBiometricAttributes(Create(phraseId), true)
 	{
@@ -41,11 +53,21 @@ public:
 		return value;
 	}
 
+	void SetPhraseId(NInt value)
+	{
+		NCheck(NSAttributesSetPhraseId(GetHandle(), value));
+	}
+
 	NTimeSpan GetVoiceStart() const
 	{
 		NTimeSpan_ value;
 		NCheck(NSAttributesGetVoiceStart(GetHandle(), &value));
 		return NTimeSpan(value);
+	}
+
+	void SetVoiceStart(NTimeSpan value)
+	{
+		NCheck(NSAttributesSetVoiceStart(GetHandle(), value.GetValue()));
 	}
 
 	NTimeSpan GetVoiceDuration() const
@@ -55,6 +77,11 @@ public:
 		return NTimeSpan(value);
 	}
 
+	void SetVoiceDuration(NTimeSpan value)
+	{
+		NCheck(NSAttributesSetVoiceDuration(GetHandle(), value.GetValue()));
+	}
+
 	bool IsVoiceDetected() const
 	{
 		NBool value;
@@ -62,11 +89,21 @@ public:
 		return value != 0;
 	}
 
+	void SetIsVoiceDetected(bool value)
+	{
+		NCheck(NSAttributesSetIsVoiceDetected(GetHandle(), value ? NTrue : NFalse));
+	}
+
 	NDouble GetSoundLevel() const
 	{
 		NDouble value;
 		NCheck(NSAttributesGetSoundLevel(GetHandle(), &value));
 		return value;
+	}
+
+	void SetSoundLevel(NDouble value)
+	{
+		NCheck(NSAttributesSetSoundLevel(GetHandle(), value));
 	}
 
 	NSRecord GetTemplate() const

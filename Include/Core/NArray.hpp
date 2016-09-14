@@ -201,9 +201,9 @@ public:
 	}
 
 	template<typename InputIt>
-	NArray(InputIt first, InputIt last, NAttributes attributes = naNone)
-		: NValue(Create<InputIt>(first, last, attributes), true)
+	static NArray FromArray(InputIt first, InputIt last, NAttributes attributes = naNone)
 	{
+		return NArray::FromHandle<NArray>(Create<InputIt>(first, last, attributes), true);
 	}
 
 	NArray(const NByte * arValues, NInt valuesLength, NAttributes attributes = naNone)

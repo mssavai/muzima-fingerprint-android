@@ -125,6 +125,10 @@
 	#define N_MINGW
 #endif
 
+#ifdef __CUDACC__
+	#define N_NVCC
+#endif
+
 #if defined(__STDC__) && !defined(N_GCC) && !defined(N_CLANG)
 	#define N_ANSI_C
 #endif
@@ -140,7 +144,9 @@
 	#define N_ALIGN(x) __declspec(align(x))
 	#define N_LIKELY(x) (x)
 	#define N_UNLIKELY(x) (x)
+	#define N_PREFETCH(x)
 	#define N_INLINE __inline
+	#define N_UNUSED
 #elif defined(N_GCC)
 	#define N_DEPRECATED(message) __attribute__((deprecated))
 	#define N_NO_RETURN __attribute__((noreturn))
@@ -150,7 +156,9 @@
 	#define N_ALIGN(x) __attribute__((aligned (x)))
 	#define N_LIKELY(x) __builtin_expect((x),1)
 	#define N_UNLIKELY(x) __builtin_expect((x),0)
+	#define N_PREFETCH(x) __builtin_prefetch(x)
 	#define N_INLINE inline
+	#define N_UNUSED __attribute__((unused))
 #else
 	#define N_DEPRECATED(message)
 	#define N_NO_RETURN
@@ -160,7 +168,15 @@
 	#define N_ALIGN(x)
 	#define N_LIKELY(x) (x)
 	#define N_UNLIKELY(x) (x)
+	#define N_PREFETCH(x)
 	#define N_INLINE inline
+	#define N_UNUSED
+#endif
+
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 7)))
+	#define N_ASSUME_ALIGNED(ptr, align) __builtin_assume_aligned((ptr), align)
+#else
+	#define N_ASSUME_ALIGNED(ptr, align) (ptr)
 #endif
 
 #ifdef N_CPP
@@ -209,7 +225,7 @@
 	#define N_ARM
 #endif
 
-#if defined(__arm64)
+#if defined(__arm64) || defined(__aarch64__)
 	#define N_ARM64
 #endif
 
@@ -229,8 +245,18 @@
 	#define N_SLOW_FLOAT
 #endif
 
-#if defined(__ARM_NEON__) && defined(N_GCC) && !defined(N_CLANG)
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON)) && (defined(N_GCC) || defined(N_CLANG))
+	// NEON enabled for currently compiled file (auto-vectorization, etc)
 	#define N_ARM_NEON
+#endif
+
+#if defined(N_ARM_NEON) || defined(__ARM_ARCH_7A__) || (defined(__ARM_ARCH) && __ARM_ARCH >= 7)
+	// NEON enabled for optional runtime-selected code only
+	#define N_ARM_NEON_AVAILABLE
+#endif
+
+#if defined(N_ARM) && defined(__SOFTFP__) && defined(N_GCC) && !defined(N_CLANG)
+	#define N_ARM_SOFTFP
 #endif
 
 #if defined(N_WINDOWS_CE) || defined(N_ANDROID) || (defined(N_WINDOWS) && defined(N_ARM_FAMILY))

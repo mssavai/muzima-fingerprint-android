@@ -1,4 +1,5 @@
 #include <Core/NValue.hpp>
+#include <IO/NStream.hpp>
 #include <Collections/NCollection.hpp>
 #include <Collections/NCollections.hpp>
 
@@ -66,6 +67,13 @@ private:
 		return handle;
 	}
 
+	static HNPropertyBag Create(const ::Neurotec::IO::NStream & stream, NUInt flags)
+	{
+		HNPropertyBag handle;
+		NCheck(NPropertyBagCreateFromStream(stream.GetHandle(), flags, &handle));
+		return handle;
+	}
+
 public:
 	static bool TryParse(const NStringWrapper & value, const NStringWrapper & format, NPropertyBag * pValue)
 	{
@@ -90,6 +98,11 @@ public:
 
 	NPropertyBag()
 		: NObject(Create(), true)
+	{
+	}
+
+	NPropertyBag(const ::Neurotec::IO::NStream & stream, NUInt flags = 0)
+		: NObject(Create(stream, flags), true)
 	{
 	}
 

@@ -14,7 +14,7 @@ namespace Neurotec { namespace Geometry
 
 class NPoint : public NPoint_
 {
-	N_DECLARE_STRUCT_CLASS(NPoint)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NPoint)
 
 public:
 	NPoint(NInt x, NInt y)
@@ -86,7 +86,7 @@ public:
 
 class NRect : public NRect_
 {
-	N_DECLARE_STRUCT_CLASS(NRect)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NRect)
 
 public:
 	NRect(NInt x, NInt y, NInt width, NInt height)

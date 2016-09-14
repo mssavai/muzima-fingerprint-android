@@ -14,6 +14,8 @@ N_DECLARE_OBJECT_TYPE(ANType7Record, ANBinaryRecord)
 #define AN_TYPE_7_RECORD_FIELD_IDC AN_RECORD_FIELD_IDC
 #define AN_TYPE_7_RECORD_FIELD_UDF AN_RECORD_FIELD_DATA
 
+NResult N_API ANType7RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType7Record * phRecord);
+
 #ifdef N_CPP
 }
 #endif

@@ -16,9 +16,16 @@ public:
 	{
 	}
 
-	void SetPalm(::Neurotec::Biometrics::NPalm palm)
+	void SetPalm(const ::Neurotec::Biometrics::NPalm & palm)
 	{
-		SetFrictionRidge(static_cast<NFrictionRidge>(palm));
+		if (palm.IsNull())
+		{
+			Clear();
+		}
+		else
+		{
+			SetFrictionRidge(NObjectDynamicCast<NFrictionRidge>(palm));
+		}
 	}
 
 	::Neurotec::Biometrics::NPalm GetPalm()

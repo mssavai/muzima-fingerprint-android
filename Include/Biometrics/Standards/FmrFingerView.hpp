@@ -10,6 +10,7 @@ namespace Neurotec { namespace Biometrics { namespace Standards
 
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
+#include <Core/NNoDeprecate.h>
 
 #undef FMRFV_MAX_DIMENSION
 #undef FMRFV_MAX_MINUTIA_COUNT
@@ -23,6 +24,9 @@ namespace Neurotec { namespace Biometrics { namespace Standards
 #undef FMRFV_SKIP_NEUROTEC_FIELDS
 #undef FMRFV_USE_NEUROTEC_FIELDS
 
+#undef FMRFV_NO_NEIGHBOR_MINUTIA
+#undef FMRFV_NO_RIDGE_COUNT
+
 const NUShort FMRFV_MAX_DIMENSION = 16383;
 const NInt FMRFV_MAX_MINUTIA_COUNT = 255;
 const NInt FMRFV_MAX_CORE_COUNT = 15;
@@ -35,9 +39,12 @@ const NUInt FMRFV_OLD_CONVERT = 0x20000000;
 const NUInt FMRFV_SKIP_NEUROTEC_FIELDS = 0x40000000;
 const NUInt FMRFV_USE_NEUROTEC_FIELDS = 0x80000000;
 
+const NInt FMRFV_NO_NEIGHBOR_MINUTIA = -1;
+const NByte FMRFV_NO_RIDGE_COUNT     = 255;
+
 class FmrMinutia : public FmrMinutia_
 {
-	N_DECLARE_STRUCT_CLASS(FmrMinutia)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(FmrMinutia)
 
 public:
 	FmrMinutia(NUShort x, NUShort y, BdifFPMinutiaType type, NByte angle, NByte quality = 0)
@@ -59,7 +66,7 @@ public:
 
 class FmrCore : public FmrCore_
 {
-	N_DECLARE_STRUCT_CLASS(FmrCore)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(FmrCore)
 
 public:
 	FmrCore(NUShort x, NUShort y, NInt angle = -1)
@@ -79,7 +86,7 @@ public:
 
 class FmrDelta : public FmrDelta_
 {
-	N_DECLARE_STRUCT_CLASS(FmrDelta)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(FmrDelta)
 
 public:
 	FmrDelta(NUShort x, NUShort y, NInt angle1 = -1, NInt angle2 = -1, NInt angle3 = -1)
@@ -108,15 +115,15 @@ N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, FmrDelta)
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
-class FmrFinger;
+class FMRecord;
 
 class FmrFingerView : public NObject
 {
 	N_DECLARE_OBJECT_CLASS(FmrFingerView, NObject)
 
 public:
-	class MinutiaCollection : public ::Neurotec::Collections::NCollectionBase<FmrMinutia, FmrFingerView,
-		FmrFingerViewGetMinutiaCount, FmrFingerViewGetMinutia>
+	class MinutiaCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<FmrMinutia, FmrFingerView,
+		FmrFingerViewGetMinutiaCount, FmrFingerViewGetMinutia, FmrFingerViewGetMinutiae>
 	{
 		MinutiaCollection(const FmrFingerView & owner)
 		{
@@ -124,7 +131,7 @@ public:
 		}
 
 		friend class FmrFingerView;
-	protected:
+	public:
 		NInt GetCapacity() const
 		{
 			NInt value;
@@ -137,12 +144,8 @@ public:
 			NCheck(FmrFingerViewSetMinutiaCapacity(this->GetOwnerHandle(), value));
 		}
 
-		NInt GetAll(FmrMinutia * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = FmrFingerViewGetMinutiaeEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<FmrMinutia, FmrFingerView,
+			FmrFingerViewGetMinutiaCount, FmrFingerViewGetMinutia, FmrFingerViewGetMinutiae>::GetAll;
 
 		void Set(NInt index, const FmrMinutia & value)
 		{
@@ -151,8 +154,8 @@ public:
 
 		NInt Add(const FmrMinutia & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(FmrFingerViewAddMinutia(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(FmrFingerViewAddMinutiaEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -163,7 +166,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(FmrFingerViewRemoveMinutia(this->GetOwnerHandle(), index));
+			NCheck(FmrFingerViewRemoveMinutiaAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -180,9 +183,10 @@ public:
 		}
 
 		friend class FmrFingerView;
-	protected:
-		NInt GetCount() const
+	public:
+		NInt GetCount(NInt baseIndex) const
 		{
+			N_UNREFERENCED_PARAMETER(baseIndex);
 			return 4;
 		}
 
@@ -198,11 +202,12 @@ public:
 			return value;
 		}
 
-		NInt GetAll(NInt baseIndex, BdifFPMinutiaNeighbor * arValues, NInt valuesLength) const
+		NArrayWrapper<BdifFPMinutiaNeighbor> GetAll(NInt baseIndex) const
 		{
-			NInt count;
-			NCheck(count = FmrFingerViewGetMinutiaFourNeighborsEx(this->GetOwnerHandle(), baseIndex, arValues, valuesLength));
-			return count;
+			BdifFPMinutiaNeighbor::NativeType * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(FmrFingerViewGetMinutiaFourNeighbors(this->GetOwnerHandle(), baseIndex, &arValues, &valueCount));
+			return NArrayWrapper<BdifFPMinutiaNeighbor>(arValues, valueCount);
 		}
 
 		void Set(NInt baseIndex, NInt index, const BdifFPMinutiaNeighbor & value)
@@ -219,9 +224,10 @@ public:
 		}
 
 		friend class FmrFingerView;
-	protected:
-		NInt GetCount() const
+	public:
+		NInt GetCount(NInt baseIndex) const
 		{
+			N_UNREFERENCED_PARAMETER(baseIndex);
 			return 8;
 		}
 
@@ -237,11 +243,12 @@ public:
 			return value;
 		}
 
-		NInt GetAll(NInt baseIndex, BdifFPMinutiaNeighbor * arValues, NInt valuesLength) const
+		NArrayWrapper<BdifFPMinutiaNeighbor> GetAll(NInt baseIndex) const
 		{
-			NInt count;
-			NCheck(count = FmrFingerViewGetMinutiaEightNeighborsEx(this->GetOwnerHandle(), baseIndex, arValues, valuesLength));
-			return count;
+			BdifFPMinutiaNeighbor::NativeType * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(FmrFingerViewGetMinutiaEightNeighbors(this->GetOwnerHandle(), baseIndex, &arValues, &valueCount));
+			return NArrayWrapper<BdifFPMinutiaNeighbor>(arValues, valueCount);
 		}
 
 		void Set(NInt baseIndex, NInt index, const BdifFPMinutiaNeighbor & value)
@@ -250,8 +257,8 @@ public:
 		}
 	};
 
-	class CoreCollection : public ::Neurotec::Collections::NCollectionBase<FmrCore, FmrFingerView,
-		FmrFingerViewGetCoreCount, FmrFingerViewGetCore>
+	class CoreCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<FmrCore, FmrFingerView,
+		FmrFingerViewGetCoreCount, FmrFingerViewGetCore, FmrFingerViewGetCores>
 	{
 		CoreCollection(const FmrFingerView & owner)
 		{
@@ -259,7 +266,7 @@ public:
 		}
 
 		friend class FmrFingerView;
-	protected:
+	public:
 		NInt GetCapacity() const
 		{
 			NInt value;
@@ -272,12 +279,8 @@ public:
 			NCheck(FmrFingerViewSetCoreCapacity(this->GetOwnerHandle(), value));
 		}
 
-		NInt GetAll(FmrCore * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = FmrFingerViewGetCoresEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<FmrCore, FmrFingerView,
+			FmrFingerViewGetCoreCount, FmrFingerViewGetCore, FmrFingerViewGetCores>::GetAll;
 
 		void Set(NInt index, const FmrCore & value)
 		{
@@ -286,8 +289,8 @@ public:
 
 		NInt Add(const FmrCore & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(FmrFingerViewAddCore(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(FmrFingerViewAddCoreEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -298,7 +301,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(FmrFingerViewRemoveCore(this->GetOwnerHandle(), index));
+			NCheck(FmrFingerViewRemoveCoreAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -307,8 +310,8 @@ public:
 		}
 	};
 
-	class DeltaCollection : public ::Neurotec::Collections::NCollectionBase<FmrDelta, FmrFingerView,
-		FmrFingerViewGetDeltaCount, FmrFingerViewGetDelta>
+	class DeltaCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<FmrDelta, FmrFingerView,
+		FmrFingerViewGetDeltaCount, FmrFingerViewGetDelta, FmrFingerViewGetDeltas>
 	{
 		DeltaCollection(const FmrFingerView & owner)
 		{
@@ -316,7 +319,7 @@ public:
 		}
 
 		friend class FmrFingerView;
-	protected:
+	public:
 		NInt GetCapacity() const
 		{
 			NInt value;
@@ -329,12 +332,8 @@ public:
 			NCheck(FmrFingerViewSetDeltaCapacity(this->GetOwnerHandle(), value));
 		}
 
-		NInt GetAll(FmrDelta * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = FmrFingerViewGetDeltasEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<FmrDelta, FmrFingerView,
+			FmrFingerViewGetDeltaCount, FmrFingerViewGetDelta, FmrFingerViewGetDeltas>::GetAll;
 
 		void Set(NInt index, const FmrDelta & value)
 		{
@@ -343,8 +342,8 @@ public:
 
 		NInt Add(const FmrDelta & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(FmrFingerViewAddDelta(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(FmrFingerViewAddDeltaEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -355,7 +354,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(FmrFingerViewRemoveDelta(this->GetOwnerHandle(), index));
+			NCheck(FmrFingerViewRemoveDeltaAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -364,24 +363,118 @@ public:
 		}
 	};
 
-public:
-	static NSizeType GetMaxSize(BdifStandard standard, NInt minutiaCount, NBool hasFourNeighborRidgeCounts, NBool hasEightNeighborRidgeCounts,
-		NInt coreWithAngleCount, NInt coreCount, NInt deltaWithAngleCount, NInt deltaCount)
+	class QualityBlockCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifQualityBlock, FmrFingerView,
+		FmrFingerViewGetQualityBlockCount, FmrFingerViewGetQualityBlock, FmrFingerViewGetQualityBlocks>
 	{
-		NSizeType size;
-		NCheck(FmrFingerViewGetMaxSize(standard, minutiaCount, hasFourNeighborRidgeCounts, hasEightNeighborRidgeCounts,
-			coreWithAngleCount, coreCount, deltaWithAngleCount, deltaCount, &size));
-		return size;
+		QualityBlockCollection(const FmrFingerView & owner)
+		{
+			SetOwner(owner);
+		}
+
+		friend class FmrFingerView;
+	public:
+		NInt GetCapacity() const
+		{
+			NInt value;
+			NCheck(FmrFingerViewGetQualityBlockCapacity(this->GetOwnerHandle(), &value));
+			return value;
+		}
+
+		void SetCapacity(NInt value)
+		{
+			NCheck(FmrFingerViewSetQualityBlockCapacity(this->GetOwnerHandle(), value));
+		}
+	
+		void Set(NInt index, const BdifQualityBlock & value)
+		{
+			NCheck(FmrFingerViewSetQualityBlock(this->GetOwnerHandle(), index, &value));
+		}
+
+		NInt Add(const BdifQualityBlock & value)
+		{
+			NInt index;
+			NCheck(FmrFingerViewAddQualityBlock(this->GetOwnerHandle(), &value, &index));
+			return index;
+		}
+
+		void Insert(NInt index, const BdifQualityBlock & value)
+		{
+			NCheck(FmrFingerViewInsertQualityBlock(this->GetOwnerHandle(), index, &value));
+		}
+
+		void RemoveAt(NInt index)
+		{
+			NCheck(FmrFingerViewRemoveQualityBlockAt(this->GetOwnerHandle(), index));
+		}
+
+		void Clear()
+		{
+			NCheck(FmrFingerViewClearQualityBlocks(this->GetOwnerHandle()));
+		}
+	};
+
+	class CertificationBlockCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifCertificationBlock, FmrFingerView,
+		FmrFingerViewGetCertificationBlockCount, FmrFingerViewGetCertificationBlock, FmrFingerViewGetCertificationBlocks>
+	{
+		CertificationBlockCollection(const FmrFingerView & owner)
+		{
+			SetOwner(owner);
+		}
+
+		friend class FmrFingerView;
+	public:
+		NInt GetCapacity() const
+		{
+			NInt value;
+			NCheck(FmrFingerViewGetCertificationBlockCapacity(this->GetOwnerHandle(), &value));
+			return value;
+		}
+
+		void SetCapacity(NInt value)
+		{
+			NCheck(FmrFingerViewSetCertificationBlockCapacity(this->GetOwnerHandle(), value));
+		}
+	
+		void Set(NInt index, const BdifCertificationBlock & value)
+		{
+			NCheck(FmrFingerViewSetCertificationBlock(this->GetOwnerHandle(), index, &value));
+		}
+
+		NInt Add(const BdifCertificationBlock & value)
+		{
+			NInt index;
+			NCheck(FmrFingerViewAddCertificationBlock(this->GetOwnerHandle(), &value, &index));
+			return index;
+		}
+
+		void Insert(NInt index, const BdifCertificationBlock & value)
+		{
+			NCheck(FmrFingerViewInsertCertificationBlock(this->GetOwnerHandle(), index, &value));
+		}
+
+		void RemoveAt(NInt index)
+		{
+			NCheck(FmrFingerViewRemoveCertificationBlockAt(this->GetOwnerHandle(), index));
+		}
+
+		void Clear()
+		{
+			NCheck(FmrFingerViewClearCertificationBlocks(this->GetOwnerHandle()));
+		}
+	};
+
+private:
+	static HFmrFingerView Create(BdifStandard standard, NVersion version)
+	{
+		HFmrFingerView handle;
+		NCheck(FmrFingerViewCreate(standard, version.GetValue(), &handle));
+		return handle;
 	}
 
-	static NSizeType GetMaxSize(BdifStandard standard, NInt minutiaCount, NBool hasFourNeighborRidgeCounts, NBool hasEightNeighborRidgeCounts,
-		NInt coreWithAngleCount, NInt coreCount, NInt deltaWithAngleCount, NInt deltaCount,
-		NBool hasNeurotecCurvatures, NBool hasNeurotecGs, NInt neurotecBOWidth, NInt neurotecBOHeight)
+public:
+	FmrFingerView(BdifStandard standard, NVersion version)
+		: NObject(Create(standard, version), true)
 	{
-		NSizeType size;
-		NCheck(FmrFingerViewGetMaxSizeEx(standard, minutiaCount, hasFourNeighborRidgeCounts, hasEightNeighborRidgeCounts,
-			coreWithAngleCount, coreCount, deltaWithAngleCount, deltaCount, hasNeurotecCurvatures, hasNeurotecGs, neurotecBOWidth, neurotecBOHeight, &size));
-		return size;
 	}
 
 	NFRecord ToNFRecord(NUInt flags = 0) const
@@ -391,11 +484,78 @@ public:
 		return FromHandle<NFRecord>(hNFRecord);
 	}
 
+	BdifStandard GetStandard() const
+	{
+		BdifStandard value;
+		NCheck(FmrFingerViewGetStandard(GetHandle(), &value));
+		return value;
+	}
+
+	NVersion GetVersion() const
+	{
+		NVersion_ value;
+		NCheck(FmrFingerViewGetVersion(GetHandle(), &value));
+		return NVersion(value);
+	}
+
+	BdifCaptureDateTime GetCaptureDateAndTime() const
+	{
+		BdifCaptureDateTime_ value;
+		NCheck(FmrFingerViewGetCaptureDateAndTime(GetHandle(), &value));
+		return BdifCaptureDateTime(value);
+	}
+
+	void SetCaptureDateAndTime(const BdifCaptureDateTime & value)
+	{
+		NCheck(FmrFingerViewSetCaptureDateAndTime(GetHandle(), value));
+	}
+
+	BdifFPCaptureDeviceTechnology GetCaptureDeviceTechnology() const
+	{
+		BdifFPCaptureDeviceTechnology value;
+		NCheck(FmrFingerViewGetCaptureDeviceTechnology(GetHandle(), &value));
+		return value;
+	}
+
+	void SetCaptureDeviceTechnology(BdifFPCaptureDeviceTechnology value)
+	{
+		NCheck(FmrFingerViewSetCaptureDeviceTechnology(GetHandle(), value));
+	}
+
+	NUShort GetCaptureDeviceVendorId() const
+	{
+		NUShort value;
+		NCheck(FmrFingerViewGetCaptureDeviceVendorId(GetHandle(), &value));
+		return value;
+	}
+
+	void SetCaptureDeviceVendorId(NUShort value)
+	{
+		NCheck(FmrFingerViewSetCaptureDeviceVendorId(GetHandle(), value));
+	}
+
+	NUShort GetCaptureDeviceTypeId() const
+	{
+		NUShort value;
+		NCheck(FmrFingerViewGetCaptureDeviceTypeId(GetHandle(), &value));
+		return value;
+	}
+
+	void SetCaptureDeviceTypeId(NUShort value)
+	{
+		NCheck(FmrFingerViewSetCaptureDeviceTypeId(GetHandle(), value));
+	}
+
 	BdifFPPosition GetFingerPosition() const
 	{
 		BdifFPPosition value;
 		NCheck(FmrFingerViewGetFingerPosition(GetHandle(), &value));
 		return value;
+	}
+
+	void SetFingerPosition(BdifFPPosition value)
+	{
+		NCheck(FmrFingerViewSetFingerPosition(GetHandle(), value));
 	}
 
 	BdifFPImpressionType GetImpressionType() const
@@ -410,11 +570,76 @@ public:
 		NCheck(FmrFingerViewSetImpressionType(GetHandle(), value));
 	}
 
-	NInt GetViewCount() const
+	NUShort GetHorzImageResolution() const
 	{
-		NInt value;
-		NCheck(FmrFingerViewGetViewCount(GetHandle(), &value));
+		NUShort value;
+		NCheck(FmrFingerViewGetHorzImageResolution(GetHandle(), &value));
 		return value;
+	}
+
+	void SetHorzImageResolution(NUShort value)
+	{
+		NCheck(FmrFingerViewSetHorzImageResolution(GetHandle(), value));
+	}
+
+	NUShort GetVertImageResolution() const
+	{
+		NUShort value;
+		NCheck(FmrFingerViewGetVertImageResolution(GetHandle(), &value));
+		return value;
+	}
+
+	void SetVertImageResolution(NUShort value)
+	{
+		NCheck(FmrFingerViewSetVertImageResolution(GetHandle(), value));
+	}
+
+	NUShort GetSizeX() const
+	{
+		NUShort value;
+		NCheck(FmrFingerViewGetSizeX(GetHandle(), &value));
+		return value;
+	}
+
+	void SetSizeX(NUShort value)
+	{
+		NCheck(FmrFingerViewSetSizeX(GetHandle(), value));
+	}
+
+	NUShort GetSizeY() const
+	{
+		NUShort value;
+		NCheck(FmrFingerViewGetSizeY(GetHandle(), &value));
+		return value;
+	}
+
+	void SetSizeY(NUShort value)
+	{
+		NCheck(FmrFingerViewSetSizeY(GetHandle(), value));
+	}
+
+	bool GetMinutiaeQualityFlag() const
+	{
+		NBool value;
+		NCheck(FmrFingerViewGetMinutiaeQualityFlag(GetHandle(), &value));
+		return value != 0;
+	}
+
+	void SetMinutiaeQualityFlag(bool value)
+	{
+		NCheck(FmrFingerViewSetMinutiaeQualityFlag(GetHandle(), value ? NTrue : NFalse));
+	}
+
+	BdifFPMinutiaRidgeEndingType GetRidgeEndingType() const
+	{
+		BdifFPMinutiaRidgeEndingType value;
+		NCheck(FmrFingerViewGetRidgeEndingType(GetHandle(), &value));
+		return value;
+	}
+
+	void SetRidgeEndingType(BdifFPMinutiaRidgeEndingType value)
+	{
+		NCheck(FmrFingerViewSetRidgeEndingType(GetHandle(), value));
 	}
 
 	NInt GetViewNumber() const
@@ -458,6 +683,13 @@ public:
 	void SetHasEightNeighborRidgeCounts(bool value)
 	{
 		NCheck(FmrFingerViewSetHasEightNeighborRidgeCounts(GetHandle(), value ? NTrue : NFalse));
+	}
+
+	bool ValidateMinutiaeUniqueness() const
+	{
+		NBool value;
+		NCheck(FmrFingerViewValidateMinutiaeUniqueness(GetHandle(), &value));
+		return value != 0;
 	}
 
 	MinutiaCollection GetMinutiae()
@@ -510,19 +742,39 @@ public:
 		return DeltaCollection(*this);
 	}
 
-	FmrFinger GetOwner() const;
-};
+	QualityBlockCollection GetQualityBlocks()
+	{
+		return QualityBlockCollection(*this);
+	}
 
+	const QualityBlockCollection GetQualityBlocks() const
+	{
+		return QualityBlockCollection(*this);
+	}
+
+	CertificationBlockCollection GetCertificationBlocks()
+	{
+		return CertificationBlockCollection(*this);
+	}
+
+	const CertificationBlockCollection GetCertificationBlocks() const
+	{
+		return CertificationBlockCollection(*this);
+	}
+
+	FMRecord GetOwner() const;
+};
+#include <Core/NReDeprecate.h>
 }}}
 
-#include <Biometrics/Standards/FmrFinger.hpp>
+#include <Biometrics/Standards/FMRecord.hpp>
 
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
-inline FmrFinger FmrFingerView::GetOwner() const
+inline FMRecord FmrFingerView::GetOwner() const
 {
-	return NObject::GetOwner<FmrFinger>();
+	return NObject::GetOwner<FMRecord>();
 }
 
 }}}

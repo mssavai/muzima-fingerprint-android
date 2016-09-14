@@ -15,5 +15,6 @@
 #include <Devices/NIrisScanner.hpp>
 #include <Devices/NDeviceManager.hpp>
 #include <Devices/NDevices.hpp>
+#include <Devices/Virtual/NVirtualCameraSource.hpp>
 
 #endif // !N_DEVICES_LIBRARY_HPP_INCLUDED

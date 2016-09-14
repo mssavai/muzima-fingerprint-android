@@ -18,7 +18,7 @@ NResult N_API NBiometricAttributesGetQuality(HNBiometricAttributes hAttributes, 
 NResult N_API NBiometricAttributesSetQuality(HNBiometricAttributes hAttributes, NByte value);
 
 NResult N_API NBiometricAttributesGetChild(HNBiometricAttributes hAttributes, HNObject * phValue);
-NResult N_API NBiometricGetAttributesChildSubject(HNBiometricAttributes hAttributes, HNObject * phValue);
+NResult N_API NBiometricAttributesGetChildSubject(HNBiometricAttributes hAttributes, HNObject * phValue);
 
 #ifdef N_CPP
 }

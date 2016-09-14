@@ -36,7 +36,10 @@ NResult N_API NETemplateSetRecordCapacity(HNETemplate hTemplate, NInt value);
 NResult N_API NETemplateSetRecord(HNETemplate hTemplate, NInt index, HNERecord hValue);
 NResult N_API NETemplateAddRecordEx(HNETemplate hTemplate, HNERecord hValue, NInt * pIndex);
 NResult N_API NETemplateInsertRecord(HNETemplate hTemplate, NInt index, HNERecord hValue);
+N_DEPRECATED("function is deprecated, use NETemplateRemoveRecordAt instead")
 NResult N_API NETemplateRemoveRecord(HNETemplate hTemplate, NInt index);
+NResult N_API NETemplateRemoveRecordAt(HNETemplate hTemplate, NInt index);
+
 NResult N_API NETemplateClearRecords(HNETemplate hTemplate);
 
 #ifdef N_CPP

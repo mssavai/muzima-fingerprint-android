@@ -28,6 +28,18 @@ public:
 		: NFrictionRidge(Create(), true)
 	{
 	}
+
+	bool GetWrongHandWarning() const
+	{
+		NBool value;
+		NCheck(NFingerGetWrongHandWarning(GetHandle(), &value));
+		return value != NFalse;
+	}
+
+	void SetWrongHandWarning(bool value)
+	{
+		NCheck(NFingerSetWrongHandWarning(GetHandle(), value ? NTrue : NFalse));
+	}
 };
 
 }}

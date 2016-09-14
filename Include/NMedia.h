@@ -11,10 +11,8 @@
 #include <Images/NImageWriter.h>
 #include <Images/NImageInfo.h>
 #include <Images/NImages.h>
-#include <Images/NMonochromeImage.h>
-#include <Images/NGrayscaleImage.h>
+#include <Images/NImage.h>
 #include <Images/NRgb.h>
-#include <Images/NRgbImage.h>
 #include <Images/Bmp.h>
 #include <Images/Tiff.h>
 #include <Images/Jpeg.h>

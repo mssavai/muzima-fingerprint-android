@@ -19,11 +19,11 @@ N_DECLARE_OBJECT_TYPE(ANFImageBinaryRecord, ANImageBinaryRecord)
 
 NResult N_API ANFImageBinaryRecordGetPositionCount(HANFImageBinaryRecord hRecord, NInt * pValue);
 NResult N_API ANFImageBinaryRecordGetPosition(HANFImageBinaryRecord hRecord, NInt index, BdifFPPosition * pValue);
-NResult N_API ANFImageBinaryRecordGetPositionsEx(HANFImageBinaryRecord hRecord, BdifFPPosition * arValue, NInt valueLength);
+NResult N_API ANFImageBinaryRecordGetPositions(HANFImageBinaryRecord hRecord, BdifFPPosition * * parValues, NInt * pValueCount);
 NResult N_API ANFImageBinaryRecordSetPosition(HANFImageBinaryRecord hRecord, NInt index, BdifFPPosition value);
-NResult N_API ANFImageBinaryRecordAddPosition(HANFImageBinaryRecord hRecord, BdifFPPosition value);
+NResult N_API ANFImageBinaryRecordAddPositionEx(HANFImageBinaryRecord hRecord, BdifFPPosition value, NInt * pIndex);
 NResult N_API ANFImageBinaryRecordInsertPosition(HANFImageBinaryRecord hRecord, NInt index, BdifFPPosition value);
-NResult N_API ANFImageBinaryRecordRemovePosition(HANFImageBinaryRecord hRecord, NInt index);
+NResult N_API ANFImageBinaryRecordRemovePositionAt(HANFImageBinaryRecord hRecord, NInt index);
 NResult N_API ANFImageBinaryRecordClearPositions(HANFImageBinaryRecord hRecord);
 
 NResult N_API ANFImageBinaryRecordGetImpressionType(HANFImageBinaryRecord hRecord, BdifFPImpressionType * pValue);

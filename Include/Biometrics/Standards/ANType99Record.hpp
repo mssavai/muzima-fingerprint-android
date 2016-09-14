@@ -54,10 +54,23 @@ class ANType99Record : public ANAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType99Record, ANAsciiBinaryRecord)
 
+private:
+	static HANType99Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType99Record handle;
+		NCheck(ANType99RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
 public:
 	static NType ANBiometricTypeNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(ANBiometricType), true);
+	}
+
+	explicit ANType99Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
 	}
 
 	NVersion GetHeaderVersion() const
@@ -67,11 +80,21 @@ public:
 		return NVersion(value);
 	}
 
+	void SetHeaderVersion(NVersion value)
+	{
+		NCheck(ANType99RecordSetHeaderVersion(GetHandle(), value.GetValue()));
+	}
+
 	ANBiometricType GetBiometricType() const
 	{
 		ANBiometricType value;
 		NCheck(ANType99RecordGetBiometricType(GetHandle(), &value));
 		return value;
+	}
+
+	void SetBiometricType(ANBiometricType value)
+	{
+		NCheck(ANType99RecordSetBiometricType(GetHandle(), value));
 	}
 
 	bool GetBiometricDataQuality(ANQualityMetric * pValue) const
@@ -93,11 +116,21 @@ public:
 		return value;
 	}
 
+	void SetBdbFormatOwner(NUShort value)
+	{
+		NCheck(ANType99RecordSetBdbFormatOwner(GetHandle(), value));
+	}
+
 	NUShort GetBdbFormatType() const
 	{
 		NUShort value;
 		NCheck(ANType99RecordGetBdbFormatType(GetHandle(), &value));
 		return value;
+	}
+
+	void SetBdbFormatType(NUShort value)
+	{
+		NCheck(ANType99RecordSetBdbFormatType(GetHandle(), value));
 	}
 };
 

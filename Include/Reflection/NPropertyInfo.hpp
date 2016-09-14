@@ -86,7 +86,7 @@ public:
 		typename NTypeTraits<T>::NativeType value;
 		NBool hasValue;
 		NCheck(NPropertyInfoGetValue(GetHandle(), object.GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &value, sizeof(value), 1, pHasValue ? &hasValue : NULL));
-		T v = NTypeTraits<T>::FromNative(value);
+		T v = NTypeTraits<T>::FromNative(value, true);
 		if (pHasValue) *pHasValue = hasValue != 0;
 		return v;
 	}

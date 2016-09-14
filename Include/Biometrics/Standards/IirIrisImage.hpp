@@ -17,17 +17,13 @@ N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, IirImageFormat)
 
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
-#undef IIR_MAX_IRIS_IMAGE_COUNT
-	
-#undef IIRII_MAX_QUALITY_BLOCK_COUNT
 #undef IIRII_COORDINATE_UNDEFINED
 #undef IIRII_CAPTURE_DEVICE_VENDOR_UNDEFINED
 #undef IIRII_CAPTURE_DEVICE_TYPE_UNDEFINED
 #undef IIRII_RANGE_UNASSIGNED
 #undef IIRII_RANGE_FAILED
 #undef IIRII_RANGE_OVERFLOW
-	
-const NInt IIRII_MAX_QUALITY_BLOCK_COUNT = 255;
+
 const NInt IIRII_COORDINATE_UNDEFINED = 0;
 const NInt IIRII_CAPTURE_DEVICE_VENDOR_UNDEFINED = 0;
 const NInt IIRII_CAPTURE_DEVICE_TYPE_UNDEFINED = 0;
@@ -51,7 +47,7 @@ public:
 		}
 
 		friend class IirIrisImage;
-	protected:
+	public:
 		NInt GetCapacity() const
 		{
 			NInt value;
@@ -93,10 +89,10 @@ public:
 	};
 
 private:
-	static HIirIrisImage Create()
+	static HIirIrisImage Create(BdifStandard standard, NVersion version)
 	{
 		HIirIrisImage handle;
-		NCheck(IirIrisImageCreate(&handle));
+		NCheck(IirIrisImageCreateEx(standard, version.GetValue(), &handle));
 		return handle;
 	}
 
@@ -121,8 +117,8 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(IirImageFormat), true);
 	}
 
-	IirIrisImage()
-		: NObject(Create(), true)
+	IirIrisImage(BdifStandard standard, NVersion version)
+		: NObject(Create(standard, version), true)
 	{
 	}
 
@@ -145,11 +141,6 @@ public:
 		return value;
 	}
 
-	void SetStandard(BdifStandard value)
-	{
-		NCheck(IirIrisImageSetStandard(GetHandle(), value));
-	}
-
 	NVersion GetVersion() const
 	{
 		NVersion_ value;
@@ -157,21 +148,16 @@ public:
 		return NVersion(value);
 	}
 
-	void SetVersion(const NVersion value)
+	BdifCaptureDateTime GetCaptureDateAndTimeEx() const
 	{
-		NCheck(IirIrisImageSetVersion(GetHandle(), value.GetValue()));
+		BdifCaptureDateTime_ value;
+		NCheck(IirIrisImageGetCaptureDateAndTimeEx(GetHandle(), &value));
+		return BdifCaptureDateTime(value);
 	}
 
-	NDateTime GetCaptureDateAndTime() const
+	void SetCaptureDateAndTimeEx(const BdifCaptureDateTime & value)
 	{
-		NDateTime value;
-		NCheck(IirIrisImageGetCaptureDateAndTime(GetHandle(), &value));
-		return value;
-	}
-
-	void SetCaptureDateAndTime(NDateTime value)
-	{
-		NCheck(IirIrisImageSetCaptureDateAndTime(GetHandle(), value));
+		NCheck(IirIrisImageSetCaptureDateAndTimeEx(GetHandle(), value));
 	}
 
 	IirCaptureDeviceTechnology GetCaptureDeviceTechnology() const
@@ -467,7 +453,6 @@ public:
 
 	IIRecord GetOwner() const;
 };
-
 }}}
 
 #include <Biometrics/Standards/IIRecord.hpp>

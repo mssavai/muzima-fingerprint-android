@@ -17,7 +17,9 @@ NResult N_API NFrictionRidgeFromImageAndTemplate(HNImage hImage, HNFRecord hTemp
 
 NResult N_API NFrictionRidgeGetImage(HNFrictionRidge hFrictionRidge, HNImage * phValue);
 NResult N_API NFrictionRidgeSetImage(HNFrictionRidge hFrictionRidge, HNImage hValue);
+N_DEPRECATED("function is deprecated, use NFrictionRidgeGetRidgeSkeletonImage or NFrictionRidgeGetBinarizedImage")
 NResult N_API NFrictionRidgeGetProcessedImage(HNFrictionRidge hFrictionRidge, HNImage * phValue);
+N_DEPRECATED("function is deprecated, use NFrictionRidgeSetRidgeSkeletonImage or NFrictionRidgeSetBinarizedImage")
 NResult N_API NFrictionRidgeSetProcessedImage(HNFrictionRidge hFrictionRidge, HNImage hValue);
 NResult N_API NFrictionRidgeGetPosition(HNFrictionRidge hFrictionRidge, NFPosition * pValue);
 NResult N_API NFrictionRidgeSetPosition(HNFrictionRidge hFrictionRidge, NFPosition value);
@@ -29,9 +31,11 @@ NResult N_API NFrictionRidgeGetObject(HNFrictionRidge hFrictionRidge, NInt index
 NResult N_API NFrictionRidgeGetObjects(HNFrictionRidge hFrictionRidge, HNFAttributes * * parhValues, NInt * pValueCount);
 
 NResult N_API NFrictionRidgeAddObjectsCollectionChanged(HNFrictionRidge hFrictionRidge, HNCallback hCallback);
-NResult N_API NFrictionRidgeObjectsCollectionChangedCallback(HNFrictionRidge hFrictionRidge, N_COLLECTION_CHANGED_CALLBACK_ARG(HNFAttributes, pCallback), void * pParam);
+NResult N_API NFrictionRidgeAddObjectsCollectionChangedCallback(HNFrictionRidge hFrictionRidge, N_COLLECTION_CHANGED_CALLBACK_ARG(HNFAttributes, pCallback), void * pParam);
 NResult N_API NFrictionRidgeRemoveObjectsCollectionChanged(HNFrictionRidge hFrictionRidge, HNCallback hCallback);
 NResult N_API NFrictionRidgeRemoveObjectsCollectionChangedCallback(HNFrictionRidge hFrictionRidge, N_COLLECTION_CHANGED_CALLBACK_ARG(HNFAttributes, pCallback), void * pParam);
+N_DEPRECATED("function is deprecated, use NFrictionRidgeAddObjectsCollectionChangedCallback instead")
+NResult N_API NFrictionRidgeObjectsCollectionChangedCallback(HNFrictionRidge hFrictionRidge, N_COLLECTION_CHANGED_CALLBACK_ARG(HNFAttributes, pCallback), void * pParam);
 
 NResult N_API NFrictionRidgeGetPossiblePositionCount(HNFrictionRidge hFrictionRidge, NInt * pValue);
 NResult N_API NFrictionRidgeGetPossiblePosition(HNFrictionRidge hFrictionRidge, NInt index, NFPosition * pValue);
@@ -41,6 +45,11 @@ NResult N_API NFrictionRidgeAddPossiblePosition(HNFrictionRidge hFrictionRidge, 
 NResult N_API NFrictionRidgeInsertPossiblePosition(HNFrictionRidge hFrictionRidge, NInt index, NFPosition value);
 NResult N_API NFrictionRidgeRemovePossiblePositionAt(HNFrictionRidge hFrictionRidge, NInt index);
 NResult N_API NFrictionRidgeClearPossiblePositions(HNFrictionRidge hFrictionRidge);
+
+NResult N_API NFrictionRidgeGetRidgeSkeletonImage(HNFrictionRidge hFrictionRidge, HNImage * phValue);
+NResult N_API NFrictionRidgeSetRidgeSkeletonImage(HNFrictionRidge hFrictionRidge, HNImage hValue);
+NResult N_API NFrictionRidgeGetBinarizedImage(HNFrictionRidge hFrictionRidge, HNImage * phValue);
+NResult N_API NFrictionRidgeSetBinarizedImage(HNFrictionRidge hFrictionRidge, HNImage hValue);
 
 #ifdef N_CPP
 }

@@ -10,6 +10,7 @@ namespace Neurotec { namespace Biometrics
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NMatchingSpeed)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NMFusionType)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NTemplateSize)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, BiometricTemplateFormat)
 
 namespace Neurotec { namespace Biometrics
 {
@@ -31,6 +32,10 @@ public:
 	static NType NTemplateSizeNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(NTemplateSize), true);
+	}
+	static NType BiometricTemplateFormatNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BiometricTemplateFormat), true);
 	}
 };
 

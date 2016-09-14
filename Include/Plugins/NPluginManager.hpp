@@ -109,11 +109,6 @@ public:
 	};
 
 public:
-	static NType NPluginManagerPluginCallbackNativeTypeOf()
-	{
-		return NObject::GetObject<NType>(N_TYPE_OF(NPluginManagerPluginCallback), true);
-	}
-
 	static NArrayWrapper<NPluginManager> GetInstances()
 	{
 		return GetObjects<NPluginManager>(NPluginManagerGetInstances, true);

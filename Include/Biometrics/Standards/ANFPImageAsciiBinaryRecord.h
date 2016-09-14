@@ -75,29 +75,29 @@ N_DECLARE_TYPE(ANFPQualityMetric)
 
 NResult N_API ANFPImageAsciiBinaryRecordGetPositionCount(HANFPImageAsciiBinaryRecord hRecord, NInt * pValue);
 NResult N_API ANFPImageAsciiBinaryRecordGetPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index, BdifFPPosition * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordGetPositionsEx(HANFPImageAsciiBinaryRecord hRecord, BdifFPPosition * arValue, NInt valueLength);
+NResult N_API ANFPImageAsciiBinaryRecordGetPositions(HANFPImageAsciiBinaryRecord hRecord, BdifFPPosition * * parValues, NInt * pValueCount);
 NResult N_API ANFPImageAsciiBinaryRecordSetPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index, BdifFPPosition value);
-NResult N_API ANFPImageAsciiBinaryRecordAddPosition(HANFPImageAsciiBinaryRecord hRecord, BdifFPPosition value);
+NResult N_API ANFPImageAsciiBinaryRecordAddPositionEx(HANFPImageAsciiBinaryRecord hRecord, BdifFPPosition value, NInt * pIndex);
 NResult N_API ANFPImageAsciiBinaryRecordInsertPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index, BdifFPPosition value);
-NResult N_API ANFPImageAsciiBinaryRecordRemovePosition(HANFPImageAsciiBinaryRecord hRecord, NInt index);
+NResult N_API ANFPImageAsciiBinaryRecordRemovePositionAt(HANFPImageAsciiBinaryRecord hRecord, NInt index);
 NResult N_API ANFPImageAsciiBinaryRecordClearPositions(HANFPImageAsciiBinaryRecord hRecord);
 
 NResult N_API ANFPImageAsciiBinaryRecordGetPrintPositionCount(HANFPImageAsciiBinaryRecord hRecord, NInt * pValue);
 NResult N_API ANFPImageAsciiBinaryRecordGetPrintPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index, struct ANFPrintPosition_ * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordGetPrintPositionsEx(HANFPImageAsciiBinaryRecord hRecord, struct ANFPrintPosition_ * arValue, NInt valueLength);
+NResult N_API ANFPImageAsciiBinaryRecordGetPrintPositions(HANFPImageAsciiBinaryRecord hRecord, struct ANFPrintPosition_ * * parValues, NInt * pValueCount);
 NResult N_API ANFPImageAsciiBinaryRecordSetPrintPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index, const struct ANFPrintPosition_ * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordAddPrintPosition(HANFPImageAsciiBinaryRecord hRecord, const struct ANFPrintPosition_ * pValue);
+NResult N_API ANFPImageAsciiBinaryRecordAddPrintPositionEx(HANFPImageAsciiBinaryRecord hRecord, const struct ANFPrintPosition_ * pValue, NInt * pIndex);
 NResult N_API ANFPImageAsciiBinaryRecordInsertPrintPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index, const struct ANFPrintPosition_ * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordRemovePrintPosition(HANFPImageAsciiBinaryRecord hRecord, NInt index);
+NResult N_API ANFPImageAsciiBinaryRecordRemovePrintPositionAt(HANFPImageAsciiBinaryRecord hRecord, NInt index);
 NResult N_API ANFPImageAsciiBinaryRecordClearPrintPositions(HANFPImageAsciiBinaryRecord hRecord);
 
 NResult N_API ANFPImageAsciiBinaryRecordGetQualityMetricCount(HANFPImageAsciiBinaryRecord hRecord, NInt * pValue);
 NResult N_API ANFPImageAsciiBinaryRecordGetQualityMetric(HANFPImageAsciiBinaryRecord hRecord, NInt index, struct ANFPQualityMetric_ * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordGetQualityMetricsEx(HANFPImageAsciiBinaryRecord hRecord, struct ANFPQualityMetric_ * arValue, NInt valueLength);
+NResult N_API ANFPImageAsciiBinaryRecordGetQualityMetrics(HANFPImageAsciiBinaryRecord hRecord, struct ANFPQualityMetric_ * * parValues, NInt * pValueCount);
 NResult N_API ANFPImageAsciiBinaryRecordSetQualityMetric(HANFPImageAsciiBinaryRecord hRecord, NInt index, const struct ANFPQualityMetric_ * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordAddQualityMetric(HANFPImageAsciiBinaryRecord hRecord, const struct ANFPQualityMetric_ * pValue);
+NResult N_API ANFPImageAsciiBinaryRecordAddQualityMetricEx(HANFPImageAsciiBinaryRecord hRecord, const struct ANFPQualityMetric_ * pValue, NInt * pIndex);
 NResult N_API ANFPImageAsciiBinaryRecordInsertQualityMetric(HANFPImageAsciiBinaryRecord hRecord, NInt index, const struct ANFPQualityMetric_ * pValue);
-NResult N_API ANFPImageAsciiBinaryRecordRemoveQualityMetric(HANFPImageAsciiBinaryRecord hRecord, NInt index);
+NResult N_API ANFPImageAsciiBinaryRecordRemoveQualityMetricAt(HANFPImageAsciiBinaryRecord hRecord, NInt index);
 NResult N_API ANFPImageAsciiBinaryRecordClearQualityMetrics(HANFPImageAsciiBinaryRecord hRecord);
 
 NResult N_API ANFPImageAsciiBinaryRecordGetImpressionType(HANFPImageAsciiBinaryRecord hRecord, BdifFPImpressionType * pValue);

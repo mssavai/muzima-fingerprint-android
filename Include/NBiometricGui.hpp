@@ -8,6 +8,11 @@
 #include <Biometrics/Gui/wxNPalmView.hpp>
 #include <Biometrics/Gui/wxNFaceView.hpp>
 #include <Biometrics/Gui/wxNIrisView.hpp>
+#include <Biometrics/Gui/wxNVoiceView.hpp>
+#include <Biometrics/Standards/Gui/wxANView.hpp>
+#include <Biometrics/Standards/Gui/wxFCView.hpp>
+#include <Biometrics/Standards/Gui/wxFIView.hpp>
+#include <Biometrics/Standards/Gui/wxIIView.hpp>
 #endif
 
 #ifdef N_FRAMEWORK_QT

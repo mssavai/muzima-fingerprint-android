@@ -58,6 +58,7 @@
 #include <IO/NBinaryWriter.hpp>
 #include <IO/NBuffer.hpp>
 #include <IO/NFile.hpp>
+#include <IO/NFileEnumerator.hpp>
 #include <IO/NDirectory.hpp>
 #include <IO/NPath.hpp>
 #include <IO/NTextReader.hpp>

@@ -49,7 +49,8 @@ typedef enum NBiometricType_
 	nbtVeinPattern = nbtVein,
 	nbtFoot = 0x080000,
 	nbtFootPrint = nbtFoot,
-	nbtPalmGeometry = 0x100000
+	nbtPalmGeometry = 0x100000,
+	nbtAll = 0x1FFFFF
 } NBiometricType;
 
 N_DECLARE_TYPE(NBiometricType)
@@ -118,6 +119,7 @@ typedef enum NBiometricStatus_
 	nbsTooWide = 84,
 	nbsTooSkewed = 91,
 	nbsWrongDirection = 92,
+	nbsWrongHand = 93,
 	nbsTooFewSamples = 100,
 	nbsIncompatibleSamples = 101,
 	nbsSourceNotFound = 501,
@@ -126,6 +128,7 @@ typedef enum NBiometricStatus_
 	nbsDuplicateId = 602,
 	nbsMatchNotFound = 610,
 	nbsDuplicateFound = 611,
+	nbsConflict = 612,
 	nbsInvalidOperations = 900,
 	nbsInvalidId = 901,
 	nbsInvalidQuery = 902,
@@ -450,7 +453,7 @@ typedef enum NLProperties_
 	nlpNotSpecified = 0,
 	nlpSpecified = 0x000001,
 	nlpGlasses = 0x000002,
-	nlpMoustache = 0x000004,
+	nlpMustache = 0x000004,
 	nlpBeard = 0x000008,
 	nlpTeethVisible = 0x000010,
 	nlpBlink = 0x000020,
@@ -481,6 +484,28 @@ typedef enum NLExpression_
 } NLExpression;
 
 N_DECLARE_TYPE(NLExpression)
+
+typedef enum NLivenessMode_
+{
+	nlmNone = 0,
+	nlmPassive = 1,
+	nlmActive = 2,
+	nlmPassiveAndActive = 3,
+	nlmSimple = 4
+} NLivenessMode;
+
+N_DECLARE_TYPE(NLivenessMode)
+
+typedef enum NLivenessAction_
+{
+	nlaNone = 0,
+	nlaKeepStill = 0x000001,
+	nlaBlink = 0x000002,
+	nlaRotateYaw = 0x000004,
+	nlaKeepRotatingYaw = 0x000008
+} NLivenessAction;
+
+N_DECLARE_TYPE(NLivenessAction)
 
 typedef enum NEImageType_
 {

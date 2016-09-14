@@ -19,10 +19,12 @@ using Neurotec::Media::HNAudioFormat;
 
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Devices::Virtual, NVirtualDeviceOptions)
 
+#include <Core/NNoDeprecate.h>
+
 namespace Neurotec { namespace Devices { namespace Virtual
 {
 
-class NVirtualDevice : public NObject
+class N_DEPRECATED("NVirtualDevice is deprecated, connect to Virtual device through NDeviceManager instead") NVirtualDevice : public NObject
 {
 	N_DECLARE_OBJECT_CLASS(NVirtualDevice, NObject)
 
@@ -64,7 +66,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NVirtualDeviceRemoveSupportedImpressionType(this->GetOwnerHandle(), index));
+			NCheck(NVirtualDeviceRemoveSupportedImpressionTypeAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -102,7 +104,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NVirtualDeviceRemoveSupportedFingerPosition(this->GetOwnerHandle(), index));
+			NCheck(NVirtualDeviceRemoveSupportedFingerPositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -140,7 +142,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NVirtualDeviceRemoveSupportedIrisPosition(this->GetOwnerHandle(), index));
+			NCheck(NVirtualDeviceRemoveSupportedIrisPositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -149,7 +151,7 @@ public:
 		}
 
 	};
-	class VideoFormatCollection : public ::Neurotec::Collections::NCollectionBase<NVideoFormat, NVirtualDevice,
+	class VideoFormatCollection : public ::Neurotec::Collections::NCollectionBase< ::Neurotec::Media::NVideoFormat, NVirtualDevice,
 		NVirtualDeviceGetVideoFormatCount, NVirtualDeviceGetVideoFormat>
 	{
 		VideoFormatCollection(const NVirtualDevice & owner)
@@ -159,26 +161,26 @@ public:
 
 		friend class NVirtualDevice;
 	public:
-		void Set(NInt index, const NVideoFormat & value)
+		void Set(NInt index, const ::Neurotec::Media::NVideoFormat & value)
 		{
 			NCheck(NVirtualDeviceSetVideoFormat(this->GetOwnerHandle(), index, value.GetHandle()));
 		}
 
-		NInt Add(const NVideoFormat & value)
+		NInt Add(const ::Neurotec::Media::NVideoFormat & value)
 		{
 			NInt result;
 			NCheck(NVirtualDeviceAddVideoFormat(this->GetOwnerHandle(), value.GetHandle(), &result));
 			return result;
 		}
 
-		void Insert(NInt index, const NVideoFormat & value)
+		void Insert(NInt index, const ::Neurotec::Media::NVideoFormat & value)
 		{
 			NCheck(NVirtualDeviceInsertVideoFormat(this->GetOwnerHandle(), index, value.GetHandle()));
 		}
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NVirtualDeviceRemoveVideoFormat(this->GetOwnerHandle(), index));
+			NCheck(NVirtualDeviceRemoveVideoFormatAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -187,7 +189,7 @@ public:
 		}
 
 	};
-	class AudioFormatCollection : public ::Neurotec::Collections::NCollectionBase<NAudioFormat, NVirtualDevice,
+	class AudioFormatCollection : public ::Neurotec::Collections::NCollectionBase< ::Neurotec::Media::NAudioFormat, NVirtualDevice,
 		NVirtualDeviceGetAudioFormatCount, NVirtualDeviceGetAudioFormat>
 	{
 		AudioFormatCollection(const NVirtualDevice & owner)
@@ -197,26 +199,26 @@ public:
 
 		friend class NVirtualDevice;
 	public:
-		void Set(NInt index, const NAudioFormat & value)
+		void Set(NInt index, const ::Neurotec::Media::NAudioFormat & value)
 		{
 			NCheck(NVirtualDeviceSetAudioFormat(this->GetOwnerHandle(), index, value.GetHandle()));
 		}
 
-		NInt Add(const NAudioFormat & value)
+		NInt Add(const ::Neurotec::Media::NAudioFormat & value)
 		{
 			NInt result;
 			NCheck(NVirtualDeviceAddAudioFormat(this->GetOwnerHandle(), value.GetHandle(), &result));
 			return result;
 		}
 
-		void Insert(NInt index, const NAudioFormat & value)
+		void Insert(NInt index, const ::Neurotec::Media::NAudioFormat & value)
 		{
 			NCheck(NVirtualDeviceInsertAudioFormat(this->GetOwnerHandle(), index, value.GetHandle()));
 		}
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NVirtualDeviceRemoveAudioFormat(this->GetOwnerHandle(), index));
+			NCheck(NVirtualDeviceRemoveAudioFormatAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -254,7 +256,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NVirtualDeviceRemoveSource(this->GetOwnerHandle(), index));
+			NCheck(NVirtualDeviceRemoveSourceAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -396,4 +398,7 @@ public:
 
 }}}
 
+#include <Core/NReDeprecate.h>
+
 #endif //!N_VIRTUAL_DEVICE_HPP_INCLUDED
+

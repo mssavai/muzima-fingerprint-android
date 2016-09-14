@@ -15,7 +15,6 @@ N_DECLARE_OBJECT_TYPE(IIRecord, NObject)
 }
 #endif
 
-#include <Biometrics/Standards/IirIris.h>
 #include <Biometrics/Standards/IirIrisImage.h>
 
 #ifdef N_CPP
@@ -55,55 +54,39 @@ typedef enum IirImageTransformation_
 
 N_DECLARE_TYPE(IirImageTransformation)
 
-#define IIR_VERSION_1_0 0x0100
-#define IIR_VERSION_2_0 0x0200
+#define IIR_VERSION_ANSI_1_0 0x0100
+#define IIR_VERSION_ISO_1_0  0x0100
+#define IIR_VERSION_ISO_2_0  0x0200
+
+#define IIR_VERSION_ANSI_CURRENT IIR_VERSION_ANSI_1_0
+#define IIR_VERSION_ISO_CURRENT  IIR_VERSION_ISO_2_0
 
 #define IIR_RANGE_UNASSIGNED 0
 #define IIR_RANGE_FAILED 1
 #define IIR_RANGE_OVERFLOW 0xFFFF
 
-#define IIR_MAX_IRIS_IMAGE_COUNT (2 * IIRI_MAX_IRIS_IMAGE_COUNT)
+#define IIR_MAX_IRIS_IMAGE_COUNT_PER_IRIS_1_0 N_USHORT_MAX
+#define IIR_MAX_IRIS_IMAGE_COUNT_1_0          (2 * IIR_MAX_IRIS_IMAGE_COUNT_PER_IRIS_1_0)
+#define IIR_MAX_IRIS_IMAGE_COUNT_2_0          N_USHORT_MAX
 
-N_DEPRECATED("function is deprecated, use IIRecordGetSize instead")
-NResult N_API IIRecordCalculateSize(BdifStandard standard, NInt irisCount, const NSizeType * arIrisSizes, NSizeType * pSize);
+#define IIR_PROCESS_IRIS_FIRST_IRIS_IMAGE_ONLY 0x00001000
 
-N_DEPRECATED("function is deprecated, use IIRecordCreateEx, IIRecordSetStandard, IIRecordSetVersion, IIRecordSetImageFormat, IIRecordSetRawImageWidth, IIRecordSetRawImageHeight,IIRecordSetIntensityDepth instead")
-NResult N_API IIRecordCreate(IirImageFormat imageFormat, NUShort rawImageWidth, NUShort rawImageHeight, NByte intensityDepth,
-	NUInt flags, BdifStandard standard, HIIRecord * phRecord);
-NResult N_API IIRecordCreateEx(NUInt flags, HIIRecord * phRecord);
+NResult N_API IIRecordCreateEx2(BdifStandard standard, NVersion_ version, NUInt flags, HIIRecord * phRecord);
 NResult N_API IIRecordCreateFromMemoryN(HNBuffer hBuffer, NUInt flags, BdifStandard standard, NSizeType * pSize, HIIRecord * phRecord);
 NResult N_API IIRecordCreateFromMemory(const void * pBuffer, NSizeType bufferSize, NUInt flags, BdifStandard standard, NSizeType * pSize, HIIRecord * phRecord);
-N_DEPRECATED("function is deprecated, use IIRecordCreateFromIIRecordEx instead")
-NResult N_API IIRecordCreateFromIIRecord(HIIRecord hSrcRecord, NUInt flags, BdifStandard standard, HIIRecord * phRecord);
 NResult N_API IIRecordCreateFromIIRecordEx(HIIRecord hSrcRecord, NUInt flags, BdifStandard standard, NVersion_ version, HIIRecord * phRecord);
-N_DEPRECATED("function is deprecated, use IIRecordCreateFromNImageEx instead")
-NResult N_API IIRecordCreateFromNImage(HNImage hImage, IirImageFormat imageFormat, BdifEyePosition irisPosition, NUInt flags, BdifStandard standard, HIIRecord * phRecord);
 NResult N_API IIRecordCreateFromNImageEx(HNImage hImage, IirImageFormat imageFormat, BdifEyePosition irisPosition, NUInt flags, BdifStandard standard, NVersion_ version, HIIRecord * phRecord);
-
-NResult N_API IIRecordGetIrisCount(HIIRecord hRecord, NInt * pValue);
-NResult N_API IIRecordGetIris(HIIRecord hRecord, NInt index, HIirIris * phValue);
-NResult N_API IIRecordGetIrisCapacity(HIIRecord hRecord, NInt * pValue);
-NResult N_API IIRecordSetIrisCapacity(HIIRecord hRecord, NInt value);
-NResult N_API IIRecordAddIris(HIIRecord hRecord, BdifEyePosition irisPosition, NUInt flags, HIirIris * phIris);
-NResult N_API IIRecordAddIrisEx(HIIRecord hRecord, HIirIris hIris, NInt * pIndex);
-N_DEPRECATED("function is deprecated, use IIRecordAddIrisFromNImageEx instead")
-NResult N_API IIRecordAddIrisFromNImage(HIIRecord hRecord, BdifEyePosition irisPosition, HNImage hImage, NUInt flags, HIirIris * phIris);
-NResult N_API IIRecordAddIrisFromNImageEx(HIIRecord hRecord, BdifEyePosition irisPosition, HNImage hImage, IirImageFormat imageFormat, NUInt flags, HIirIris * phIris);
-NResult N_API IIRecordRemoveIrisAt(HIIRecord hRecord, NInt index);
-NResult N_API IIRecordClearIrises(HIIRecord hRecord);
 
 NResult N_API IIRecordGetIrisImageCount(HIIRecord hRecord, NInt * pValue);
 NResult N_API IIRecordGetIrisImage(HIIRecord hRecord, NInt index, HIirIrisImage * phValue);
 NResult N_API IIRecordGetIrisImageCapacity(HIIRecord hRecord, NInt * pValue);
 NResult N_API IIRecordSetIrisImageCapacity(HIIRecord hRecord, NInt value);
-NResult N_API IIRecordAddIrisImage(HIIRecord hRecord, HIirIrisImage hIrisImage);
 NResult N_API IIRecordAddIrisImageEx(HIIRecord hRecord, HIirIrisImage hIrisImage, NInt * pIndex);
 NResult N_API IIRecordRemoveIrisImageAt(HIIRecord hRecord, NInt index);
 NResult N_API IIRecordClearIrisImages(HIIRecord hRecord);
+
 NResult N_API IIRecordGetStandard(HIIRecord hRecord, BdifStandard * pValue);
-NResult N_API IIRecordSetStandard(HIIRecord hRecord, BdifStandard value);
 NResult N_API IIRecordGetVersion(HIIRecord hRecord, NVersion_ * pValue);
-NResult N_API IIRecordSetVersion(HIIRecord hRecord, NVersion_ value);
 NResult N_API IIRecordGetCbeffProductId(HIIRecord hRecord, NUInt * pValue);
 NResult N_API IIRecordSetCbeffProductId(HIIRecord hRecord, NUInt value);
 NResult N_API IIRecordGetCaptureDeviceId(HIIRecord hRecord, NUShort * pValue);
@@ -137,29 +120,18 @@ NResult N_API IIRecordGetDeviceUniqueIdentifierN(HIIRecord hRecord, HNString * p
 
 NResult N_API IIRecordSetDeviceUniqueIdentifierN(HIIRecord hRecord, HNString hValue);
 #ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use IIRecordSetDeviceUniqueIdentifierN instead")
 NResult N_API IIRecordSetDeviceUniqueIdentifierA(HIIRecord hRecord, const NAChar * szValue);
 #endif
 #ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use IIRecordSetDeviceUniqueIdentifierN instead")
 NResult N_API IIRecordSetDeviceUniqueIdentifierW(HIIRecord hRecord, const NWChar * szValue);
+#endif
+#ifdef N_DOCUMENTATION
+NResult N_API IIRecordSetDeviceUniqueIdentifier(HIIRecord hRecord, const NChar * szValue);
 #endif
 #define IIRecordSetDeviceUniqueIdentifier N_FUNC_AW(IIRecordSetDeviceUniqueIdentifier)
 
 NResult N_API IIRecordGetGuid(HIIRecord hRecord, struct NGuid_ * pValue);
 NResult N_API IIRecordSetGuid(HIIRecord hRecord, const struct NGuid_ * pValue);
-
-#define IIRecordRemoveIris(hRecord, index) IIRecordRemoveIrisAt(hRecord, index)
-#define IIRecordRemoveIrisImage(hRecord, index) IIRecordRemoveIrisImageAt(hRecord, index)
-#define IIRecordGetIrisEx(hRecord, index, phValue) IIRecordGetIris(hRecord, index, phValue)
-#define IIRecordGetIrisImageEx(hRecord, index, phValue) IIRecordGetIrisImage(hRecord, index, phValue)
-
-#ifdef N_MSVC
-	#pragma deprecated("IIRecordRemoveIris")
-	#pragma deprecated("IIRecordRemoveIrisImage")
-	#pragma deprecated("IIRecordGetIrisEx")
-	#pragma deprecated("IIRecordGetIrisImageEx")
-#endif
 
 #ifdef N_CPP
 }

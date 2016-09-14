@@ -12,9 +12,6 @@ extern "C"
 #endif
 
 N_DECLARE_OBJECT_TYPE(NImage, NObject)
-N_DECLARE_OBJECT_TYPE(NGrayscaleImage, NImage)
-N_DECLARE_OBJECT_TYPE(NMonochromeImage, NImage)
-N_DECLARE_OBJECT_TYPE(NRgbImage, NImage)
 
 #ifdef N_CPP
 }
@@ -156,6 +153,9 @@ NResult N_API NImageCopyFromDataPlanesPartEx(HNImage hImage,
 	const void * pSrcPalette, NSizeType srcPaletteSize, NInt srcPaletteLength, NUInt srcWidth, NUInt srcHeight,
 	NSizeType srcStride, const void * const * arpSrcPlanes, const NSizeType * arSrcPlaneSizes, NInt srcPlaneCount, NUInt srcLeft, NUInt srcTop,
 	NUInt left, NUInt top, NUInt width, NUInt height, NUInt flags);
+NResult N_API NImageCopyFromYCbCrDataN(HNImage hImage, HNBuffer hPlaneY, NInt rowStrideY, NInt pixelStrideY,
+	HNBuffer hPlaneCb, NInt rowStrideCb, NInt pixelStrideCb,
+	HNBuffer hPlaneCr, NInt rowStrideCr, NInt pixelStrideCr);
 
 NResult N_API NImageCopyToDataN(HNImage hImage, NPixelFormat_ dstPixelFormat, NUInt dstWidth, NUInt dstHeight,
 	NSizeType dstStride, HNBuffer hDstPixels, NUInt dstLeft, NUInt dstTop, NUInt flags);
@@ -203,12 +203,6 @@ NResult N_API NImageFlipVertically(HNImage hImage);
 NResult N_API NImageFlipDiagonally(HNImage hImage);
 NResult N_API NImageRotateFlip(HNImage hImage, NImageRotateFlipType rotateFlipType, HNImage * phResultImage);
 NResult N_API NImageCrop(HNImage hImage, NUInt left, NUInt top, NUInt width, NUInt height, HNImage * phResultImage);
-N_DEPRECATED("function is deprecated, use NImageCreateFromImageEx2 or NImagesRecolorImage instead")
-NResult N_API NImageToMonochrome(HNImage hImage, HNMonochromeImage * phResultImage);
-N_DEPRECATED("function is deprecated, use NImageCreateFromImageEx2 or NImagesRecolorImage instead")
-NResult N_API NImageToGrayscale(HNImage hImage, HNGrayscaleImage * phResultImage);
-N_DEPRECATED("function is deprecated, use NImageCreateFromImageEx2 or NImagesRecolorImage instead")
-NResult N_API NImageToRgb(HNImage hImage, HNRgbImage * phResultImage);
 
 #if defined(N_WINDOWS) || defined(N_DOCUMENTATION)
 NResult N_API NImageToHBitmap(HNImage hImage, HBITMAP * phBitmap);

@@ -45,6 +45,13 @@ public:
 	{
 	}
 
+	static NVoice FromSoundBufferAndTemplate(const ::Neurotec::Sound::NSoundBuffer & soundBuffer, const NSRecord & record)
+	{
+		HNVoice hVoice;
+		NCheck(NVoiceFromSoundBufferAndTemplate(soundBuffer.GetHandle(), record.GetHandle(), &hVoice));
+		return FromHandle<NVoice>(hVoice);
+	}
+
 	::Neurotec::Sound::NSoundBuffer GetSoundBuffer() const
 	{
 		HNSoundBuffer hValue;

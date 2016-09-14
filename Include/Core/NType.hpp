@@ -33,21 +33,21 @@ public:
 		typedef T ItemType;
 
 	public:
-		NInt GetCount()
+		NInt GetCount() const
 		{
 			NInt value;
 			NCheck(pGetCount(this->GetOwnerHandle(), &value));
 			return value;
 		}
 
-		T Get(NInt index)
+		T Get(NInt index) const
 		{
 			NativeType hValue;
 			NCheck(pGet(this->GetOwnerHandle(), index, &hValue));
 			return FromHandle<T>(hValue, true);
 		}
 
-		NArrayWrapper<ItemType> GetAll()
+		NArrayWrapper<ItemType> GetAll() const
 		{
 			NativeType * arhValues;
 			NInt valueCount;
@@ -253,9 +253,9 @@ public:
 	template<typename T> T GetPropertyValue(const NObject & object, const NStringWrapper & name, NAttributes attributes = naNone, bool * pHasValue = NULL) const
 	{
 		typename NTypeTraits<T>::NativeType value;
-		NBool hasValue;
+		NBool hasValue = NFalse;
 		NCheck(NTypeGetPropertyValueNN(GetHandle(), object.GetHandle(), name.GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &value, sizeof(value), 1, pHasValue ? &hasValue : NULL));
-		T v = NTypeTraits<T>::FromNative(value);
+		T v = NTypeTraits<T>::FromNative(value, true);
 		if (pHasValue) *pHasValue = hasValue != 0;
 		return v;
 	}

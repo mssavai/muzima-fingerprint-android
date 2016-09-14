@@ -57,7 +57,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ConstructedBerTlvRemoveDataObject(this->GetOwnerHandle(), index));
+			NCheck(ConstructedBerTlvRemoveDataObjectAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()

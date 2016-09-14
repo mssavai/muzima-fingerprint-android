@@ -58,7 +58,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANSubFieldRemoveItem(this->GetOwnerHandle(), index));
+			NCheck(ANSubFieldRemoveItemAt(this->GetOwnerHandle(), index));
 		}
 
 		void RemoveRange(NInt index, NInt count)

@@ -77,16 +77,19 @@ public:
 					}
 				}
 
-				if (pluginManagers.GetCount() > 0)
-				{
-					cbPlugins->SetSelection(0);
-				}
-
-				for(int i = 0; i < loadedModules.GetCount(); i++)
-				{
-					if(loadedModules[i].GetHandle() != NULL)
-						moduleList.push_back(loadedModules[i]);
-				}
+				cbPlugins->SetSelection(0);
+			}
+			
+			if(pluginManagers.GetCount() == 0)
+			{
+				cbPlugins->Disable();
+				buttonOpen->Disable();
+			}
+			
+			for(int i = 0; i < loadedModules.GetCount(); i++)
+			{
+				if(loadedModules[i].GetHandle() != NULL)
+					moduleList.push_back(loadedModules[i]);
 			}
 
 			RefreshComponents();

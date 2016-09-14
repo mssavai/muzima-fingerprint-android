@@ -16,15 +16,15 @@ public:
 	{
 	}
 
-	void SetFinger(::Neurotec::Biometrics::NFinger finger)
+	void SetFinger(const ::Neurotec::Biometrics::NFinger & finger)
 	{
-		if (finger.GetHandle() == NULL)
+		if (finger.IsNull())
 		{
 			Clear();
 		}
 		else
 		{
-			SetFrictionRidge(static_cast<NFrictionRidge>(finger));
+			SetFrictionRidge(NObjectDynamicCast<NFrictionRidge>(finger));
 		}
 	}
 

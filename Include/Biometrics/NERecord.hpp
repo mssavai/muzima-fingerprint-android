@@ -10,6 +10,8 @@ namespace Neurotec { namespace Biometrics
 
 namespace Neurotec { namespace Biometrics
 {
+#undef NER_OLD_FAST_CONVERT
+const NUInt NER_OLD_FAST_CONVERT = 0x20000000;
 
 class NERecord : public NObject
 {

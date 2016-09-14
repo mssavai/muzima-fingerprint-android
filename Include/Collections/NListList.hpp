@@ -469,7 +469,7 @@ public:
 	{
 		typename NTypeTraits<T>::NativeType value;
 		NCheck(Internal::NListListGetItem(this, listIndex, index, NTypeTraits<T>::GetNativeType().GetHandle(), &value, sizeof(value)));
-		return NTypeTraits<T>::FromNative(value);
+		return NTypeTraits<T>::FromNative(value, true);
 	}
 
 	void Get(NInt listIndex, NInt index, const NType & valueType, void * pValue, NSizeType valueSize)

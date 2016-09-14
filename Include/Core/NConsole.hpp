@@ -229,7 +229,7 @@ public:
 		NCheck(NConsoleWriteSSizeTypeLine(value));
 	}
 
-	static void WriteLine(const void * value)
+	static void WritePointerLine(const void * value)
 	{
 		NCheck(NConsoleWritePointerLine(value));
 	}
@@ -254,13 +254,13 @@ public:
 		NCheck(NConsoleWriteLineN(value.GetHandle()));
 	}
 
-	static void WriteLine(const NStringWrapper format, ...)
+	static void WriteLine(const NChar * szFormat, ...)
 	{
 		va_list args;
-		va_start(args, format);
+		va_start(args, szFormat);
 		try
 		{
-			WriteLine(format, args);
+			WriteLine(szFormat, args);
 			va_end(args);
 		}
 		catch (...)
@@ -270,9 +270,9 @@ public:
 		}
 	}
 
-	static void WriteLine(const NStringWrapper & value, va_list args)
+	static void WriteLine(const NChar * szFormat, va_list args)
 	{
-		NCheck(NConsoleWriteFormatLineN(value.GetHandle(), args));
+		NCheck(NConsoleWriteFormatLine(szFormat, args));
 	}
 };
 

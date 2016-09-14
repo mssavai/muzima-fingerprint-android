@@ -56,12 +56,18 @@ typedef enum ANBiometricType_
 
 N_DECLARE_TYPE(ANBiometricType)
 
+NResult N_API ANType99RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType99Record * phRecord);
+
 NResult N_API ANType99RecordGetHeaderVersion(HANType99Record hRecord, NVersion_ * pValue);
+NResult N_API ANType99RecordSetHeaderVersion(HANType99Record hRecord, NVersion_ value);
 NResult N_API ANType99RecordGetBiometricType(HANType99Record hRecord, ANBiometricType * pValue);
+NResult N_API ANType99RecordSetBiometricType(HANType99Record hRecord, ANBiometricType value);
 NResult N_API ANType99RecordGetBiometricDataQuality(HANType99Record hRecord, struct ANQualityMetric_ * pValue, NBool * pHasValue);
 NResult N_API ANType99RecordSetBiometricDataQuality(HANType99Record hRecord, const struct ANQualityMetric_ * pValue);
 NResult N_API ANType99RecordGetBdbFormatOwner(HANType99Record hRecord, NUShort * pValue);
+NResult N_API ANType99RecordSetBdbFormatOwner(HANType99Record hRecord, NUShort value);
 NResult N_API ANType99RecordGetBdbFormatType(HANType99Record hRecord, NUShort * pValue);
+NResult N_API ANType99RecordSetBdbFormatType(HANType99Record hRecord, NUShort value);
 
 #ifdef N_CPP
 }

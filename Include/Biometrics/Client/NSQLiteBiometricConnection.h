@@ -36,6 +36,8 @@ NResult N_API NSQLiteBiometricConnectionSetFileName(HNSQLiteBiometricConnection 
 #endif
 #define NSQLiteBiometricConnectionSetFileName N_FUNC_AW(NSQLiteBiometricConnectionSetFileName)
 
+NResult N_API NSQLiteBiometricConnectionExecuteSQL(HNSQLiteBiometricConnection hConnection, HNString hSQL);
+
 #ifdef N_CPP
 }
 #endif

@@ -13,25 +13,39 @@ extern "C"
 N_DECLARE_OBJECT_TYPE(NEAttributes, NBiometricAttributes)
 
 NResult N_API NEAttributesCreate(NEPosition position, HNEAttributes * phAttributes);
+NResult N_API NEAttributesCreateEx(HNEAttributes * phAttributes);
 
 NResult N_API NEAttributesGetTemplate(HNEAttributes hAttributes, HNERecord * phValue);
 NResult N_API NEAttributesSetTemplate(HNEAttributes hAttributes, HNERecord hValue);
 NResult N_API NEAttributesGetPosition(HNEAttributes hAttributes, NEPosition * pValue);
+NResult N_API NEAttributesSetPosition(HNEAttributes hAttributes, NEPosition value);
 NResult N_API NEAttributesGetImageIndex(HNEAttributes hAttributes, NInt * pValue);
 NResult N_API NEAttributesSetImageIndex(HNEAttributes hAttributes, NInt value);
 NResult N_API NEAttributesGetBoundingRect(HNEAttributes hAttributes, struct NRect_ * pValue);
 NResult N_API NEAttributesSetBoundingRect(HNEAttributes hAttributes, const struct NRect_ * pValue);
+
 NResult N_API NEAttributesGetUsableIrisArea(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetUsableIrisArea(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetIrisScleraContrast(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetIrisScleraContrast(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetIrisPupilContrast(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetIrisPupilContrast(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetPupilBoundaryCircularity(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetPupilBoundaryCircularity(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetGrayScaleUtilisation(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetGrayScaleUtilisation(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetIrisRadius(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetIrisRadius(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetPupilToIrisRatio(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetPupilToIrisRatio(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetIrisPupilConcentricity(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetIrisPupilConcentricity(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetMarginAdequacy(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetMarginAdequacy(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetSharpness(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetSharpness(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesGetInterlace(HNEAttributes hAttributes, NByte * pValue);
+NResult N_API NEAttributesSetInterlace(HNEAttributes hAttributes, NByte value);
 NResult N_API NEAttributesIsInnerBoundaryAvailable(HNEAttributes hAttributes, NBool * pValue);
 NResult N_API NEAttributesIsOuterBoundaryAvailable(HNEAttributes hAttributes, NBool * pValue);
 

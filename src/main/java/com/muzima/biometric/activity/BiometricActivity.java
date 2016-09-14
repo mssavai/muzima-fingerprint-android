@@ -5,7 +5,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.muzima.biometric.BiometricApplication;
@@ -20,11 +24,16 @@ import com.muzima.biometric.util.EnvironmentUtils;
 import com.muzima.biometric.util.ResourceUtils;
 import com.muzima.biometric.view.EnrollmentDialogFragment;
 import com.muzima.biometric.view.SubjectListFragment;
-import com.neurotec.biometrics.*;
+import com.neurotec.biometrics.NBiometric;
+import com.neurotec.biometrics.NBiometricOperation;
+import com.neurotec.biometrics.NBiometricStatus;
+import com.neurotec.biometrics.NBiometricTask;
+import com.neurotec.biometrics.NMatchingResult;
+import com.neurotec.biometrics.NSubject;
 import com.neurotec.biometrics.client.NBiometricClient;
 import com.neurotec.lang.NCore;
 import com.neurotec.util.concurrent.CompletionHandler;
-import com.muzima.biometric.R;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -44,7 +53,6 @@ public abstract class BiometricActivity extends BaseActivity implements Licensin
     private static final int DATABASE_REQUEST_CODE = 2;
 
     private static final String TAG = BiometricActivity.class.getSimpleName();
-
     // ===========================================================
     // Private fields
     // ===========================================================
@@ -386,7 +394,6 @@ public abstract class BiometricActivity extends BaseActivity implements Licensin
 
     @Override
     protected void onStop() {
-        System.out.println("onStop");
         super.onStop();
         cancel();
         if (mAppClosing) {

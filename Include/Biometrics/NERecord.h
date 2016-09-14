@@ -12,6 +12,8 @@ extern "C"
 
 N_DECLARE_OBJECT_TYPE(NERecord, NObject)
 
+#define NER_OLD_FAST_CONVERT 0x20000000
+
 NResult N_API NERecordCheckN(HNBuffer hBuffer);
 NResult N_API NERecordCheck(const void * pBuffer, NSizeType bufferSize);
 NResult N_API NERecordGetSizeMemN(HNBuffer hBuffer, NSizeType * pValue);

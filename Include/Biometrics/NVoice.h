@@ -13,6 +13,8 @@ extern "C"
 N_DECLARE_OBJECT_TYPE(NVoice, NBiometric)
 
 NResult N_API NVoiceCreate(HNVoice * phVoice);
+NResult N_API NVoiceFromSoundBufferAndTemplate(HNSoundBuffer hSoundBuffer, HNSRecord hTemplate, HNVoice * phVoice);
+
 NResult N_API NVoiceGetSoundBuffer(HNVoice hVoice, HNSoundBuffer * phValue);
 NResult N_API NVoiceSetSoundBuffer(HNVoice hVoice, HNSoundBuffer hValue);
 NResult N_API NVoiceGetPhraseId(HNVoice hVoice, NInt * pValue);

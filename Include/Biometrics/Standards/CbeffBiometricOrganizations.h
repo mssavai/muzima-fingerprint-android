@@ -94,6 +94,7 @@ extern "C"
 #define CBEFF_BO_CHINA_NATIONAL_INFORMATION_TECHNOLOGY_STANDARDIZATION_TECHNICAL_COMMITTEE 0x0056
 #define CBEFF_BO_DELTA_ID                                                                  0x0057
 #define CBEFF_BO_BEIJING_TECHSHINO_TECHNOLOGY                                              0x0058
+#define CBEFF_BO_GENKEY_SOLUTIONS                                                          0x0059
 
 #define CBEFF_BO_ISO_IEC_JTC_1_SC_37_BIOMETRICS             0x0101
 #define CBEFF_BO_ISO_IEC_JTC_1_SC_27_IT_SECURITY_TECHNIQUES 0x0102
@@ -102,6 +103,8 @@ extern "C"
 #define CBEFF_BO_TESTING_1   0xFFF0
 #define CBEFF_BO_TESTING_2   0xFFFE
 #define CBEFF_BO_NOT_FOR_USE 0xFFFF
+
+#define CBEFF_BO_VENDOR_UNKNOWN 0x0103
 
 N_DECLARE_STATIC_OBJECT_TYPE(CbeffBiometricOrganizations)
 

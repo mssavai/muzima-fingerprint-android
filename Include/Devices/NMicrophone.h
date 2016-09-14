@@ -13,6 +13,7 @@ extern "C"
 N_DECLARE_OBJECT_TYPE(NMicrophone, NCaptureDevice)
 
 NResult N_API NMicrophoneGetSoundSample(HNMicrophone hDevice, HNSoundBuffer * phSoundBuffer);
+NResult N_API NMicrophoneGetSoundSampleEx(HNMicrophone hDevice, NTimeSpan_ * pTimeStamp, NTimeSpan_ * pDuration, HNSoundBuffer * phSoundBuffer);
 
 #ifdef N_CPP
 }

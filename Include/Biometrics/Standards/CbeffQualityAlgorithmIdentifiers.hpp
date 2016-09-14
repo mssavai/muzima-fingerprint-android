@@ -14,9 +14,17 @@ namespace Neurotec { namespace Biometrics { namespace Standards
 
 #undef CBEFF_QAI_NIST_NFIQ
 
+#undef CBEFF_QAI_NEUROTECHNOLOGY_FRQ_1
+
+#undef CBEFF_QAI_VENDOR_UNKNOWN_PRODUCT_UNKNOWN
+
 const NUShort CBEFF_QAI_INTECH_QM = 0x001A;
 
 const NUShort CBEFF_QAI_NIST_NFIQ = 0x377D;
+
+const NUShort CBEFF_QAI_VENDOR_UNKNOWN_PRODUCT_UNKNOWN = 0x0001;
+
+const NUShort CBEFF_QAI_NEUROTECHNOLOGY_FRQ_1 = 0x0100;
 
 class CbeffQualityAlgorithmIdentifiers
 {

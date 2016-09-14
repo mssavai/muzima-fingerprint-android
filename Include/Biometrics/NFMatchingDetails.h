@@ -16,6 +16,7 @@ NResult N_API NFMatchingDetailsGetRotation(HNFMatchingDetails hMatchingDetails, 
 NResult N_API NFMatchingDetailsGetTranslationX(HNFMatchingDetails hMatchingDetails, NInt * pValue);
 NResult N_API NFMatchingDetailsGetTranslationY(HNFMatchingDetails hMatchingDetails, NInt * pValue);
 NResult N_API NFMatchingDetailsGetMatedMinutiae(HNFMatchingDetails hMatchingDetails, struct NIndexPair_ * arValue, NInt valueLength);
+NResult N_API NFMatchingDetailsGetScore(HNFMatchingDetails hMatchingDetails, NFloat * pValue);
 
 #ifdef N_CPP
 }

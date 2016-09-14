@@ -142,6 +142,18 @@ public:
 		return SetObject(NBiometricTaskSetConnection, value);
 	}
 
+	NString GetGalleryId() const
+	{
+		HNString hGalleryId;
+		NCheck(NBiometricTaskGetGalleryId(GetHandle(), &hGalleryId));
+		return NString(hGalleryId, true);
+	}
+
+	void SetGalleryId(const NString & galleryId)
+	{
+		NCheck(NBiometricTaskSetGalleryId(GetHandle(), galleryId.GetHandle()));
+	}
+
 	NPropertyBag GetStatistics() const
 	{
 		return GetObject<HandleType, NPropertyBag>(NBiometricTaskGetStatistics, true);

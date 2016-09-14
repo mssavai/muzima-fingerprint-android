@@ -122,6 +122,46 @@ public:
 		NCheck(NPixelFormatCreate(pixelType, extraChannel, channelCount, channelFormat, bitsPerChannel, bitsPerIndex, isSeparated, &value));
 	}
 
+	bool IsValid()
+	{
+		return NPixelFormatIsValid(value) != 0;
+	}
+
+	NPixelFormat GetIndexed(NInt bitsPerIndex)
+	{
+		NPixelFormat_ value;
+		NCheck(NPixelFormatGetIndexed(this->value, bitsPerIndex, &value));
+		return NPixelFormat(value);
+	}
+
+	NPixelFormat GetNonIndexed()
+	{
+		NPixelFormat_ value;
+		NCheck(NPixelFormatGetNonIndexed(this->value, &value));
+		return NPixelFormat(value);
+	}
+
+	NPixelFormat GetSeparated()
+	{
+		NPixelFormat_ value;
+		NCheck(NPixelFormatGetSeparated(this->value, &value));
+		return NPixelFormat(value);
+	}
+
+	NPixelFormat GetNonSeparated()
+	{
+		NPixelFormat_ value;
+		NCheck(NPixelFormatGetNonSeparated(this->value, &value));
+		return NPixelFormat(value);
+	}
+
+	NPixelFormat GetWithExtraChannel(NExtraChannel extraChannel)
+	{
+		NPixelFormat_ value;
+		NCheck(NPixelFormatGetWithExtraChannel(this->value, extraChannel, &value));
+		return NPixelFormat(value);
+	}
+
 	NSizeType GetRowSize(NUInt length, NSizeType alignment = 1) const
 	{
 		NSizeType value;

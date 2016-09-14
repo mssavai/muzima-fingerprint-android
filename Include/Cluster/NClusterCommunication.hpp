@@ -13,19 +13,6 @@ namespace Neurotec { namespace Cluster
 {
 	class Communication
 	{
-	public:
-		N_DEPRECATED("method is deprecated, do not use")
-		static void Initialize()
-		{
-			Check(cluster_initialize());
-		}
-
-		N_DEPRECATED("method is deprecated, do not use")
-		static void Finalize()
-		{
-			Check(cluster_finalize());
-		}
-
 	private:
 		cluster_socket_t * _my_socket;
 	public:

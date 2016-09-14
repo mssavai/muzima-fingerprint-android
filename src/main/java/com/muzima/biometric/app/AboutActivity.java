@@ -9,6 +9,7 @@ import com.muzima.biometric.util.ManifestData;
 import com.muzima.biometric.widget.CustomItemAdapter;
 import com.muzima.biometric.widget.HeaderItem;
 import com.muzima.biometric.widget.ListItem;
+import com.neurotec.biometrics.NBiometricEngine;
 import com.neurotec.devices.NDeviceManager;
 import com.neurotec.devices.NDeviceType;
 import com.neurotec.lang.NModule;
@@ -42,7 +43,9 @@ public final class AboutActivity extends BaseListActivity {
 		super.onCreate(savedInstanceState);
 		mLogo = BitmapFactory.decodeResource(getResources(), R.drawable.iris);
 		mAbout = String.format(getString(R.string.msg_company_info), getString(R.string.msg_company_name), ManifestData.getApplicationVersion(this));
-		NDeviceManager devMan = new NDeviceManager(EnumSet.of(NDeviceType.FINGER_SCANNER), true, true);
+		NDeviceManager devMan = new NDeviceManager();
+		NBiometricEngine nEng = new NBiometricEngine();
+		devMan.setBiometricEngine(nEng);
 	}
 
 	@Override

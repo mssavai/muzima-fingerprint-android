@@ -45,7 +45,7 @@ const NByte AN_ASCII_BINARY_RECORD_MAX_QUALITY_METRIC_SCORE = 100;
 
 class ANQualityMetric : public ANQualityMetric_
 {
-	N_DECLARE_STRUCT_CLASS(ANQualityMetric)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANQualityMetric)
 
 public:
 	ANQualityMetric(NByte score, NUShort algorithmVendorId, NUShort algorithmProductId)

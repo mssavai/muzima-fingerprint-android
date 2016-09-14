@@ -7,18 +7,30 @@ namespace Neurotec { namespace Biometrics { namespace Standards
 #include <Biometrics/Standards/BdifTypes.h>
 }}}
 
+#include <Core/NObject.hpp>
+
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifStandard)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifScaleUnits)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifCertificationSchemeId)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPPosition)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPImpressionType)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPatternClass)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPCaptureDeviceTechnology)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPExtendedDataTypeId)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPAnnotationCode)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPSegmentationStatus)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPMinutiaType)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPMinutiaRidgeEndingType)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifGender)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifEyeColor)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifHairColor)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceProperties)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceExpression)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceExpressionBitMask)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceFeaturePointType)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceTemporalSemantics)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceSpatialSamplingRateLevel)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFacePostAcquisitionProcessing)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifImageSourceType)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifEyePosition)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifIrisOrientation)
@@ -43,7 +55,7 @@ const NUInt BDIF_ALLOW_OUT_OF_BOUNDS_FEATURES = 0x00000008;
 
 class BdifQualityBlock : public BdifQualityBlock_
 {
-	N_DECLARE_STRUCT_CLASS(BdifQualityBlock)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(BdifQualityBlock)
 
 public:
 	BdifQualityBlock(NByte qualityScore, NUShort qualityAlgorithmVendorId, NUShort qualityAlgorithmId)
@@ -63,10 +75,10 @@ public:
 
 class BdifCertificationBlock : public BdifCertificationBlock_
 {
-	N_DECLARE_STRUCT_CLASS(BdifCertificationBlock)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(BdifCertificationBlock)
 
 public:
-	BdifCertificationBlock(NUShort certificationAuthorityId, NByte certificationSchemeId)
+	BdifCertificationBlock(NUShort certificationAuthorityId, BdifCertificationSchemeId certificationSchemeId)
 	{
 		this->certificationAuthorityId = certificationAuthorityId;
 		this->certificationSchemeId = certificationSchemeId;
@@ -80,9 +92,80 @@ public:
 	}
 };
 
+class BdifCaptureDateTime : public BdifCaptureDateTime_
+{
+	N_DECLARE_STRUCT_CLASS(BdifCaptureDateTime)
+
+public:
+	BdifCaptureDateTime(NUShort year, NByte month, NByte day, NByte hour, NByte minute, NByte second, NUShort millisecond)
+	{
+		this->year = year;
+		this->month = month;
+		this->day = day;
+		this->hour = hour;
+		this->minute = minute;
+		this->second = second;
+		this->millisecond = millisecond;
+	}
+
+	NString ToString(const NStringWrapper & format = NString()) const
+	{
+		HNString hValue;
+		NCheck(BdifCaptureDateTimeToStringN(this, format.GetHandle(), &hValue));
+		return NString(hValue, true);
+	}
+};
+
+class BdifFPAnnotation : public BdifFPAnnotation_
+{
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(BdifFPAnnotation)
+
+public:
+	BdifFPAnnotation(BdifFPPosition fingerPosition, BdifFPAnnotationCode annotationCode)
+	{
+		this->fingerPosition = fingerPosition;
+		this->annotationCode = annotationCode;
+	}
+
+	NString ToString(const NStringWrapper & format = NString()) const
+	{
+		HNString hValue;
+		NCheck(BdifFPAnnotationToStringN(this, format.GetHandle(), &hValue));
+		return NString(hValue, true);
+	}
+};
+
+class BdifFPExtendedData : public BdifFPExtendedData_
+{
+	N_DECLARE_EQUATABLE_DISPOSABLE_STRUCT_CLASS(BdifFPExtendedData)
+
+public:
+	BdifFPExtendedData(NUShort code, const ::Neurotec::IO::NBuffer & data)
+	{
+		NCheck(BdifFPExtendedDataCreateN(code, data.GetHandle(), this));
+	}
+
+	NString ToString(const NStringWrapper & format = NString()) const
+	{
+		HNString hValue;
+		NCheck(BdifFPExtendedDataToStringN(this, format.GetHandle(), &hValue));
+		return NString(hValue, true);
+	}
+
+	::Neurotec::IO::NBuffer GetData() const
+	{
+		return ::Neurotec::IO::NBuffer(this->hData, false);
+	}
+
+	void SetData(const ::Neurotec::IO::NBuffer & value)
+	{
+		NCheck(NObjectSet(value.GetHandle(), (HNObject *)&this->hData));
+	}
+};
+
 class BdifFPMinutiaNeighbor : public BdifFPMinutiaNeighbor_
 {
-	N_DECLARE_STRUCT_CLASS(BdifFPMinutiaNeighbor)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(BdifFPMinutiaNeighbor)
 
 public:
 	BdifFPMinutiaNeighbor(NInt index, NByte ridgeCount)
@@ -101,7 +184,7 @@ public:
 
 class BdifFaceFeaturePoint : public BdifFaceFeaturePoint_
 {
-	N_DECLARE_STRUCT_CLASS(BdifFaceFeaturePoint)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(BdifFaceFeaturePoint)
 
 public:
 	BdifFaceFeaturePoint(BdifFaceFeaturePointType type, NByte code, NUShort x, NUShort y)
@@ -135,6 +218,11 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(BdifScaleUnits), true);
 	}
 
+	static NType BdifCertificationSchemeIdNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifCertificationSchemeId), true);
+	}
+
 	static NType BdifFPPositionNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPPosition), true);
@@ -150,9 +238,34 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPatternClass), true);
 	}
 
+	static NType BdifFPCaptureDeviceTechnologyNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPCaptureDeviceTechnology), true);
+	}
+
+	static NType BdifFPExtendedDataTypeIdNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPExtendedDataTypeId), true);
+	}
+
+	static NType BdifFPAnnotationCodeNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPAnnotationCode), true);
+	}
+
+	static NType BdifFPSegmentationStatusNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPSegmentationStatus), true);
+	}
+
 	static NType BdifFPMinutiaTypeNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPMinutiaType), true);
+	}
+
+	static NType BdifFPMinutiaRidgeEndingTypeNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFPMinutiaRidgeEndingType), true);
 	}
 
 	static NType BdifGenderNativeTypeOf()
@@ -180,9 +293,29 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(BdifFaceExpression), true);
 	}
 
+	static NType BdifFaceExpressionBitMaskNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFaceExpressionBitMask), true);
+	}
+
 	static NType BdifFaceFeaturePointTypeNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(BdifFaceFeaturePointType), true);
+	}
+
+	static NType BdifFaceTemporalSemanticsNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFaceTemporalSemantics), true);
+	}
+
+	static NType BdifFaceSpatialSamplingRateLevelNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFaceSpatialSamplingRateLevel), true);
+	}
+
+	static NType BdifFacePostAcquisitionProcessingNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(BdifFacePostAcquisitionProcessing), true);
 	}
 
 	static NType BdifImageSourceTypeNativeTypeOf()
@@ -248,13 +381,31 @@ public:
 		NCheck(BdifQualityToStringN(value, format.GetHandle(), &hValue));
 		return NString(hValue, true);
 	}
+
+	static NUInt MakeFormat(NUShort owner, NUShort type)
+	{
+		return BdifMakeFormat(owner, type);
+	}
+
+	static NUShort GetFormatOwner(NUInt format)
+	{
+		return BdifGetFormatOwner(format);
+	}
+
+	static NUShort GetFormatType(NUInt format)
+	{
+		return BdifGetFormatType(format);
+	}
 };
 
 }}}
 
 N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifQualityBlock);
 N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifCertificationBlock);
+N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifCaptureDateTime);
 N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPMinutiaNeighbor);
 N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFaceFeaturePoint);
+N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPAnnotation);
+N_DEFINE_DISPOSABLE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, BdifFPExtendedData);
 
 #endif // !BDIF_TYPES_HPP_INCLUDED

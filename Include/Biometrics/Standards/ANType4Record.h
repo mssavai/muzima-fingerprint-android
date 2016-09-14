@@ -20,8 +20,13 @@ N_DECLARE_OBJECT_TYPE(ANType4Record, ANFImageBinaryRecord)
 #define AN_TYPE_4_RECORD_FIELD_GCA  AN_F_IMAGE_BINARY_RECORD_FIELD_CA
 #define AN_TYPE_4_RECORD_FIELD_DATA AN_RECORD_FIELD_DATA
 
+NResult N_API ANType4RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType4Record * phRecord);
+NResult N_API ANType4RecordCreateFromNImage(NVersion_ version, NInt idc, NBool isr, ANImageCompressionAlgorithm ca,
+		HNImage hImage, NUInt flags, HANType4Record * phRecord);
+
 NResult N_API ANType4RecordGetCompressionAlgorithm(HANType4Record hRecord, ANImageCompressionAlgorithm * pValue);
 NResult N_API ANType4RecordGetVendorCompressionAlgorithm(HANType4Record hRecord, NByte * pValue);
+NResult N_API ANType4RecordSetCompressionAlgorithm(HANType4Record hRecord, ANImageCompressionAlgorithm value, NByte vendorValue);
 
 #ifdef N_CPP
 }

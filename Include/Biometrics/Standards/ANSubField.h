@@ -52,7 +52,7 @@ NResult N_API ANSubFieldInsertItemEx(HANSubField hSubField, NInt index, const NC
 #endif
 #define ANSubFieldInsertItemEx N_FUNC_AW(ANSubFieldInsertItemEx)
 
-NResult N_API ANSubFieldRemoveItem(HANSubField hSubField, NInt index);
+NResult N_API ANSubFieldRemoveItemAt(HANSubField hSubField, NInt index);
 NResult N_API ANSubFieldRemoveItemRange(HANSubField hSubField, NInt index, NInt count);
 
 NResult N_API ANSubFieldGetValueN(HANSubField hSubField, HNString * phValue);

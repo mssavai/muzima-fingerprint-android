@@ -83,13 +83,6 @@ private:
 	};
 
 public:
-	typedef void (* DeviceCallback)(NDeviceManager * pDeviceManager, const NDevice & Device);
-
-	static NType NDeviceManagerDeviceCallbackNativeTypeOf()
-	{
-		return NObject::GetObject<NType>(N_TYPE_OF(NDeviceManagerDeviceCallback), true);
-	}
-
 	static ::Neurotec::Plugins::NPluginManager GetPluginManager()
 	{
 		return GetObject< ::Neurotec::Plugins::NPluginManager>(NDeviceManagerGetPluginManager, true);

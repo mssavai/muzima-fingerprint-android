@@ -435,4 +435,6 @@ public:
 
 }}
 
+#include <Core/NReDeprecate.h>
+
 #endif // !N_COLLECTIONS_HPP_INCLUDED

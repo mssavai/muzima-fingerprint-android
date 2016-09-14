@@ -20,8 +20,13 @@ N_DECLARE_OBJECT_TYPE(ANType5Record, ANFImageBinaryRecord)
 #define AN_TYPE_5_RECORD_FIELD_BCA  AN_F_IMAGE_BINARY_RECORD_FIELD_CA
 #define AN_TYPE_5_RECORD_FIELD_DATA AN_RECORD_FIELD_DATA
 
+NResult N_API ANType5RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType5Record * phRecord);
+NResult N_API ANType5RecordCreateFromNImage(NVersion_ version, NInt idc, NBool isr, ANBinaryImageCompressionAlgorithm bca,
+	HNImage hImage, NUInt flags, HANType5Record * phRecord);
+
 NResult N_API ANType5RecordGetCompressionAlgorithm(HANType5Record hRecord, ANBinaryImageCompressionAlgorithm * pValue);
 NResult N_API ANType5RecordGetVendorCompressionAlgorithm(HANType5Record hRecord, NByte * pValue);
+NResult N_API ANType5RecordSetCompressionAlgorithm(HANType5Record hRecord, ANBinaryImageCompressionAlgorithm value, NByte vendorValue);
 
 #ifdef N_CPP
 }

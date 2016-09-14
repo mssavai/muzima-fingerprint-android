@@ -167,7 +167,7 @@ public:
 #include <Core/NNoDeprecate.h>
 	template<typename T> static T FromHandle(typename T::HandleType handle, bool ownsHandle = true);
 
-	template<typename T> static NInt ToHandleArray(T * const * arpObjects, NInt objectCount, typename T::HandleType * arhObjects, NInt objectsLength, bool addRef = false);
+	template<typename T> static NInt ToHandleArray(const T * arpObjects, NInt objectCount, typename T::HandleType * arhObjects, NInt objectsLength, bool addRef = false);
 
 	template<typename T> static T GetObject(NResult (N_CALLBACK pGetObject)(typename T::HandleType * phValue), bool ownsHandle = true);
 
@@ -734,7 +734,7 @@ inline bool operator==(const NObject & value1, const NObject & value2)
 
 inline bool operator!=(const NObject & value1, const NObject & value2)
 {
-	return NObject::Equals(value1, value2);
+	return !NObject::Equals(value1, value2);
 }
 
 }
@@ -752,27 +752,27 @@ template<typename T> inline T NObject::FromHandle(typename T::HandleType handle,
 	return T(handle, ownsHandle);
 }
 
-template<typename T> inline NInt NObject::ToHandleArray(T * const * arpObjects, NInt objectCount, typename T::HandleType * arhObjects, NInt objectsLength, bool addRef)
+template<typename T> inline NInt NObject::ToHandleArray(const T * arpObjects, NInt objectCount, typename T::HandleType * arhObjects, NInt objectsLength, bool addRef)
 {
 	if (!arpObjects && objectCount != 0) NThrowArgumentNullException(N_T("arpObjects"));
 	if (objectCount < 0) NThrowArgumentLessThanZeroException(N_T("objectCount"));
 	if (arhObjects)
 	{
 		if (objectsLength < objectCount) NThrowArgumentInsufficientException(N_T("objectsLength"));
-		T * const * pObject = arpObjects;
+		const T * pObject = arpObjects;
 		typename T::HandleType * phObject = arhObjects;
 		NInt i = 0;
 		try
 		{
 			for (; i < objectCount; i++, pObject++, phObject++)
 			{
-				if (!*pObject)
+				if (pObject->GetHandle() == NULL)
 				{
 					*phObject = NULL;
 				}
 				else
 				{
-					*phObject = addRef ? (*pObject)->RefHandle() : (*pObject)->GetHandle();
+					*phObject = addRef ? pObject->RefHandle() : pObject->GetHandle();
 				}
 			}
 		}
@@ -1044,7 +1044,7 @@ inline NType NObject::GetNativeType() const
 template<typename T>
 inline T NObjectDynamicCast(const NObject & obj)
 {
-	if (!T::NativeTypeOf().IsInstanceOfType(obj))
+	if (!obj.IsNull() && !T::NativeTypeOf().IsInstanceOfType(obj))
 		NThrowInvalidCastException();
 	return NObject::FromHandle<T>((typename T::HandleType)(obj.GetHandle()), false);
 }

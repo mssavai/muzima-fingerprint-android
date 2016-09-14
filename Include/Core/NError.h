@@ -53,9 +53,6 @@ extern "C"
       #define N_E_SYS                    -94
       #define N_E_WIN32                  -91
 
-    #define N_E_PARAMETER               -100
-      #define N_E_PARAMETER_READ_ONLY   -101
-
     #define N_E_NOT_ACTIVATED           -200
 
 #define NFailed(result) ((result) < 0)
@@ -101,49 +98,10 @@ NInt N_API NErrorGetLastSysError(void);
 NUInt N_API NErrorGetLastWin32Error(void);
 
 NResult N_API NErrorGetDefaultMessageN(NResult code, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetDefaultMessageN instead")
-NResult N_API NErrorGetDefaultMessageExA(NResult code, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetDefaultMessageN instead")
-NResult N_API NErrorGetDefaultMessageExW(NResult code, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetDefaultMessageEx(NResult code, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetDefaultMessageEx N_FUNC_AW(NErrorGetDefaultMessageEx)
-
 NResult N_API NErrorGetSysErrorMessageN(NInt errnum, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetSysErrorMessageN instead")
-NResult N_API NErrorGetSysErrorMessageExA(NInt errnum, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetSysErrorMessageN instead")
-NResult N_API NErrorGetSysErrorMessageExW(NInt errnum, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetSysErrorMessageEx(NInt errnum, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetSysErrorMessageEx N_FUNC_AW(NErrorGetSysErrorMessageEx)
-
 NResult N_API NErrorGetMachErrorMessageN(NInt err, HNString * phValue);
 
 NResult N_API NErrorGetMacErrorMessageN(NInt err, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetMacErrorMessageN instead")
-NResult N_API NErrorGetMacErrorMessageExA(NInt err, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetMacErrorMessageN instead")
-NResult N_API NErrorGetMacErrorMessageExW(NInt err, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetMacErrorMessageEx(NInt err, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetMacErrorMessageEx N_FUNC_AW(NErrorGetMacErrorMessageEx)
-
 NResult N_API NErrorGetWin32ErrorMessageN(NUInt errorCode, HNString * phValue);
 
 NResult N_API NErrorCreateN(NResult code, HNString hMessage, HNString hParam, NInt externalError, HNString hExternalCallStack, const HNError * arhInnerErrors, NInt innerErrorCount, HNError * phError);
@@ -334,80 +292,14 @@ NResult N_API NErrorCapture(NResult result, HNError * phError);
 NResult N_API NErrorGetCodeEx(HNError hError, NResult * pValue);
 
 NResult N_API NErrorGetMessageN(HNError hError, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetMessageN instead")
-NResult N_API NErrorGetMessageExA(HNError hError, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetMessageN instead")
-NResult N_API NErrorGetMessageExW(HNError hError, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetMessageEx(HNError hError, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetMessageEx N_FUNC_AW(NErrorGetMessageEx)
-
 NResult N_API NErrorGetParamN(HNError hError, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetParamN instead")
-NResult N_API NErrorGetParamExA(HNError hError, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetParamN instead")
-NResult N_API NErrorGetParamExW(HNError hError, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetParamEx(HNError hError, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetParamEx N_FUNC_AW(NErrorGetParamEx)
 
 NResult N_API NErrorGetExternalErrorEx(HNError hError, NInt * pValue);
 
 NResult N_API NErrorGetExternalCallStackN(HNError hError, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetExternalCallStackN instead")
-NResult N_API NErrorGetExternalCallStackExA(HNError hError, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetExternalCallStackN instead")
-NResult N_API NErrorGetExternalCallStackExW(HNError hError, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetExternalCallStackEx(HNError hError, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetExternalCallStackEx N_FUNC_AW(NErrorGetExternalCallStackEx)
-
 NResult N_API NErrorGetCallStackCount(HNError hError, NInt * pValue);
 NResult N_API NErrorGetCallStackEntry(HNError hError, NInt index, struct NCallStackEntry_ * pValue);
 
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetCallStackEntry instead")
-NResult N_API NErrorGetCallStackFunctionExA(HNError hError, NInt index, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetCallStackEntry instead")
-NResult N_API NErrorGetCallStackFunctionExW(HNError hError, NInt index, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetCallStackFunctionEx(HNError hError, NInt index, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetCallStackFunctionEx N_FUNC_AW(NErrorGetCallStackFunctionEx)
-
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NErrorGetCallStackEntry instead")
-NResult N_API NErrorGetCallStackFileExA(HNError hError, NInt index, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NErrorGetCallStackEntry instead")
-NResult N_API NErrorGetCallStackFileExW(HNError hError, NInt index, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NErrorGetCallStackFileEx(HNError hError, NInt index, NChar * szValue, NInt valueSize);
-#endif
-#define NErrorGetCallStackFileEx N_FUNC_AW(NErrorGetCallStackFileEx)
-
-N_DEPRECATED("function is deprecated, use NErrorGetCallStackEntry instead")
-NResult N_API NErrorGetCallStackLineEx(HNError hError, NInt index, NInt * pValue);
 NResult N_API NErrorGetCallStackN(HNError hError, HNString * phValue);
 NResult N_API NErrorGetInnerErrorEx(HNError hError, HNError * phValue);
 NResult N_API NErrorGetInnerErrorCount(HNError hError, NInt * pValue);
@@ -887,7 +779,7 @@ NResult N_API NErrorGetInnerErrorAt(HNError hError, NInt index, HNError * phValu
 #define N_ERROR_EXTERNAL_EM_ N_MACRO_AW(N_ERROR_EXTERNAL_EM_)
 #define N_ERROR_EXTERNAL_EM N_MACRO_AW(N_ERROR_EXTERNAL_EM)
 #define N_ERROR_EXTERNAL_M N_MACRO_AW(N_ERROR_EXTERNAL_M)
-#define N_ERROR_EXTERNAL_E(function, comError) N_ERROR_EXTERNAL_EMN_(function, externalError, NULL, 0)
+#define N_ERROR_EXTERNAL_E(function, externalError) N_ERROR_EXTERNAL_EMN_(function, externalError, NULL, 0)
 #define N_ERROR_EXTERNAL(function) N_ERROR_EXTERNAL_EMN_(function, 0, NULL, 0)
 
 #define N_ERROR_CLR_EMN_(function, clrError, hMessage, flags) \
@@ -1314,20 +1206,6 @@ NResult N_API NErrorGetInnerErrorAt(HNError hError, NInt index, HNError * phValu
 		}\
 	}
 
-#define N_ERROR_PARAMETER() N_ERROR(N_E_PARAMETER)
-#define N_ERROR_PARAMETER_MA(szMessage) N_ERROR_MA(N_E_PARAMETER, szMessage)
-#ifndef N_NO_UNICODE
-#define N_ERROR_PARAMETER_MW(szMessage) N_ERROR_MW(N_E_PARAMETER, szMessage)
-#endif
-#define N_ERROR_PARAMETER_M N_MACRO_AW(N_ERROR_PARAMETER_M)
-
-#define N_ERROR_PARAMETER_READ_ONLY() N_ERROR(N_E_PARAMETER_READ_ONLY)
-#define N_ERROR_PARAMETER_READ_ONLY_MA(szMessage) N_ERROR_MA(N_E_PARAMETER_READ_ONLY, szMessage)
-#ifndef N_NO_UNICODE
-#define N_ERROR_PARAMETER_READ_ONLY_MW(szMessage) N_ERROR_MW(N_E_PARAMETER_READ_ONLY, szMessage)
-#endif
-#define N_ERROR_PARAMETER_READ_ONLY_M N_MACRO_AW(N_ERROR_PARAMETER_READ_ONLY_M)
-
 #define N_ERROR_NOT_ACTIVATED() N_ERROR(N_E_NOT_ACTIVATED)
 #define N_ERROR_NOT_ACTIVATED_MA(szMessage) N_ERROR_MA(N_E_NOT_ACTIVATED, szMessage)
 #ifndef N_NO_UNICODE
@@ -1395,12 +1273,6 @@ NResult N_API NErrorGetInnerErrorAt(HNError hError, NInt index, HNError * phValu
 #define N_TRY_ECNR(useContext, result, hError) \
 	N_FINALLY\
 	N_TRY_ENDCNR(useContext, result, hError)
-
-#if !defined(N_ERROR_HPP_INCLUDED) && !defined(N_OBJECT_HPP_INCLUDED)
-#ifdef N_MSVC
-	#pragma deprecated("N_E_PARAMETER", "N_E_PARAMETER_READ_ONLY")
-#endif
-#endif
 
 #ifdef N_CPP
 }

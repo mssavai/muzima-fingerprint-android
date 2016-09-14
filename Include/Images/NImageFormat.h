@@ -25,8 +25,6 @@ extern "C"
 #endif
 
 NResult N_API NImageFormatGetFormatCount(NInt * pValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetFormatEx instead")
-NResult N_API NImageFormatGetFormat(NInt index, HNImageFormat * phValue);
 NResult N_API NImageFormatGetFormatEx(NInt index, HNImageFormat * phValue);
 
 NResult N_API NImageFormatSelectExN(HNString hFileName, NFileAccess fileAccess, HNImageFormat * phImageFormat);
@@ -81,26 +79,12 @@ NResult N_API NImageFormatSelectReaderFromMemoryN(HNBuffer hBuffer, NUInt flags,
 NResult N_API NImageFormatSelectReaderFromMemory(const void * pBuffer, NSizeType bufferSize, NUInt flags, HNImageReader * phReader);
 NResult N_API NImageFormatSelectReaderFromStream(HNStream hStream, NUInt flags, HNImageReader * phReader);
 
-N_DEPRECATED("function is deprecated, use NImageFormatGetTiffEx instead")
-NResult N_API NImageFormatGetTiff(HNImageFormat * phValue);
 NResult N_API NImageFormatGetTiffEx(HNImageFormat * phValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetJpegEx instead")
-NResult N_API NImageFormatGetJpeg(HNImageFormat * phValue);
 NResult N_API NImageFormatGetJpegEx(HNImageFormat * phValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetPngEx instead")
-NResult N_API NImageFormatGetPng(HNImageFormat * phValue);
 NResult N_API NImageFormatGetPngEx(HNImageFormat * phValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetWsqEx instead")
-NResult N_API NImageFormatGetWsq(HNImageFormat * phValue);
 NResult N_API NImageFormatGetWsqEx(HNImageFormat * phValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetJpeg2KEx instead")
-NResult N_API NImageFormatGetJpeg2K(HNImageFormat * phValue);
 NResult N_API NImageFormatGetJpeg2KEx(HNImageFormat * phValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetBmpEx instead")
-NResult N_API NImageFormatGetBmp(HNImageFormat * phValue);
 NResult N_API NImageFormatGetBmpEx(HNImageFormat * phValue);
-N_DEPRECATED("function is deprecated, use NImageFormatGetIHeadEx instead")
-NResult N_API NImageFormatGetIHead(HNImageFormat * phValue);
 NResult N_API NImageFormatGetIHeadEx(HNImageFormat * phValue);
 
 NResult N_API NImageFormatOpenReaderFromFileN(HNImageFormat hImageFormat, HNString hFileName, NUInt flags, HNImageReader * phReader);
@@ -137,74 +121,10 @@ NResult N_API NImageFormatOpenWriterToMemory(HNImageFormat hImageFormat, NUInt f
 NResult N_API NImageFormatOpenWriterToStream(HNImageFormat hImageFormat, HNStream hStream, NUInt flags, HNImageWriter * phWriter);
 
 NResult N_API NImageFormatGetNameN(HNImageFormat hImageFormat, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NImageFormatGetNameN instead")
-NResult N_API NImageFormatGetNameExA(HNImageFormat hImageFormat, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NImageFormatGetNameN instead")
-NResult N_API NImageFormatGetNameExW(HNImageFormat hImageFormat, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NImageFormatGetNameEx(HNImageFormat hImageFormat, NChar * szValue, NInt valueSize);
-#endif
-#define NImageFormatGetNameEx N_FUNC_AW(NImageFormatGetNameEx)
-
 NResult N_API NImageFormatGetDefaultFileExtensionN(HNImageFormat hImageFormat, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NImageFormatGetDefaultFileExtensionN instead")
-NResult N_API NImageFormatGetDefaultFileExtensionExA(HNImageFormat hImageFormat, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NImageFormatGetDefaultFileExtensionN instead")
-NResult N_API NImageFormatGetDefaultFileExtensionExW(HNImageFormat hImageFormat, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NImageFormatGetDefaultFileExtensionEx(HNImageFormat hImageFormat, NChar * szValue, NInt valueSize);
-#endif
-#define NImageFormatGetDefaultFileExtensionEx N_FUNC_AW(NImageFormatGetDefaultFileExtensionEx)
-
 NResult N_API NImageFormatGetDefaultInternetMediaTypeN(HNImageFormat hImageFormat, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NImageFormatGetDefaultInternetMediaTypeN instead")
-NResult N_API NImageFormatGetDefaultInternetMediaTypeA(HNImageFormat hImageFormat, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NImageFormatGetDefaultInternetMediaTypeN instead")
-NResult N_API NImageFormatGetDefaultInternetMediaTypeW(HNImageFormat hImageFormat, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NImageFormatGetDefaultInternetMediaType(HNImageFormat hImageFormat, NChar * szValue, NInt valueSize);
-#endif
-#define NImageFormatGetDefaultInternetMediaType N_FUNC_AW(NImageFormatGetDefaultInternetMediaType)
-
 NResult N_API NImageFormatGetFileFilterN(HNImageFormat hImageFormat, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NImageFormatGetFileFilterN instead")
-NResult N_API NImageFormatGetFileFilterExA(HNImageFormat hImageFormat, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NImageFormatGetFileFilterN instead")
-NResult N_API NImageFormatGetFileFilterExW(HNImageFormat hImageFormat, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NImageFormatGetFileFilterEx(HNImageFormat hImageFormat, NChar * szValue, NInt valueSize);
-#endif
-#define NImageFormatGetFileFilterEx N_FUNC_AW(NImageFormatGetFileFilterEx)
-
 NResult N_API NImageFormatGetInternetMediaTypeN(HNImageFormat hImageFormat, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NImageFormatGetInternetMediaTypeN instead")
-NResult N_API NImageFormatGetInternetMediaTypeA(HNImageFormat hImageFormat, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NImageFormatGetInternetMediaTypeN instead")
-NResult N_API NImageFormatGetInternetMediaTypeW(HNImageFormat hImageFormat, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NImageFormatGetInternetMediaType(HNImageFormat hImageFormat, NChar * szValue, NInt valueSize);
-#endif
-#define NImageFormatGetInternetMediaType N_FUNC_AW(NImageFormatGetInternetMediaType)
 
 NResult N_API NImageFormatCanRead(HNImageFormat hImageFormat, NBool * pValue);
 NResult N_API NImageFormatCanWrite(HNImageFormat hImageFormat, NBool * pValue);

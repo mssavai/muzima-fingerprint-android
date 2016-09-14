@@ -101,11 +101,21 @@ public:
 		return FromHandle< ::Neurotec::Images::NImage>(hImage);
 	}
 
+	void SetImage(::Neurotec::Images::NImage & value, NUInt flags = 0) const
+	{
+		NCheck(ANImageAsciiBinaryRecordSetImage(GetHandle(), value.GetHandle(), flags));
+	}
+
 	NUShort GetHorzLineLength() const
 	{
 		NUShort value;
 		NCheck(ANImageAsciiBinaryRecordGetHorzLineLength(GetHandle(), &value));
 		return value;
+	}
+
+	void SetHorzLineLength(NUShort value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetHorzLineLength(GetHandle(), value));
 	}
 
 	NUShort GetVertLineLength() const
@@ -115,11 +125,21 @@ public:
 		return value;
 	}
 
+	void SetVertLineLength(NUShort value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetVertLineLength(GetHandle(), value));
+	}
+
 	BdifScaleUnits GetScaleUnits() const
 	{
 		BdifScaleUnits value;
 		NCheck(ANImageAsciiBinaryRecordGetScaleUnits(GetHandle(), &value));
 		return value;
+	}
+
+	void SetScaleUnits(BdifScaleUnits value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetScaleUnits(GetHandle(), value));
 	}
 
 	NUShort GetHorzPixelScale() const
@@ -129,11 +149,21 @@ public:
 		return value;
 	}
 
+	void SetHorzPixelScale(NUShort value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetHorzPixelScale(GetHandle(), value));
+	}
+
 	NUShort GetVertPixelScale() const
 	{
 		NUShort value;
 		NCheck(ANImageAsciiBinaryRecordGetVertPixelScale(GetHandle(), &value));
 		return value;
+	}
+
+	void SetVertPixelScale(NUShort value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetVertPixelScale(GetHandle(), value));
 	}
 
 	ANImageCompressionAlgorithm GetCompressionAlgorithm() const
@@ -148,6 +178,11 @@ public:
 		return GetString(ANImageAsciiBinaryRecordGetVendorCompressionAlgorithmN);
 	}
 
+	void SetCompressionAlgorithm(ANImageCompressionAlgorithm value, const NStringWrapper & vendorValue)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetCompressionAlgorithm(GetHandle(), value, vendorValue.GetHandle()));
+	}
+
 	NByte GetBitsPerPixel() const
 	{
 		NByte value;
@@ -155,11 +190,21 @@ public:
 		return value;
 	}
 
+	void SetBitsPerPixel(NByte value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetBitsPerPixel(GetHandle(), value));
+	}
+
 	ANImageColorSpace GetColorSpace() const
 	{
 		ANImageColorSpace value;
 		NCheck(ANImageAsciiBinaryRecordGetColorSpace(GetHandle(), &value));
 		return value;
+	}
+
+	void SetColorSpace(ANImageColorSpace value)
+	{
+		NCheck(ANImageAsciiBinaryRecordSetColorSpace(GetHandle(), value));
 	}
 
 	NInt GetScanHorzPixelScale() const

@@ -23,7 +23,7 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <!--<version>3.7.0</version>-->
+                <version>3.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <dex>
@@ -74,7 +74,7 @@
                             <file>${product.bin.directory.java}/neurotec-core.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-core</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -89,7 +89,7 @@
                             <file>${product.bin.directory.java}/neurotec-gui.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-gui</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -104,7 +104,7 @@
                             <file>${product.bin.directory.java}/neurotec-media.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-media</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -119,7 +119,7 @@
                             <file>${product.bin.directory.java}/neurotec-media-processing.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-media-processing</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -134,7 +134,7 @@
                             <file>${product.bin.directory.java}/neurotec-biometrics.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-biometrics</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -149,7 +149,7 @@
                             <file>${product.bin.directory.java}/neurotec-biometrics-client.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-biometrics-client</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -164,7 +164,7 @@
                             <file>${product.bin.directory.java}/neurotec-biometrics-gui.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-biometrics-gui</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -179,7 +179,7 @@
                             <file>${product.bin.directory.java}/neurotec-devices.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -194,7 +194,7 @@
                             <file>${product.bin.directory.java}/neurotec-cluster.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-cluster</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -209,7 +209,7 @@
                             <file>${product.bin.directory.java}/neurotec-licensing.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-licensing</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -239,7 +239,7 @@
                             <file>${product.bin.android.directory}/neurotec-core-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-core-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -254,7 +254,7 @@
                             <file>${product.bin.android.directory}/neurotec-gui-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-gui-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -269,7 +269,7 @@
                             <file>${product.bin.android.directory}/neurotec-media-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-media-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -284,7 +284,7 @@
                             <file>${product.bin.android.directory}/neurotec-media-processing-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-media-processing-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -299,7 +299,7 @@
                             <file>${product.bin.android.directory}/neurotec-biometrics-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-biometrics-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -314,7 +314,7 @@
                             <file>${product.bin.android.directory}/neurotec-biometrics-client-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-biometrics-client-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -329,7 +329,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -344,7 +344,7 @@
                             <file>${product.bin.android.directory}/neurotec-biometrics-gui-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-biometrics-gui-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -359,7 +359,7 @@
                             <file>${product.bin.android.directory}/neurotec-licensing-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-licensing-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -374,7 +374,7 @@
                             <file>${product.bin.android.directory}/neurotec-cluster-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-cluster-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -391,7 +391,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-miaxis-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-miaxis-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -406,7 +406,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-authentec-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-authentec-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -421,7 +421,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-bluefin-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-bluefin-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -436,7 +436,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-digitalpersona-uareu-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-digitalpersona-uareu-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -451,7 +451,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-futronic-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-futronic-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -467,7 +467,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-fscanners-integratedbiometrics-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-fscanners-integratedbiometrics-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -482,7 +482,7 @@
                             <file>${product.bin.android.directory}/neurotec-devices-media-android.jar</file>
                             <groupId>com.neurotec</groupId>
                             <artifactId>neurotec-devices-media-android</artifactId>
-                            <version>5.0.0.0</version>
+                            <version>9.0.0.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
@@ -511,22 +511,22 @@
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-core-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
-            <artifactId>neurotec-licensing-android</artifactId>
-            <version>5.0.0.0</version>
+            <artifactId>neurotec-licensing</artifactId>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-media-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>ch.acra</groupId>
@@ -537,67 +537,62 @@
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-media-processing-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-gui-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-biometrics-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-biometrics-client-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-biometrics-gui-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-fscanners-authentec-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-fscanners-bluefin-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-fscanners-digitalpersona-uareu-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>com.neurotec</groupId>-->
         <!--<artifactId>neurotec-devices-fscanners-secugen-android</artifactId>-->
-        <!--<version>5.0.0.0</version>-->
+        <!--<version>9.0.0.0</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-fscanners-futronic-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-fscanners-integratedbiometrics-android</artifactId>
-            <version>5.0.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.neurotec</groupId>
-            <artifactId>neurotec-devices-irisscanners-iritech-irishield-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.neurotec</groupId>
             <artifactId>neurotec-devices-media-android</artifactId>
-            <version>5.0.0.0</version>
+            <version>9.0.0.0</version>
         </dependency>
     </dependencies>
 

@@ -36,7 +36,9 @@ NResult N_API NSTemplateSetRecordCapacity(HNSTemplate hTemplate, NInt value);
 NResult N_API NSTemplateSetRecord(HNSTemplate hTemplate, NInt index, HNSRecord hValue);
 NResult N_API NSTemplateAddRecordEx(HNSTemplate hTemplate, HNSRecord hValue, NInt * pIndex);
 NResult N_API NSTemplateInsertRecord(HNSTemplate hTemplate, NInt index, HNSRecord hValue);
+N_DEPRECATED("function is deprecated, use NSTemplateRemoveRecordAt instead")
 NResult N_API NSTemplateRemoveRecord(HNSTemplate hTemplate, NInt index);
+NResult N_API NSTemplateRemoveRecordAt(HNSTemplate hTemplate, NInt index);
 NResult N_API NSTemplateClearRecords(HNSTemplate hTemplate);
 
 #ifdef N_CPP

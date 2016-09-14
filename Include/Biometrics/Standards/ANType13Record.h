@@ -38,13 +38,31 @@ N_DECLARE_OBJECT_TYPE(ANType13Record, ANFPImageAsciiBinaryRecord)
 #define AN_TYPE_13_RECORD_MAX_SEARCH_POSITION_DESCRIPTOR_COUNT 9
 #define AN_TYPE_13_RECORD_MAX_QUALITY_METRIC_COUNT             4
 
+NResult N_API ANType13RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType13Record * phRecord);
+
+NResult N_API ANType13RecordCreateFromNImageN(NVersion_ version, NInt idc, BdifFPImpressionType imp, HNString hSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType13Record * phRecord);
+#ifndef N_NO_ANSI_FUNC
+NResult ANType13RecordCreateFromNImageA(NVersion_ version, NInt idc, BdifFPImpressionType imp, const NAChar * szSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType13Record * phRecord);
+#endif
+#ifndef N_NO_UNICODE
+NResult ANType13RecordCreateFromNImageW(NVersion_ version, NInt idc, BdifFPImpressionType imp, const NWChar * szSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType13Record * phRecord);
+#endif
+#ifdef N_DOCUMENTATION
+NResult ANType13RecordCreateFromNImage(NVersion_ version, NInt idc, BdifFPImpressionType imp, const NChar * szSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType13Record * phRecord);
+#endif
+#define ANType13RecordCreateFromNImage N_FUNC_AW(ANType13RecordCreateFromNImage)
+
 NResult N_API ANType13RecordGetSearchPositionDescriptorCount(HANType13Record hRecord, NInt * pValue);
 NResult N_API ANType13RecordGetSearchPositionDescriptor(HANType13Record hRecord, NInt index, struct ANFPositionDescriptor_ * pValue);
-NResult N_API ANType13RecordGetSearchPositionDescriptorsEx(HANType13Record hRecord, struct ANFPositionDescriptor_ * arValue, NInt valueLength);
+NResult N_API ANType13RecordGetSearchPositionDescriptors(HANType13Record hRecord, struct ANFPositionDescriptor_ * * parValues, NInt * pValueCount);
 NResult N_API ANType13RecordSetSearchPositionDescriptor(HANType13Record hRecord, NInt index, const struct ANFPositionDescriptor_ * pValue);
-NResult N_API ANType13RecordAddSearchPositionDescriptor(HANType13Record hRecord, const struct ANFPositionDescriptor_ * pValue);
+NResult N_API ANType13RecordAddSearchPositionDescriptorEx(HANType13Record hRecord, const struct ANFPositionDescriptor_ * pValue, NInt * pIndex);
 NResult N_API ANType13RecordInsertSearchPositionDescriptor(HANType13Record hRecord, NInt index, const struct ANFPositionDescriptor_ * pValue);
-NResult N_API ANType13RecordRemoveSearchPositionDescriptor(HANType13Record hRecord, NInt index);
+NResult N_API ANType13RecordRemoveSearchPositionDescriptorAt(HANType13Record hRecord, NInt index);
 NResult N_API ANType13RecordClearSearchPositionDescriptors(HANType13Record hRecord);
 
 #ifdef N_CPP

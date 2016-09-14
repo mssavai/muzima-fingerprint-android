@@ -44,6 +44,13 @@ public:
 	{
 	}
 
+	static NFace FromImageAndAttributes(const ::Neurotec::Images::NImage & image, const ::Neurotec::Biometrics::NLAttributes & attributes)
+	{
+		HNFace hFace;
+		NCheck(NFaceFromImageAndAttributes(image.GetHandle(), attributes.GetHandle(), &hFace));
+		return FromHandle<NFace>(hFace);
+	}
+
 	::Neurotec::Images::NImage GetImage() const
 	{
 		HNImage hValue;

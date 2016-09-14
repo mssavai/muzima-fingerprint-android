@@ -40,7 +40,7 @@ public:
 		{
 			typename NTypeTraits<TKey>::NativeType key;
 			NCheck(NDictionaryGetKey(this->GetOwnerHandle(), index, NTypeTraits<TKey>::GetNativeType().GetHandle(), keyAttributes, &key, sizeof(key)));
-			return NTypeTraits<TKey>::FromNative(key);
+			return NTypeTraits<TKey>::FromNative(key, true);
 		}
 
 		NArray ToItemArray() const
@@ -55,7 +55,7 @@ public:
 		{
 			typename NTypeTraits<TKey>::NativeType * arKeys;
 			NInt keyCount;
-			NCheck(NDictionaryGetKeys(this->GetOwnerHandle(), NTypeTraits<TKey>::GetNativeType().GetHandle(), keyAttributes, sizeof(NTypeTraits<TKey>::NativeType), &arKeys, &keyCount));
+			NCheck(NDictionaryGetKeys(this->GetOwnerHandle(), NTypeTraits<TKey>::GetNativeType().GetHandle(), keyAttributes, sizeof(typename NTypeTraits<TKey>::NativeType), (void * *)&arKeys, &keyCount));
 			return NArrayWrapper<TKey>(arKeys, keyCount);
 		}
 
@@ -81,7 +81,7 @@ public:
 		{
 			typename NTypeTraits<TValue>::NativeType value;
 			NCheck(NDictionaryGetValue(this->GetOwnerHandle(), index, NTypeTraits<TValue>::GetNativeType().GetHandle(), valueAttributes, &value, sizeof(value)));
-			return NTypeTraits<TValue>::FromNative(value);
+			return NTypeTraits<TValue>::FromNative(value, true);
 		}
 
 		NArray ToItemArray() const
@@ -96,7 +96,7 @@ public:
 		{
 			typename NTypeTraits<TValue>::NativeType * arValues;
 			NInt valueCount;
-			NCheck(NDictionaryGetValues(this->GetOwnerHandle(), NTypeTraits<TValue>::GetNativeType().GetHandle(), valueAttributes, sizeof(NTypeTraits<TValue>::NativeType), &arValues, &valueCount));
+			NCheck(NDictionaryGetValues(this->GetOwnerHandle(), NTypeTraits<TValue>::GetNativeType().GetHandle(), valueAttributes, sizeof(typename NTypeTraits<TValue>::NativeType), (void * *)&arValues, &valueCount));
 			return NArrayWrapper<TValue>(arValues, valueCount);
 		}
 
@@ -212,7 +212,7 @@ public:
 	{
 		typename NTypeTraits<TItem>::NativeType item;
 		NCheck(NDictionaryGetAt(GetHandle(), index, NTypeTraits<TItem>::GetNativeType().GetHandle(), itemAttributes, &item, sizeof(item)));
-		return NTypeTraits<TItem>::FromNative(item);
+		return NTypeTraits<TItem>::FromNative(item, true);
 	}
 
 	NArrayWrapper<NKeyValuePair> ToArray() const
@@ -309,7 +309,7 @@ public:
 		typename NTypeTraits<TKey>::NativeType k = NTypeTraits<TKey>::ToNative(key);
 		typename NTypeTraits<TValue>::NativeType v;
 		NCheck(NDictionaryGet(GetHandle(), NTypeTraits<TKey>::GetNativeType().GetHandle(), keyAttributes, &k, sizeof(k), NTypeTraits<TValue>::GetNativeType().GetHandle(), valueAttributes, &v, sizeof(v)));
-		return NTypeTraits<TValue>::FromNative(v);
+		return NTypeTraits<TValue>::FromNative(v, true);
 	}
 
 	bool TryGet(const NValue & key, NValue * pValue) const
@@ -336,7 +336,7 @@ public:
 		typename NTypeTraits<TValue>::NativeType v;
 		NBool result;
 		NCheck(NDictionaryTryGet(GetHandle(), NTypeTraits<TKey>::GetNativeType().GetHandle(), keyAttributes, &k, sizeof(k), NTypeTraits<TValue>::GetNativeType().GetHandle(), valueAttributes, &v, sizeof(v), &result));
-		*pValue = NTypeTraits<TValue>::FromNative(v);
+		*pValue = NTypeTraits<TValue>::FromNative(v, true);
 		return result != 0;
 	}
 

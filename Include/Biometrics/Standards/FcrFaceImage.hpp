@@ -15,6 +15,7 @@ N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, FcrImageColorSpace)
 
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
+#include <Core/NNoDeprecate.h>
 
 #undef FCRFI_MAX_FEATURE_POINT_COUNT
 
@@ -31,8 +32,8 @@ class FcrFaceImage : public NObject
 	N_DECLARE_OBJECT_CLASS(FcrFaceImage, NObject)
 
 public:
-	class FeaturePointCollection : public ::Neurotec::Collections::NCollectionBase<BdifFaceFeaturePoint, FcrFaceImage,
-		FcrFaceImageGetFeaturePointCount, FcrFaceImageGetFeaturePoint>
+	class FeaturePointCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFaceFeaturePoint, FcrFaceImage,
+		FcrFaceImageGetFeaturePointCount, FcrFaceImageGetFeaturePoint, FcrFaceImageGetFeaturePointsEx2>
 	{
 		FeaturePointCollection(const FcrFaceImage & owner)
 		{
@@ -53,12 +54,8 @@ public:
 			NCheck(FcrFaceImageSetFeaturePointCapacity(this->GetOwnerHandle(), value));
 		}
 
-		NInt GetAll(BdifFaceFeaturePoint * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = FcrFaceImageGetFeaturePointsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFaceFeaturePoint, FcrFaceImage,
+			FcrFaceImageGetFeaturePointCount, FcrFaceImageGetFeaturePoint, FcrFaceImageGetFeaturePointsEx2>::GetAll;
 
 		void Set(NInt index, const BdifFaceFeaturePoint & value)
 		{
@@ -67,8 +64,8 @@ public:
 
 		NInt Add(const BdifFaceFeaturePoint & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(FcrFaceImageAddFeaturePoint(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(FcrFaceImageAddFeaturePointEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -79,7 +76,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(FcrFaceImageRemoveFeaturePoint(this->GetOwnerHandle(), index));
+			NCheck(FcrFaceImageRemoveFeaturePointAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -87,6 +84,64 @@ public:
 			NCheck(FcrFaceImageClearFeaturePoints(this->GetOwnerHandle()));
 		}
 	};
+
+	class QualityBlockCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifQualityBlock, FcrFaceImage,
+		FcrFaceImageGetQualityBlockCount, FcrFaceImageGetQualityBlock, FcrFaceImageGetQualityBlocks>
+	{
+		QualityBlockCollection(const FcrFaceImage & owner)
+		{
+			SetOwner(owner);
+		}
+
+		friend class FcrFaceImage;
+	public:
+		NInt GetCapacity() const
+		{
+			NInt value;
+			NCheck(FcrFaceImageGetQualityBlockCapacity(this->GetOwnerHandle(), &value));
+			return value;
+		}
+
+		void SetCapacity(NInt value)
+		{
+			NCheck(FcrFaceImageSetQualityBlockCapacity(this->GetOwnerHandle(), value));
+		}
+	
+		void Set(NInt index, const BdifQualityBlock & value)
+		{
+			NCheck(FcrFaceImageSetQualityBlock(this->GetOwnerHandle(), index, &value));
+		}
+
+		NInt Add(const BdifQualityBlock & value)
+		{
+			NInt index;
+			NCheck(FcrFaceImageAddQualityBlock(this->GetOwnerHandle(), &value, &index));
+			return index;
+		}
+
+		void Insert(NInt index, const BdifQualityBlock & value)
+		{
+			NCheck(FcrFaceImageInsertQualityBlock(this->GetOwnerHandle(), index, &value));
+		}
+
+		void RemoveAt(NInt index)
+		{
+			NCheck(FcrFaceImageRemoveQualityBlockAt(this->GetOwnerHandle(), index));
+		}
+
+		void Clear()
+		{
+			NCheck(FcrFaceImageClearQualityBlocks(this->GetOwnerHandle()));
+		}
+	};
+
+private:
+	static HFcrFaceImage Create(BdifStandard standard, NVersion version)
+	{
+		HFcrFaceImage handle;
+		NCheck(FcrFaceImageCreate(standard, version.GetValue(), &handle));
+		return handle;
+	}
 
 public:
 	static NType FcrImageDataTypeNativeTypeOf()
@@ -104,11 +159,9 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(FcrImageColorSpace), true);
 	}
 
-	static NSizeType CalculateSize(BdifStandard standard, NInt featurePointCount, NSizeType imageDataLength)
+	explicit FcrFaceImage(BdifStandard standard, NVersion version)
+		: NObject(Create(standard, version), true)
 	{
-		NSizeType size;
-		NCheck(FcrFaceImageCalculateSize(standard, featurePointCount, imageDataLength, &size));
-		return size;
 	}
 
 	::Neurotec::Images::NImage ToNImage(NUInt flags = 0) const
@@ -118,6 +171,49 @@ public:
 		return FromHandle< ::Neurotec::Images::NImage>(hImage);
 	}
 
+	void SetImage(const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+	{
+		NCheck(FcrFaceImageSetImage(GetHandle(), flags, image.GetHandle()));
+	}
+
+	BdifStandard GetStandard() const
+	{
+		BdifStandard value;
+		NCheck(FcrFaceImageGetStandard(GetHandle(), &value));
+		return value;
+	}
+
+	NVersion GetVersion() const
+	{
+		NVersion_ value;
+		NCheck(FcrFaceImageGetVersion(GetHandle(), &value));
+		return NVersion(value);
+	}
+
+	BdifCaptureDateTime GetCaptureDateAndTime() const
+	{
+		BdifCaptureDateTime_ value;
+		NCheck(FcrFaceImageGetCaptureDateAndTime(GetHandle(), &value));
+		return BdifCaptureDateTime(value);
+	}
+
+	void SetCaptureDateAndTime(const BdifCaptureDateTime & value)
+	{
+		NCheck(FcrFaceImageSetCaptureDateAndTime(GetHandle(), value));
+	}
+
+	NUShort GetCaptureDeviceVendorId() const
+	{
+		NUShort value;
+		NCheck(FcrFaceImageGetCaptureDeviceVendorId(GetHandle(), &value));
+		return value;
+	}
+
+	void SetCaptureDeviceVendorId(NUShort value)
+	{
+		NCheck(FcrFaceImageSetCaptureDeviceVendorId(GetHandle(), value));
+	}
+	
 	BdifGender GetGender() const
 	{
 		BdifGender value;
@@ -154,6 +250,18 @@ public:
 		NCheck(FcrFaceImageSetHairColor(GetHandle(), value));
 	}
 
+	NByte GetSubjectHeight() const
+	{
+		NByte value;
+		NCheck(FcrFaceImageGetSubjectHeight(GetHandle(), &value));
+		return value;
+	}
+
+	void SetSubjectHeight(NByte value)
+	{
+		NCheck(FcrFaceImageSetSubjectHeight(GetHandle(), value));
+	}
+
 	BdifFaceProperties GetProperties() const
 	{
 		BdifFaceProperties value;
@@ -173,6 +281,13 @@ public:
 		return value;
 	}
 
+	BdifFaceExpressionBitMask GetExpressionBitMask() const
+	{
+		BdifFaceExpressionBitMask value;
+		NCheck(FcrFaceImageGetExpressionBitMask(GetHandle(), &value));
+		return value;
+	}
+
 	NUShort GetVendorExpression() const
 	{
 		NUShort value;
@@ -180,9 +295,9 @@ public:
 		return value;
 	}
 
-	void SetExpression(BdifFaceExpression value, NUShort vendorValue)
+	void SetExpression(BdifFaceExpression value, BdifFaceExpressionBitMask valueBitMask, NUShort vendorValue)
 	{
-		NCheck(FcrFaceImageSetExpression(GetHandle(), value, vendorValue));
+		NCheck(FcrFaceImageSetExpressionEx(GetHandle(), value, valueBitMask, vendorValue));
 	}
 
 	NByte GetPoseAngleYaw() const
@@ -269,11 +384,21 @@ public:
 		return value;
 	}
 
+	void SetFaceImageType(FcrFaceImageType value)
+	{
+		NCheck(FcrFaceImageSetFaceImageType(GetHandle(), value));
+	}
+
 	FcrImageDataType GetImageDataType() const
 	{
 		FcrImageDataType value;
 		NCheck(FcrFaceImageGetImageDataType(GetHandle(), &value));
 		return value;
+	}
+
+	void SetImageDataType(FcrImageDataType value)
+	{
+		NCheck(FcrFaceImageSetImageDataType(GetHandle(), value));
 	}
 
 	NUShort GetWidth() const
@@ -283,11 +408,57 @@ public:
 		return value;
 	}
 
+	void SetWidth(NUShort value)
+	{
+		NCheck(FcrFaceImageSetWidth(GetHandle(), value));
+	}
+
 	NUShort GetHeight() const
 	{
 		NUShort value;
 		NCheck(FcrFaceImageGetHeight(GetHandle(), &value));
 		return value;
+	}
+
+	void SetHeight(NUShort value)
+	{
+		NCheck(FcrFaceImageSetHeight(GetHandle(), value));
+	}
+
+	BdifFaceSpatialSamplingRateLevel GetSpatialSamplingRateLevel() const
+	{
+		BdifFaceSpatialSamplingRateLevel value;
+		NCheck(FcrFaceImageGetSpatialSamplingRateLevel(GetHandle(), &value));
+		return value;
+	}
+
+	void SetSpatialSamplingRateLevel(BdifFaceSpatialSamplingRateLevel value)
+	{
+		NCheck(FcrFaceImageSetSpatialSamplingRateLevel(GetHandle(), value));
+	}
+
+	BdifFacePostAcquisitionProcessing GetPostAcquisitionProcessing() const
+	{
+		BdifFacePostAcquisitionProcessing value;
+		NCheck(FcrFaceImageGetPostAcquisitionProcessing(GetHandle(), &value));
+		return value;
+	}
+
+	void SetPostAcquisitionProcessing(BdifFacePostAcquisitionProcessing value)
+	{
+		NCheck(FcrFaceImageSetPostAcquisitionProcessing(GetHandle(), value));
+	}
+
+	NUShort GetCrossReference() const
+	{
+		NUShort value;
+		NCheck(FcrFaceImageGetCrossReference(GetHandle(), &value));
+		return value;
+	}
+
+	void SetCrossReference(NUShort value)
+	{
+		NCheck(FcrFaceImageSetCrossReference(GetHandle(), value));
 	}
 
 	FcrImageColorSpace GetImageColorSpace() const
@@ -302,6 +473,11 @@ public:
 		NByte value;
 		NCheck(FcrFaceImageGetVendorImageColorSpace(GetHandle(), &value));
 		return value;
+	}
+
+	void SetImageColorSpace(FcrImageColorSpace value, NByte vendorValue)
+	{
+		NCheck(FcrFaceImageSetImageColorSpace(GetHandle(), value, vendorValue));
 	}
 
 	BdifImageSourceType GetSourceType() const
@@ -357,11 +533,6 @@ public:
 		SetObject(FcrFaceImageSetImageDataN, value);
 	}
 
-	void SetImageData(const void * pValue, NSizeType valueSize, bool copy = true)
-	{
-		NCheck(FcrFaceImageSetImageDataEx(GetHandle(), pValue, valueSize, copy ? NTrue : NFalse));
-	}
-
 	FeaturePointCollection GetFeaturePoints()
 	{
 		return FeaturePointCollection(*this);
@@ -372,9 +543,19 @@ public:
 		return FeaturePointCollection(*this);
 	}
 
+	QualityBlockCollection GetQualityBlocks()
+	{
+		return QualityBlockCollection(*this);
+	}
+
+	const QualityBlockCollection GetQualityBlocks() const
+	{
+		return QualityBlockCollection(*this);
+	}
+
 	FCRecord GetOwner() const;
 };
-
+#include <Core/NReDeprecate.h>
 }}}
 
 #include <Biometrics/Standards/FCRecord.hpp>

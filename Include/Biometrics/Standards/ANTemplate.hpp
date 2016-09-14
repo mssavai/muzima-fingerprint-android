@@ -25,15 +25,12 @@
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 using ::Neurotec::Images::HNImage;
-using ::Neurotec::Images::HNGrayscaleImage;
-using ::Neurotec::Images::HNMonochromeImage;
 #include <Biometrics/Standards/ANTemplate.h>
 }}}
 
-N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANValidationLevel)
-
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
+#include <Core/NNoDeprecate.h>
 
 #undef AN_TEMPLATE_VERSION_2_0
 #undef AN_TEMPLATE_VERSION_2_1
@@ -90,7 +87,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANTemplateRemoveRecord(this->GetOwnerHandle(), index));
+			NCheck(ANTemplateRemoveRecordAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -98,400 +95,31 @@ public:
 			NCheck(ANTemplateClearRecords(this->GetOwnerHandle()));
 		}
 
-
-		ANRecord Add(const ANRecordType & recordType, NInt idc, NUInt flags = 0)
+		NInt Add(const ANRecord & value)
 		{
-			HANRecord hRecord;
-			NCheck(ANTemplateAddRecord(this->GetOwnerHandle(), recordType.GetHandle(), idc, flags, &hRecord));
-			return FromHandle<ANRecord>(hRecord, true);
-		}
-
-		ANType2Record AddType2(NInt idc, NUInt flags = 0)
-		{
-			HANType2Record hRecord;
-			NCheck(ANTemplateAddType2Record(this->GetOwnerHandle(), idc, flags, &hRecord));
-			return FromHandle<ANType2Record>(hRecord, true);
-		}
-
-		ANType3Record AddType3(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANImageCompressionAlgorithm ca, NByte vendorCA, const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType3Record hRecord;
-			NCheck(ANTemplateAddType3RecordN(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType3Record>(hRecord, true);
-		}
-
-		ANType3Record AddType3(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANImageCompressionAlgorithm ca, NByte vendorCA, const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType3Record hRecord;
-			NCheck(ANTemplateAddType3Record(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType3Record>(hRecord, true);
-		}
-
-		ANType3Record AddType3(NInt idc, bool isr, NUInt isrValue,
-			ANImageCompressionAlgorithm ca, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType3Record hRecord;
-			NCheck(ANTemplateAddType3RecordFromNImageEx(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue,
-				ca, (HNGrayscaleImage)image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType3Record>(hRecord, true);
-		}
-
-		ANType4Record AddType4(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANImageCompressionAlgorithm ca, NByte vendorCA, const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType4Record hRecord;
-			NCheck(ANTemplateAddType4RecordN(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType4Record>(hRecord, true);
-		}
-
-		ANType4Record AddType4(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANImageCompressionAlgorithm ca, NByte vendorCA, const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType4Record hRecord;
-			NCheck(ANTemplateAddType4Record(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType4Record>(hRecord, true);
-		}
-
-		ANType4Record AddType4(NInt idc, bool isr, NUInt isrValue,
-			ANImageCompressionAlgorithm ca, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType4Record hRecord;
-			NCheck(ANTemplateAddType4RecordFromNImageEx(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue,
-				ca, (HNGrayscaleImage)image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType4Record>(hRecord, true);
-		}
-
-		ANType5Record AddType5(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANBinaryImageCompressionAlgorithm ca, NByte vendorCA, const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType5Record hRecord;
-			NCheck(ANTemplateAddType5RecordN(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType5Record>(hRecord, true);
-		}
-
-		ANType5Record AddType5(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANBinaryImageCompressionAlgorithm ca, NByte vendorCA, const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType5Record hRecord;
-			NCheck(ANTemplateAddType5Record(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType5Record>(hRecord, true);
-		}
-
-		ANType5Record AddType5(NInt idc, bool isr, NUInt isrValue,
-			ANBinaryImageCompressionAlgorithm ca, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType5Record hRecord;
-			NCheck(ANTemplateAddType5RecordFromNImageEx(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue,
-				ca, (HNMonochromeImage)image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType5Record>(hRecord, true);
-		}
-
-		ANType6Record AddType6(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANBinaryImageCompressionAlgorithm ca, NByte vendorCA, const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType6Record hRecord;
-			NCheck(ANTemplateAddType6RecordN(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType6Record>(hRecord, true);
-		}
-
-		ANType6Record AddType6(NInt idc, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			ANBinaryImageCompressionAlgorithm ca, NByte vendorCA, const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType6Record hRecord;
-			NCheck(ANTemplateAddType6Record(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				ca, vendorCA, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType6Record>(hRecord, true);
-		}
-
-		ANType6Record AddType6(NInt idc, bool isr, NUInt isrValue,
-			ANBinaryImageCompressionAlgorithm ca, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType6Record hRecord;
-			NCheck(ANTemplateAddType6RecordFromNImageEx(this->GetOwnerHandle(), idc, isr ? NTrue : NFalse, isrValue,
-				ca, (HNMonochromeImage)image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType6Record>(hRecord, true);
-		}
-
-		ANType7Record AddType7(NInt idc, NUInt isr, NUInt ir, const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType7Record hRecord;
-			NCheck(ANTemplateAddType7RecordN(this->GetOwnerHandle(), idc, isr, ir, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType7Record>(hRecord, true);
-		}
-
-		ANType7Record AddType7(NInt idc, NUInt isr, NUInt ir, const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType7Record hRecord;
-			NCheck(ANTemplateAddType7Record(this->GetOwnerHandle(), idc, isr, ir, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType7Record>(hRecord, true);
-		}
-
-		ANType8Record AddType8(NInt idc, ANSignatureRepresentationType srt, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType8Record hRecord;
-			NCheck(ANTemplateAddType8RecordN(this->GetOwnerHandle(), idc, srt, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType8Record>(hRecord, true);
-		}
-
-		ANType8Record AddType8(NInt idc, ANSignatureRepresentationType srt, bool isr, NUInt isrValue, NUInt ir, NUShort hll, NUShort vll,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType8Record hRecord;
-			NCheck(ANTemplateAddType8Record(this->GetOwnerHandle(), idc, srt, isr ? NTrue : NFalse, isrValue, ir, hll, vll,
-				pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType8Record>(hRecord, true);
-		}
-
-		ANType8Record AddType8(NInt idc, NUInt isr, NUInt ir, const ANPenVector * arPenVectors, NInt penVectorCount, NUInt flags = 0)
-		{
-			HANType8Record hRecord;
-			NCheck(ANTemplateAddType8RecordFromVectors(this->GetOwnerHandle(), idc, isr, ir, arPenVectors, penVectorCount, flags, &hRecord));
-			return FromHandle<ANType8Record>(hRecord, true);
-		}
-
-		ANType8Record AddType8(NInt idc, ANSignatureRepresentationType srt, bool isr, NUInt isrValue,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType8Record hRecord;
-			NCheck(ANTemplateAddType8RecordFromNImageEx(this->GetOwnerHandle(), idc, srt, isr ? NTrue : NFalse, isrValue,
-				(HNMonochromeImage)image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType8Record>(hRecord, true);
-		}
-
-		ANType9Record AddType9(NInt idc, BdifFPImpressionType imp, bool fmt, bool hasMinutiae, bool rdg, bool hasMinutiaeRidgeCountsIndicator, NUInt flags = 0)
-		{
-			HANType9Record hRecord;
-			NCheck(ANTemplateAddType9Record(this->GetOwnerHandle(), idc, imp, fmt ? NTrue : NFalse, hasMinutiae ? NTrue : NFalse, rdg ? NTrue : NFalse, hasMinutiaeRidgeCountsIndicator ? NTrue : NFalse, flags, &hRecord));
-			return FromHandle<ANType9Record>(hRecord, true);
-		}
-
-		ANType9Record AddType9(NInt idc, bool fmt, const NFRecord & nfRecord, NUInt flags = 0)
-		{
-			HANType9Record hRecord;
-			NCheck(ANTemplateAddType9RecordFromNFRecord(this->GetOwnerHandle(), idc, fmt ? NTrue : NFalse, nfRecord.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType9Record>(hRecord, true);
-		}
-
-		ANType10Record AddType10(NInt idc, ANImageType imt, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, ANImageColorSpace csp, const NStringWrapper & smt,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType10Record hRecord;
-			NCheck(ANTemplateAddType10RecordN(this->GetOwnerHandle(), idc, imt, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, csp, smt.GetHandle(), imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType10Record>(hRecord, true);
-		}
-
-		ANType10Record AddType10(NInt idc, ANImageType imt, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, ANImageColorSpace csp, const NStringWrapper & smt,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType10Record hRecord;
-			NCheck(ANTemplateAddType10RecordSSN(this->GetOwnerHandle(), idc, imt, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, csp, smt.GetHandle(), pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType10Record>(hRecord, true);
-		}
-
-		ANType10Record AddType10(NInt idc, ANImageType imt, const NStringWrapper & src,
-			BdifScaleUnits slc, ANImageCompressionAlgorithm cga, const NStringWrapper & smt,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType10Record hRecord;
-			NCheck(ANTemplateAddType10RecordFromNImageN(this->GetOwnerHandle(), idc, imt, src.GetHandle(),
-				slc, cga, smt.GetHandle(), image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType10Record>(hRecord, true);
-		}
-
-		ANType13Record AddType13(NInt idc, BdifFPImpressionType imp, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType13Record hRecord;
-			NCheck(ANTemplateAddType13RecordN(this->GetOwnerHandle(), idc, imp, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType13Record>(hRecord, true);
-		}
-
-		ANType13Record AddType13(NInt idc, BdifFPImpressionType imp, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType13Record hRecord;
-			NCheck(ANTemplateAddType13RecordSN(this->GetOwnerHandle(), idc, imp, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType13Record>(hRecord, true);
-		}
-
-		ANType13Record AddType13(NInt idc, BdifFPImpressionType imp, const NStringWrapper & src,
-			BdifScaleUnits slc, ANImageCompressionAlgorithm cga,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType13Record hRecord;
-			NCheck(ANTemplateAddType13RecordFromNImageN(this->GetOwnerHandle(), idc, imp, src.GetHandle(),
-				slc, cga, image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType13Record>(hRecord, true);
-		}
-
-		ANType14Record AddType14(NInt idc, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType14Record hRecord;
-			NCheck(ANTemplateAddType14RecordN(this->GetOwnerHandle(), idc, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType14Record>(hRecord, true);
-		}
-
-		ANType14Record AddType14(NInt idc, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType14Record hRecord;
-			NCheck(ANTemplateAddType14RecordSN(this->GetOwnerHandle(), idc, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType14Record>(hRecord, true);
-		}
-
-		ANType14Record AddType14(NInt idc, const NStringWrapper & src,
-			BdifScaleUnits slc, ANImageCompressionAlgorithm cga,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType14Record hRecord;
-			NCheck(ANTemplateAddType14RecordFromNImageN(this->GetOwnerHandle(), idc, src.GetHandle(),
-				slc, cga, image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType14Record>(hRecord, true);
-		}
-
-		ANType15Record AddType15(NInt idc, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType15Record hRecord;
-			NCheck(ANTemplateAddType15RecordN(this->GetOwnerHandle(), idc, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType15Record>(hRecord, true);
-		}
-
-		ANType15Record AddType15(NInt idc, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType15Record hRecord;
-			NCheck(ANTemplateAddType15RecordSN(this->GetOwnerHandle(), idc, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType15Record>(hRecord, true);
-		}
-
-		ANType15Record AddType15(NInt idc, const NStringWrapper & src,
-			BdifScaleUnits slc, ANImageCompressionAlgorithm cga,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType15Record hRecord;
-			NCheck(ANTemplateAddType15RecordFromNImageN(this->GetOwnerHandle(), idc, src.GetHandle(),
-				slc, cga, image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType15Record>(hRecord, true);
-		}
-
-		ANType16Record AddType16(NInt idc, const NStringWrapper & udi, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx, ANImageColorSpace csp,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType16Record hRecord;
-			NCheck(ANTemplateAddType16RecordN(this->GetOwnerHandle(), idc, udi.GetHandle(), src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, csp, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType16Record>(hRecord, true);
-		}
-
-		ANType16Record AddType16(NInt idc, const NStringWrapper & udi, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx, ANImageColorSpace csp,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType16Record hRecord;
-			NCheck(ANTemplateAddType16RecordUSN(this->GetOwnerHandle(), idc, udi.GetHandle(), src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, csp, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType16Record>(hRecord, true);
-		}
-
-		ANType16Record AddType16(NInt idc, const NStringWrapper & udi, const NStringWrapper & src,
-			BdifScaleUnits slc, ANImageCompressionAlgorithm cga,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType16Record hRecord;
-			NCheck(ANTemplateAddType16RecordFromNImageN(this->GetOwnerHandle(), idc, udi.GetHandle(), src.GetHandle(),
-				slc, cga, image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType16Record>(hRecord, true);
-		}
-
-		ANType17Record AddType17(NInt idc, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx, ANImageColorSpace csp,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
-		{
-			HANType17Record hRecord;
-			NCheck(ANTemplateAddType17RecordN(this->GetOwnerHandle(), idc, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, csp, imageData.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType17Record>(hRecord, true);
-		}
-
-		ANType17Record AddType17(NInt idc, const NStringWrapper & src, NUShort hll, NUShort vll,
-			BdifScaleUnits slc, NUShort hps, NUShort vps, ANImageCompressionAlgorithm cga, NByte bpx, ANImageColorSpace csp,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HANType17Record hRecord;
-			NCheck(ANTemplateAddType17RecordSN(this->GetOwnerHandle(), idc, src.GetHandle(), hll, vll,
-				slc, hps, vps, cga, bpx, csp, pImageData, imageDataLength, flags, &hRecord));
-			return FromHandle<ANType17Record>(hRecord, true);
-		}
-
-		ANType17Record AddType17(NInt idc, const NStringWrapper & src,
-			BdifScaleUnits slc, ANImageCompressionAlgorithm cga,
-			const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HANType17Record hRecord;
-			NCheck(ANTemplateAddType17RecordFromNImageN(this->GetOwnerHandle(), idc, src.GetHandle(),
-				slc, cga, image.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType17Record>(hRecord, true);
-		}
-
-		ANType99Record AddType99(NInt idc, const NStringWrapper & src, NVersion hdv, ANBiometricType bty, NUShort bfo, NUShort bft,
-			const ::Neurotec::IO::NBuffer & bdb, NUInt flags = 0)
-		{
-			HANType99Record hRecord;
-			NCheck(ANTemplateAddType99RecordN(this->GetOwnerHandle(), idc, src.GetHandle(), hdv.GetValue(), bty, bfo, bft, bdb.GetHandle(), flags, &hRecord));
-			return FromHandle<ANType99Record>(hRecord, true);
-		}
-
-		ANType99Record AddType99(NInt idc, const NStringWrapper & src, NVersion hdv, ANBiometricType bty, NUShort bfo, NUShort bft,
-			const void * pBdb, NSizeType bdbLength, NUInt flags = 0)
-		{
-			HANType99Record hRecord;
-			NCheck(ANTemplateAddType99RecordSN(this->GetOwnerHandle(), idc, src.GetHandle(), hdv.GetValue(), bty, bfo, bft, pBdb, bdbLength, flags, &hRecord));
-			return FromHandle<ANType99Record>(hRecord, true);
+			NInt index;
+			NCheck(ANTemplateAddRecordEx(this->GetOwnerHandle(), value.GetHandle(), &index));
+			return index;
 		}
 	};
 
 private:
-	static HANTemplate Create(NUInt flags)
+	static HANTemplate Create(NVersion version, ANValidationLevel validationLevel,  NUInt flags)
 	{
 		HANTemplate handle;
-		NCheck(ANTemplateCreateWithMinimalValidation(flags, &handle));
+		NCheck(ANTemplateCreateEx(version.GetValue(), validationLevel, flags, &handle));
 		return handle;
 	}
 
 	static HANTemplate Create(const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn, NUInt flags)
 	{
+		return Create(AN_TEMPLATE_VERSION_4_0, tot, dai, ori, tcn, flags);
+	}
+
+	static HANTemplate Create(NVersion version, const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn, NUInt flags)
+	{
 		HANTemplate handle;
-		NCheck(ANTemplateCreateN(tot.GetHandle(), dai.GetHandle(), ori.GetHandle(), tcn.GetHandle(), flags, &handle));
+		NCheck(ANTemplateCreateWithTransactionInformationN(version.GetValue(), tot.GetHandle(), dai.GetHandle(), ori.GetHandle(), tcn.GetHandle(), flags, &handle));
 		return handle;
 	}
 
@@ -523,14 +151,20 @@ private:
 		return handle;
 	}
 
-	static HANTemplate Create(const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn,
+	static HANTemplate Create(NVersion version, const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn,
 		bool type9RecordFmt, const NTemplate & nTemplate, NUInt flags)
 	{
 		HANTemplate handle;
-		NCheck(ANTemplateCreateFromNTemplateN(tot.GetHandle(), dai.GetHandle(), ori.GetHandle(), tcn.GetHandle(), type9RecordFmt ? NTrue : NFalse, nTemplate.GetHandle(), flags, &handle));
+		NCheck(ANTemplateCreateFromNTemplateExN(version.GetValue(), tot.GetHandle(), dai.GetHandle(), ori.GetHandle(), tcn.GetHandle(), type9RecordFmt ? NTrue : NFalse, nTemplate.GetHandle(), flags, &handle));
 		return handle;
 	}
 
+	static HANTemplate Create(const ANTemplate & srcANTemplate, NVersion version, NUInt flags)
+	{
+		HANTemplate handle;
+		NCheck(ANTemplateCreateFromANTemplate(srcANTemplate.GetHandle(), version.GetValue(), flags, &handle));
+		return handle;
+	}
 public:
 	static NType ANValidationLevelNativeTypeOf()
 	{
@@ -565,14 +199,14 @@ public:
 		return NString(hValue, true);
 	}
 
-	explicit ANTemplate(NUInt flags = 0)
-		: NObject(Create(flags), true)
+	explicit ANTemplate(NVersion version, ANValidationLevel validationLevel, NUInt flags = 0)
+		: NObject(Create(version, validationLevel, flags), true)
 	{
 		Reset();
 	}
 
-	ANTemplate(const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn, NUInt flags = 0)
-		: NObject(Create(tot, dai, ori, tcn, flags), true)
+	ANTemplate(NVersion version, const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn, NUInt flags = 0)
+		: NObject(Create(version, tot, dai, ori, tcn, flags), true)
 	{
 		Reset();
 	}
@@ -601,9 +235,15 @@ public:
 		Reset();
 	}
 
-	ANTemplate(const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn,
+	ANTemplate(const ANTemplate & srcANTemplate, NVersion version, NUInt flags = 0)
+		: NObject(Create(srcANTemplate, version, flags), true)
+	{
+		Reset();
+	}
+
+	ANTemplate(NVersion version, const NStringWrapper & tot, const NStringWrapper & dai, const NStringWrapper & ori, const NStringWrapper & tcn,
 		bool type9RecordFmt, const NTemplate & nTemplate, NUInt flags = 0)
-		: NObject(Create(tot, dai, ori, tcn, type9RecordFmt, nTemplate, flags), true)
+		: NObject(Create(version, tot, dai, ori, tcn, type9RecordFmt, nTemplate, flags), true)
 	{
 		Reset();
 	}
@@ -649,7 +289,7 @@ public:
 		return RecordCollection(*this);
 	}
 };
-
+#include <Core/NReDeprecate.h>
 }}}
 
 #endif // !AN_TEMPLATE_HPP_INCLUDED

@@ -12,6 +12,7 @@ typedef enum Jpeg2KProfile_
 {
 	jpeg2kpNone = 0,
 	jpeg2kpFingerprint1000Ppi = 1000,
+	jpeg2kpFingerprintLossless = 1001,
 	jpeg2kpFaceLossy = 2000,
 	jpeg2kpFaceLossless = 2001,
 } Jpeg2KProfile;

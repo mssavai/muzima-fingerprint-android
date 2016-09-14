@@ -38,6 +38,11 @@ public:
 		return value != 0;
 	}
 
+	void SetImageScanResolution(bool value)
+	{
+		NCheck(ANImageBinaryRecordSetImageScanResolution(GetHandle(), value != 0));
+	}
+
 	NUInt GetImageScanResolutionValue() const
 	{
 		NUInt value;
@@ -59,11 +64,26 @@ public:
 		return value;
 	}
 
+	void SetHorzLineLength(NUShort value)
+	{
+		NCheck(ANImageBinaryRecordSetHorzLineLength(GetHandle(), value));
+	}
+
 	NUShort GetVertLineLength() const
 	{
 		NUShort value;
 		NCheck(ANImageBinaryRecordGetVertLineLength(GetHandle(), &value));
 		return value;
+	}
+
+	void SetVertLineLength(NUShort value)
+	{
+		NCheck(ANImageBinaryRecordSetVertLineLength(GetHandle(), value));
+	}
+
+	void SetImage(::Neurotec::Images::NImage image, NUInt flags = 0) const
+	{
+		NCheck(ANImageBinaryRecordSetImage(GetHandle(), image.GetHandle(), flags));
 	}
 };
 

@@ -70,7 +70,35 @@ class ANType16Record : public ANImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType16Record, ANImageAsciiBinaryRecord)
 
+private:
+	static HANType16Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+
+		HANType16Record handle;
+		NCheck(ANType16RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType16Record Create(NVersion version, NInt idc, const NStringWrapper & udi, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+
+		HANType16Record handle;
+		NCheck(ANType16RecordCreateFromNImageN(version.GetValue(), idc, udi.GetHandle(), src.GetHandle(), slc, cga, image.GetHandle(), flags, &handle));
+		return handle;
+	}
 public:
+	explicit ANType16Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANImageAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType16Record(NVersion version, NInt idc, const NStringWrapper & udi, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANImageAsciiBinaryRecord(Create(version, idc, udi, src, slc, cga, image, flags), true)
+	{
+	}
+
 	NString GetUserDefinedImage() const
 	{
 		return GetString(ANType16RecordGetUserDefinedImageN);

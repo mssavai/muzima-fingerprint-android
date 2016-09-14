@@ -21,6 +21,20 @@ const NInt AN_TYPE_7_RECORD_FIELD_UDF = AN_RECORD_FIELD_DATA;
 class ANType7Record : public ANBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType7Record, ANBinaryRecord)
+
+private:
+	static HANType7Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType7Record handle;
+		NCheck(ANType7RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+public:
+	explicit ANType7Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
 };
 
 }}}

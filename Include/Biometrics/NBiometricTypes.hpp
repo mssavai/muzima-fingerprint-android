@@ -20,6 +20,8 @@ N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NFRidgeCountsType)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NGender)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NLProperties)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NLExpression)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NLivenessMode)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NLivenessAction)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NEImageType)
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NfiqQuality)
 
@@ -41,7 +43,7 @@ const NInt N_PHRASE_ID_UNKNOWN = 0;
 
 class NFMinutia : public NFMinutia_
 {
-	N_DECLARE_STRUCT_CLASS(NFMinutia)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NFMinutia)
 
 public:
 	NFMinutia(NUShort x, NUShort y, NFMinutiaType type, NByte angle, NByte quality = 0, NByte curvature = 255, NByte g = 255)
@@ -65,7 +67,7 @@ public:
 
 class NFMinutiaNeighbor : public NFMinutiaNeighbor_
 {
-	N_DECLARE_STRUCT_CLASS(NFMinutiaNeighbor)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NFMinutiaNeighbor)
 
 public:
 	NFMinutiaNeighbor(NInt index, NByte ridgeCount)
@@ -84,7 +86,7 @@ public:
 
 class NFCore : public NFCore_
 {
-	N_DECLARE_STRUCT_CLASS(NFCore)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NFCore)
 
 public:
 	NFCore(NUShort x, NUShort y, NInt angle = -1)
@@ -104,7 +106,7 @@ public:
 
 class NFDelta : public NFDelta_
 {
-	N_DECLARE_STRUCT_CLASS(NFDelta)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NFDelta)
 
 public:
 	NFDelta(NUShort x, NUShort y, NInt angle1 = -1, NInt angle2 = -1, NInt angle3 = -1)
@@ -126,7 +128,7 @@ public:
 
 class NFDoubleCore : public NFDoubleCore_
 {
-	N_DECLARE_STRUCT_CLASS(NFDoubleCore)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NFDoubleCore)
 
 public:
 	NFDoubleCore(NUShort x, NUShort y)
@@ -145,7 +147,7 @@ public:
 
 class NLFeaturePoint : public NLFeaturePoint_
 {
-	N_DECLARE_STRUCT_CLASS(NLFeaturePoint)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(NLFeaturePoint)
 
 public:
 	NLFeaturePoint(NUShort code, NUShort x, NUShort y, NByte confidence = N_BIOMETRIC_QUALITY_UNKNOWN)
@@ -232,6 +234,16 @@ public:
 	static NType NLExpressionNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(NLExpression), true);
+	}
+
+	static NType NLivenessModeNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(NLivenessMode), true);
+	}
+
+	static NType NLivenessActionNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(NLivenessAction), true);
 	}
 
 	static NType NEImageTypeNativeTypeOf()

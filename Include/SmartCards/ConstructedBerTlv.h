@@ -17,7 +17,9 @@ NResult N_API ConstructedBerTlvSetDataObjectCapacity(HConstructedBerTlv hBerTlv,
 NResult N_API ConstructedBerTlvSetDataObject(HConstructedBerTlv hBerTlv, NInt index, HBerTlv hValue);
 NResult N_API ConstructedBerTlvAddDataObjectEx2(HConstructedBerTlv hBerTlv, HBerTlv hValue, NInt * pIndex);
 NResult N_API ConstructedBerTlvInsertDataObject(HConstructedBerTlv hBerTlv, NInt index, HBerTlv hValue);
+N_DEPRECATED("function is deprecated, use ConstructedBerTlvRemoveDataObjectAt instead")
 NResult N_API ConstructedBerTlvRemoveDataObject(HConstructedBerTlv hBerTlv, NInt index);
+NResult N_API ConstructedBerTlvRemoveDataObjectAt(HConstructedBerTlv hBerTlv, NInt index);
 NResult N_API ConstructedBerTlvClearDataObjects(HConstructedBerTlv hBerTlv);
 NResult N_API ConstructedBerTlvFindDataObjectIndex(HConstructedBerTlv hBerTlv, BerTag_ tag, NInt * pIndex);
 NResult N_API ConstructedBerTlvFindDataObjectEx(HConstructedBerTlv hBerTlv, BerTag_ tag, HBerTlv * phDataObject);

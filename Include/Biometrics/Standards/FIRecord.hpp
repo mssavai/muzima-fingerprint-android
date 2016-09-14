@@ -1,4 +1,4 @@
-#include <Biometrics/Standards/FirFinger.hpp>
+#include <Biometrics/Standards/FirFingerView.hpp>
 
 #ifndef FI_RECORD_HPP_INCLUDED
 #define FI_RECORD_HPP_INCLUDED
@@ -15,73 +15,61 @@ N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, FirImageCompressionAl
 
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
+#undef FIR_VERSION_ANSI_1_0
+#undef FIR_VERSION_ANSI_2_5
+#undef FIR_VERSION_ISO_1_0
+#undef FIR_VERSION_ISO_2_0
+#undef FIR_VERSION_ANSI_CURRENT
+#undef FIR_VERSION_ISO_CURRENT
 
-#undef FIR_MAX_FINGER_COUNT
-#undef FIR_MAX_FINGER_VIEW_COUNT
+#undef FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_1_0
+#undef FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_2_0
+#undef FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_2_5
+
+#undef FIR_MAX_FINGER_COUNT_1_0
+#undef FIR_MAX_FINGER_COUNT_2_0
+#undef FIR_MAX_FINGER_COUNT_2_5
+
+#undef FIR_MAX_FINGER_VIEW_COUNT_1_0
+#undef FIR_MAX_FINGER_VIEW_COUNT_2_0
+#undef FIR_MAX_FINGER_VIEW_COUNT_2_5
 
 #undef FIR_PROCESS_FIRST_FINGER_ONLY
+#undef FIR_PROCESS_FIRST_FINGER_VIEW_ONLY_PER_FINGER
 #undef FIR_PROCESS_FIRST_FINGER_VIEW_ONLY
 
-const NInt FIR_MAX_FINGER_COUNT = 255;
-const NInt FIR_MAX_FINGER_VIEW_COUNT = (FIR_MAX_FINGER_COUNT * FIRF_MAX_FINGER_VIEW_COUNT);
+const NVersion FIR_VERSION_ANSI_1_0(0x0100);
+const NVersion FIR_VERSION_ANSI_2_5(0x0205);
+const NVersion FIR_VERSION_ISO_1_0(0x0100);
+const NVersion FIR_VERSION_ISO_2_0(0x0200);
+
+const NVersion FIR_VERSION_ANSI_CURRENT(FIR_VERSION_ANSI_2_5);
+const NVersion FIR_VERSION_ISO_CURRENT(FIR_VERSION_ISO_2_0);
+
+const NInt FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_1_0 = N_BYTE_MAX;
+const NInt FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_2_0 = 16;
+const NInt FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_2_5 = 16;
+
+const NInt FIR_MAX_FINGER_COUNT_1_0 = N_BYTE_MAX;
+const NInt FIR_MAX_FINGER_COUNT_2_0 = 42;
+const NInt FIR_MAX_FINGER_COUNT_2_5 = 42;
+
+const NInt FIR_MAX_FINGER_VIEW_COUNT_1_0 = FIR_MAX_FINGER_COUNT_1_0 * FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_1_0;
+const NInt FIR_MAX_FINGER_VIEW_COUNT_2_0 = FIR_MAX_FINGER_COUNT_2_0 * FIR_MAX_FINGER_VIEW_COUNT_PER_FINGER_2_0;
+const NInt FIR_MAX_FINGER_VIEW_COUNT_2_5 = N_BYTE_MAX;
 
 const NUInt FIR_PROCESS_FIRST_FINGER_ONLY = 0x00000100;
-const NUInt FIR_PROCESS_FIRST_FINGER_VIEW_ONLY = (FIR_PROCESS_FIRST_FINGER_ONLY | FIRF_PROCESS_FIRST_FINGER_VIEW_ONLY);
+const NUInt FIR_PROCESS_FIRST_FINGER_VIEW_ONLY_PER_FINGER = 0x00001000;
+const NUInt FIR_PROCESS_FIRST_FINGER_VIEW_ONLY = (FIR_PROCESS_FIRST_FINGER_ONLY | FIR_PROCESS_FIRST_FINGER_VIEW_ONLY_PER_FINGER);
+
 
 class FIRecord : public NObject
 {
 	N_DECLARE_OBJECT_CLASS(FIRecord, NObject)
 
 public:
-	class FingerCollection : public ::Neurotec::Collections::NCollectionBase<FirFinger, FIRecord,
-		FIRecordGetFingerCount, FIRecordGetFingerEx>
-	{
-		FingerCollection(const FIRecord & owner)
-		{
-			SetOwner(owner);
-		}
-
-		friend class FIRecord;
-	protected:
-		NInt GetCapacity() const
-		{
-			NInt value;
-			NCheck(FIRecordGetFingerCapacity(this->GetOwnerHandle(), &value));
-			return value;
-		}
-
-		void SetCapacity(NInt value)
-		{
-			NCheck(FIRecordSetFingerCapacity(this->GetOwnerHandle(), value));
-		}
-
-		void RemoveAt(NInt index)
-		{
-			NCheck(FIRecordRemoveFinger(this->GetOwnerHandle(), index));
-		}
-
-		void Clear()
-		{
-			NCheck(FIRecordClearFingers(this->GetOwnerHandle()));
-		}
-
-		FirFinger Add(BdifFPPosition fingerPosition, NUInt flags = 0)
-		{
-			HFirFinger hFinger;
-			NCheck(FIRecordAddFinger(this->GetOwnerHandle(), fingerPosition, flags | N_OBJECT_REF_RET, &hFinger));
-			return FromHandle<FirFinger>(hFinger, true);
-		}
-
-		FirFinger Add(BdifFPPosition fingerPosition, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
-		{
-			HFirFinger hFinger;
-			NCheck(FIRecordAddFingerFromNImage(this->GetOwnerHandle(), fingerPosition, image.GetHandle(), flags | N_OBJECT_REF_RET, &hFinger));
-			return FromHandle<FirFinger>(hFinger, true);
-		}
-	};
-
 	class FingerViewCollection : public ::Neurotec::Collections::NCollectionBase<FirFingerView, FIRecord,
-		FIRecordGetFingerViewCount, FIRecordGetFingerViewEx>
+		FIRecordGetFingerViewCount, FIRecordGetFingerView>
 	{
 		FingerViewCollection(const FIRecord & owner)
 		{
@@ -90,9 +78,28 @@ public:
 
 		friend class FIRecord;
 	public:
+		NInt GetCapacity() const
+		{
+			NInt value;
+			NCheck(FIRecordGetFingerViewCapacity(this->GetOwnerHandle(), &value));
+			return value;
+		}
+
+		void SetCapacity(NInt value)
+		{
+			NCheck(FIRecordSetFingerViewCapacity(this->GetOwnerHandle(), value));
+		}
+
+		NInt Add(const FirFingerView & value)
+		{
+			NInt index;
+			NCheck(FIRecordAddFingerView(this->GetOwnerHandle(), value.GetHandle(), &index));
+			return index;
+		}
+
 		void RemoveAt(NInt index)
 		{
-			NCheck(FIRecordRemoveFingerView(this->GetOwnerHandle(), index));
+			NCheck(FIRecordRemoveFingerViewAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -102,14 +109,10 @@ public:
 	};
 
 private:
-	static HFIRecord Create(NUShort imageAcquisitionLevel, BdifScaleUnits scaleUnits,
-		NUShort horzScanResolution, NUShort vertScanResolution, NUShort horzImageResolution, NUShort vertImageResolution,
-		NByte pixelDepth, FirImageCompressionAlgorithm imageCompressionAlgorithm, BdifStandard standard, NUInt flags)
+	static HFIRecord Create(BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HFIRecord handle;
-		NCheck(FIRecordCreate(imageAcquisitionLevel, scaleUnits,
-			horzScanResolution, vertScanResolution, horzImageResolution, vertImageResolution,
-			pixelDepth, imageCompressionAlgorithm, flags, standard, &handle));
+		NCheck(FIRecordCreateEx(standard, version.GetValue(), flags, &handle));
 		return handle;
 	}
 
@@ -127,19 +130,19 @@ private:
 		return handle;
 	}
 
-	static HFIRecord Create(const FIRecord & srcRecord, BdifStandard standard, NUInt flags)
+	static HFIRecord Create(const FIRecord & srcRecord, BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HFIRecord handle;
-		NCheck(FIRecordCreateFromFIRecord(srcRecord.GetHandle(), flags, standard, &handle));
+		NCheck(FIRecordCreateFromFIRecordEx(srcRecord.GetHandle(), flags, standard, version.GetValue(), &handle));
 		return handle;
 	}
 
 	static HFIRecord Create(const ::Neurotec::Images::NImage & image, NUShort imageAcquisitionLevel, BdifScaleUnits scaleUnits, NUShort horzScanResolution, NUShort vertScanResolution,
-		NByte pixelDepth, FirImageCompressionAlgorithm imageCompressionAlgorithm, BdifFPPosition fingerPosition, BdifStandard standard, NUInt flags)
+		NByte pixelDepth, FirImageCompressionAlgorithm imageCompressionAlgorithm, BdifFPPosition fingerPosition, BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HFIRecord handle;
-		NCheck(FIRecordCreateFromNImage(image.GetHandle(), imageAcquisitionLevel, scaleUnits, horzScanResolution, vertScanResolution,
-			pixelDepth, imageCompressionAlgorithm, fingerPosition, flags, standard, &handle));
+		NCheck(FIRecordCreateFromNImageEx(image.GetHandle(), imageAcquisitionLevel, scaleUnits, horzScanResolution, vertScanResolution,
+			pixelDepth, imageCompressionAlgorithm, fingerPosition, flags, standard, version.GetValue(), &handle));
 		return handle;
 	}
 
@@ -149,25 +152,8 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(FirImageCompressionAlgorithm), true);
 	}
 
-	static NSizeType CalculateSize(BdifStandard standard, const NSizeType * arFingerViewSizes, NInt fingerViewCount)
-	{
-		NSizeType size;
-		NCheck(FIRecordCalculateSize(standard, fingerViewCount, arFingerViewSizes, &size));
-		return size;
-	}
-
-	static NSizeType CalculateSizeWithFingers(BdifStandard standard, const NSizeType * arFingerSizes, NInt fingerCount)
-	{
-		NSizeType size;
-		NCheck(FIRecordCalculateSize(standard, fingerCount, arFingerSizes, &size));
-		return size;
-	}
-
-	FIRecord(NUShort imageAcquisitionLevel, BdifScaleUnits scaleUnits,
-		NUShort horzScanResolution, NUShort vertScanResolution, NUShort horzImageResolution, NUShort vertImageResolution,
-		NByte pixelDepth, FirImageCompressionAlgorithm imageCompressionAlgorithm, BdifStandard standard, NUInt flags = 0)
-		: NObject(Create(imageAcquisitionLevel, scaleUnits, horzScanResolution, vertScanResolution, horzImageResolution, vertImageResolution,
-			pixelDepth, imageCompressionAlgorithm, standard, flags), true)
+	explicit FIRecord(BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(standard, version, flags), true)
 	{
 	}
 
@@ -181,15 +167,15 @@ public:
 	{
 	}
 
-	FIRecord(const FIRecord & srcRecord, BdifStandard standard, NUInt flags = 0)
-		: NObject(Create(srcRecord, standard, flags), true)
+	FIRecord(const FIRecord & srcRecord, BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(srcRecord, standard, version, flags), true)
 	{
 	}
 
 	FIRecord(const ::Neurotec::Images::NImage & image, NUShort imageAcquisitionLevel, BdifScaleUnits scaleUnits, NUShort horzScanResolution, NUShort vertScanResolution,
-		NByte pixelDepth, FirImageCompressionAlgorithm imageCompressionAlgorithm, BdifFPPosition fingerPosition, BdifStandard standard, NUInt flags = 0)
+		NByte pixelDepth, FirImageCompressionAlgorithm imageCompressionAlgorithm, BdifFPPosition fingerPosition, BdifStandard standard, NVersion version, NUInt flags = 0)
 		: NObject(Create(image, imageAcquisitionLevel, scaleUnits, horzScanResolution, vertScanResolution, pixelDepth, imageCompressionAlgorithm,
-			fingerPosition, standard, flags), true)
+			fingerPosition, standard, version, flags), true)
 	{
 	}
 
@@ -198,6 +184,25 @@ public:
 		BdifStandard value;
 		NCheck(FIRecordGetStandard(GetHandle(), &value));
 		return value;
+	}
+
+	NVersion GetVersion() const
+	{
+		NVersion_ value;
+		NCheck(FIRecordGetVersion(GetHandle(), &value));
+		return NVersion(value);
+	}
+
+	bool GetCertificationFlag() const
+	{
+		NBool value;
+		NCheck(FIRecordGetCertificationFlag(GetHandle(), &value));
+		return value != 0;
+	}
+
+	void SetCertificationFlag(bool value)
+	{
+		NCheck(FIRecordSetCertificationFlag(GetHandle(), value ? NTrue : NFalse));
 	}
 
 	NUInt GetCbeffProductId() const
@@ -231,11 +236,21 @@ public:
 		return value;
 	}
 
+	void SetImageAcquisitionLevel(NUShort value)
+	{
+		NCheck(FIRecordSetImageAcquisitionLevel(GetHandle(), value));
+	}
+
 	BdifScaleUnits GetScaleUnits() const
 	{
 		BdifScaleUnits value;
 		NCheck(FIRecordGetScaleUnits(GetHandle(), &value));
 		return value;
+	}
+
+	void SetScaleUnits(BdifScaleUnits value)
+	{
+		NCheck(FIRecordSetScaleUnits(GetHandle(), value));
 	}
 
 	NUShort GetHorzScanResolution() const
@@ -245,11 +260,21 @@ public:
 		return value;
 	}
 
+	void SetHorzScanResolution(NUShort value)
+	{
+		NCheck(FIRecordSetHorzScanResolution(GetHandle(), value));
+	}
+
 	NUShort GetVertScanResolution() const
 	{
 		NUShort value;
 		NCheck(FIRecordGetVertScanResolution(GetHandle(), &value));
 		return value;
+	}
+
+	void SetVertScanResolution(NUShort value)
+	{
+		NCheck(FIRecordSetVertScanResolution(GetHandle(), value));
 	}
 
 	NUShort GetHorzImageResolution() const
@@ -259,11 +284,21 @@ public:
 		return value;
 	}
 
+	void SetHorzImageResolution(NUShort value)
+	{
+		NCheck(FIRecordSetHorzImageResolution(GetHandle(), value));
+	}
+
 	NUShort GetVertImageResolution() const
 	{
 		NUShort value;
 		NCheck(FIRecordGetVertImageResolution(GetHandle(), &value));
 		return value;
+	}
+
+	void SetVertImageResolution(NUShort value)
+	{
+		NCheck(FIRecordSetVertImageResolution(GetHandle(), value));
 	}
 
 	NByte GetPixelDepth() const
@@ -273,6 +308,11 @@ public:
 		return value;
 	}
 
+	void SetPixelDepth(NByte value)
+	{
+		NCheck(FIRecordSetPixelDepth(GetHandle(), value));
+	}
+
 	FirImageCompressionAlgorithm GetImageCompressionAlgorithm() const
 	{
 		FirImageCompressionAlgorithm value;
@@ -280,14 +320,9 @@ public:
 		return value;
 	}
 
-	FingerCollection GetFingers()
+	void SetImageCompressionAlgorithm(FirImageCompressionAlgorithm value)
 	{
-		return FingerCollection(*this);
-	}
-
-	const FingerCollection GetFingers() const
-	{
-		return FingerCollection(*this);
+		NCheck(FIRecordSetImageCompressionAlgorithm(GetHandle(), value));
 	}
 
 	FingerViewCollection GetFingerViews()

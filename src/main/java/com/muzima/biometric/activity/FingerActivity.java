@@ -21,7 +21,6 @@ import com.neurotec.lang.NCore;
 import com.muzima.biometric.licensing.LicensingManager;
 import com.muzima.biometric.licensing.LicensingState;
 import com.neurotec.util.concurrent.CompletionHandler;
-import com.muzima.biometric.R;
 import java.util.Arrays;
 import java.util.EnumSet;
 
@@ -141,7 +140,6 @@ public final class FingerActivity extends Activity implements LicensingManager.L
 
         NDeviceManager.DeviceCollection devices = deviceManager.getDevices();
         if (devices.size() > 0) {
-            System.out.format("Found %d fingerprint scanner\n", devices.size());
         } else {
             showMessage(getString(R.string.msg_capturing_device_is_unavailable));
             return;

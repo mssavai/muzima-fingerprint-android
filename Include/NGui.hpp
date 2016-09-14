@@ -7,6 +7,7 @@
 #include <Gui/wxAboutBox.hpp>
 #include <Gui/wxExceptionDlg.hpp>
 #include <Gui/wxPluginManagerDlg.hpp>
+#include <Gui/wxNViewZoomSlider.hpp>
 #endif
 #ifdef N_FRAMEWORK_QT
 #include <Gui/QPluginManagerDialog.hpp>

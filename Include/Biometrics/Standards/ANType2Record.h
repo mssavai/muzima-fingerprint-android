@@ -17,6 +17,8 @@ N_DECLARE_OBJECT_TYPE(ANType2Record, ANAsciiRecord)
 #define AN_TYPE_2_RECORD_FIELD_UDF_TO    AN_RECORD_MAX_FIELD_NUMBER
 #define AN_TYPE_2_RECORD_FIELD_UDF_TO_V4 AN_ASCII_RECORD_MAX_FIELD_NUMBER
 
+NResult N_API ANType2RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType2Record * phRecord);
+
 #ifdef N_CPP
 }
 #endif

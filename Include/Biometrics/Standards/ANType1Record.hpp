@@ -204,7 +204,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType1RecordRemoveCharset(this->GetOwnerHandle(), index));
+			NCheck(ANType1RecordRemoveCharsetAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -219,6 +219,14 @@ public:
 			return value != 0;
 		}
 	};
+
+private:
+	/*static HANType1Record Create(NVersion version, NUInt flags)
+	{
+		HANType1Record handle;
+		NCheck(ANType1RecordCreate(version.GetValue(), flags, &handle));
+		return handle;
+	}*/
 
 public:
 	static NInt GetStandardCharsetIndexes(const NVersion & version, NInt * arValue, NInt valueLength)
@@ -358,11 +366,31 @@ public:
 		return value;
 	}
 
+	void SetNativeScanningResolution(NUInt value) const
+	{
+		NCheck(ANType1RecordSetNativeScanningResolution(GetHandle(), value));
+	}
+
+	void SetNativeScanningResolutionPpi(NFloat value) const
+	{
+		NCheck(ANType1RecordSetNativeScanningResolutionPpi(GetHandle(), value));
+	}
+
 	NUInt GetNominalTransmittingResolution() const
 	{
 		NUInt value;
 		NCheck(ANType1RecordGetNominalTransmittingResolution(GetHandle(), &value));
 		return value;
+	}
+
+	void SetNominalTransmittingResolution(NUInt value) const
+	{
+		NCheck(ANType1RecordSetNominalTransmittingResolution(GetHandle(), value));
+	}
+
+	void SetNominalTransmittingResolutionPpi(NFloat value) const
+	{
+		NCheck(ANType1RecordSetNominalTransmittingResolutionPpi(GetHandle(), value));
 	}
 
 	bool GetDomain(ANDomain * pValue) const

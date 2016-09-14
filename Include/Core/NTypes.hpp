@@ -21,7 +21,7 @@ namespace Neurotec
 		#define N_FRAMEWORK_MFC
 	#elif defined(wxMAJOR_VERSION)
 		#define N_FRAMEWORK_WX
-	#elif defined(QT_VERSION)
+	#elif defined(QT_VERSION) || defined(QT_CORE_LIB)
 		#define N_FRAMEWORK_QT
 	#else
 	#endif
@@ -31,8 +31,13 @@ namespace Neurotec
 	#define N_CPP11
 #endif
 
+#if defined(N_MAC)
+	#include <AvailabilityMacros.h>
+#endif
+
 #include <Core/NNoDeprecate.h>
-#if defined(N_CPP11)
+#if defined(N_CPP11) || defined(N_IOS) || (defined(N_MAC) && defined(MAC_OS_X_VERSION_10_9) && \
+	MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
 	#include <unordered_map>
 	#include <unordered_set>
 	#define N_HASH_MAP ::std::unordered_map
@@ -728,7 +733,19 @@ public:\
 		NCheck(name##Set(&other, this));\
 		return *this;\
 	}
-
+#define N_EQUATABLE_STRUCT_OPERATOR(name)\
+public:\
+	bool operator==(const name & value) const\
+	{\
+		return name::NativeTypeOf().AreValuesEqual(this, sizeof(value), &value, sizeof(value));\
+	}
+#define N_DECLARE_EQUATABLE_STRUCT_CLASS(name)\
+	N_DECLARE_STRUCT_CLASS(name)\
+	N_EQUATABLE_STRUCT_OPERATOR(name)
+#define N_DECLARE_EQUATABLE_DISPOSABLE_STRUCT_CLASS(name)\
+	N_DECLARE_DISPOSABLE_STRUCT_CLASS(name)\
+	N_EQUATABLE_STRUCT_OPERATOR(name)
+	
 namespace Neurotec
 {
 
@@ -745,7 +762,6 @@ namespace Text
 {
 class NStringBuilder;
 }
-class NException;
 namespace IO
 {
 class NBuffer;
@@ -1036,7 +1052,11 @@ public:
 	template<typename DelegateType, typename CallbackType>
 	static NCallback CreateCallback(CallbackType callback, void * pParam)
 	{
+#ifdef N_CPP11
+		std::unique_ptr<DelegateType> callbackDelegate(new DelegateType(callback));
+#else
 		std::auto_ptr<DelegateType> callbackDelegate(new DelegateType(callback));
+#endif
 		callbackDelegate->pParam = pParam;
 		NCallback cb(DelegateType::NativeCallback, callbackDelegate.get(), DelegateType::OnFree,
 			DelegateType::GetGetHashCodeProc(callback), DelegateType::GetEqualsProc(callback));
@@ -1074,7 +1094,11 @@ public:
 			if (pCallbackParam) NThrowArgumentNullException(N_T("pCallback"));
 			return NCallback();
 		}
+#ifdef N_CPP11
+		::std::unique_ptr<CallbackParam> p(new CallbackParam(pParam, reinterpret_cast<void *>(pCallback), pCallbackParam));
+#else
 		::std::auto_ptr<CallbackParam> p(new CallbackParam(pParam, reinterpret_cast<void *>(pCallback), pCallbackParam));
+#endif
 		NCallback callback(pNativeCallback, p.get(), OnCallbackFree, OnCallbackGetHashCode, OnCallbackEquals);
 		p.release();
 		return callback;
@@ -1768,7 +1792,7 @@ public:
 
 	~NCollectionItemWrapper()
 	{
-		Set(NULL);
+		Set((const T *)NULL);
 	}
 
 	T * Get()
@@ -1894,6 +1918,7 @@ public:
 	NCollectionIterator & operator=(const NCollectionIterator & value)
 	{
 		index = value.index;
+		return *this;
 	}
 };
 
@@ -2290,6 +2315,18 @@ class NGuid : public NGuid_
 	N_DECLARE_STRUCT_CLASS(NGuid)
 
 public:
+	NGuid(const NByte * pSrcArray, NInt srcLength)
+	{
+		NCheck(NGuidInitFromByteArray(pSrcArray, srcLength, this));
+	}
+
+	static NGuid NewGuid()
+	{
+		NGuid value;
+		NCheck(NGuidNewGuid(&value));
+		return value;
+	}
+
 	static bool TryParse(const NStringWrapper & value, const NStringWrapper & format, NGuid * pValue)
 	{
 		NBool result;
@@ -2303,6 +2340,13 @@ public:
 		NGuid theValue;
 		NCheck(NGuidParseN(value.GetHandle(), format.GetHandle(), &theValue));
 		return theValue;
+	}
+
+	NInt ToByteArray(NByte * pDstArray, NInt dstLength)
+	{
+		NInt length;
+		NCheck(length = NGuidToByteArray(this, pDstArray, dstLength));
+		return length;
 	}
 
 	NString ToString(const NStringWrapper & format = NString()) const
@@ -2493,7 +2537,7 @@ public:
 
 class NNameStringPair : public NNameStringPair_
 {
-	N_DECLARE_DISPOSABLE_STRUCT_CLASS(NNameStringPair)
+	N_DECLARE_EQUATABLE_DISPOSABLE_STRUCT_CLASS(NNameStringPair)
 
 public:
 	NNameStringPair(const NStringWrapper & key, const NStringWrapper & value)

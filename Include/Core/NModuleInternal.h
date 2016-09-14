@@ -20,6 +20,8 @@ typedef NResult (N_CALLBACK NModuleGetActivatedProc)(HNString * phValue);
 NResult N_API NModuleRegister(NModuleCreateProc pCreate, HNModule * phModule);
 NResult N_API NModuleUnregister(HNModule * phModule);
 
+NResult N_API NModuleGetVarP(NModuleOfProc pModuleOf, void * * ppVar);
+
 NResult N_API NModuleSetDependences(HNModule hModule, NModuleOfProc * arpValues, NInt count);
 NResult N_API NModuleSetInit(HNModule hModule, NModuleInitProc pValue);
 NResult N_API NModuleSetLazyInit(HNModule hModule, NModuleLazyInitProc pValue);

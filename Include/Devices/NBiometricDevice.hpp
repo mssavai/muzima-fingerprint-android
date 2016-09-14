@@ -33,7 +33,7 @@ public:
 
 		::Neurotec::Biometrics::NBiometric GetBiometric() const
 		{
-			return FromHandle< ::Neurotec::Biometrics::NBiometric>(hBiometric);
+			return FromHandle< ::Neurotec::Biometrics::NBiometric>(hBiometric, false);
 		}
 	};
 

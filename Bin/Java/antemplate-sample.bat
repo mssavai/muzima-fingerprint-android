@@ -1,1 +1,0 @@
-javaw -jar antemplate-sample.jar

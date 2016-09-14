@@ -14,11 +14,6 @@ N_DECLARE_OBJECT_TYPE(NWaitObject, NObject)
 
 NResult N_API NWaitObjectWaitFor(HNWaitObject hWaitObject);
 NResult N_API NWaitObjectWaitForTimed(HNWaitObject hWaitObject, NInt timeOutMilliseconds, NBool * pResult);
-#define NWaitObjectTimedWaitFor(hWaitObject, timeOutMilliseconds, pResult) NWaitObjectWaitForTimed(hWaitObject, timeOutMilliseconds, pResult)
-
-#ifdef N_MSVC
-	#pragma deprecated("NWaitObjectTimedWaitFor")
-#endif
 
 #ifdef N_CPP
 }

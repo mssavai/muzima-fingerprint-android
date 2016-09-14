@@ -13,7 +13,7 @@ namespace Neurotec
 #define N_EVENT_IMPL(argCount, argsDef, callbackArgTypes, callbackArgs) \
 		N_DECLARE_PRIMITIVE_CLASS(NEvent##argCount)\
 	private:\
-		typedef void (* CallbackType)callbackArgTypes;\
+		typedef void (N_CALLBACK CallbackType)callbackArgTypes;\
 	public:\
 		NEvent##argCount()\
 		{\

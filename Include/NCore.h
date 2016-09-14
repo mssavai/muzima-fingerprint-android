@@ -59,6 +59,7 @@
 #include <IO/NBinaryWriter.h>
 #include <IO/NBuffer.h>
 #include <IO/NFile.h>
+#include <IO/NFileEnumerator.h>
 #include <IO/NDirectory.h>
 #include <IO/NPath.h>
 #include <IO/NTextReader.h>

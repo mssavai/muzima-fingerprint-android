@@ -34,49 +34,53 @@ class wxPluginManagerDlg : public wxDialog
 private:
 	class AsyncRun : public wxThread
 	{
+	public:
+		typedef void (Neurotec::Plugins::NPlugin::*PluginFn)();
+		typedef void (Neurotec::Plugins::NPluginManager::*PluginManagerFn)();
+
 	private:
 		enum Target
 		{
 			AddPlugin,
-			PluginManagerFunc,
 			PluginFunc,
+			PluginManagerFunc
 		};
 
-		Target _target;
-		Neurotec::Plugins::NPluginManager _pluginManager;
-		Neurotec::Plugins::NPlugin _plugin;
-		void (Neurotec::Plugins::NPluginManager:: * _pluginManagerFunction)();
-		void (Neurotec::Plugins::NPlugin:: * _pluginFunction)();
-		wxString _param;
+		Target m_target;
+		Neurotec::Plugins::NPlugin m_plugin;
+		Neurotec::Plugins::NPluginManager m_pluginManager;
+		PluginFn m_pluginFn;
+		PluginManagerFn m_pluginManagerFn;
+		wxString m_param;
 
-		AsyncRun(void (Neurotec::Plugins::NPluginManager::*ptr)(), Neurotec::Plugins::NPluginManager instance)
-			: wxThread(), _target(PluginManagerFunc), _pluginManager(instance), _plugin(NULL), _pluginManagerFunction(ptr), _pluginFunction(NULL)
+		AsyncRun(PluginManagerFn function, Neurotec::Plugins::NPluginManager manager)
+			: wxThread(), m_target(PluginManagerFunc), m_plugin(NULL), m_pluginManager(manager), m_pluginFn(NULL), m_pluginManagerFn(function), m_param(wxEmptyString)
 		{
 		}
 
-		AsyncRun(void (Neurotec::Plugins::NPlugin::*ptr)(), Neurotec::Plugins::NPlugin plugin)
-			: wxThread(), _target(PluginFunc), _pluginManager(NULL), _plugin(plugin), _pluginManagerFunction(NULL), _pluginFunction(ptr)
+		AsyncRun(PluginFn function, Neurotec::Plugins::NPlugin plugin)
+			: wxThread(), m_target(PluginFunc), m_plugin(plugin), m_pluginManager(NULL), m_pluginFn(function), m_pluginManagerFn(NULL), m_param(wxEmptyString)
 		{
 		}
 
 		AsyncRun(Neurotec::Plugins::NPluginManager manager, wxString param)
-			: wxThread(), _target(AddPlugin), _pluginManager(manager), _plugin(NULL), _pluginManagerFunction(NULL), _pluginFunction(NULL), _param(param)
+			: wxThread(), m_target(AddPlugin), m_plugin(NULL), m_pluginManager(manager), m_pluginFn(NULL), m_pluginManagerFn(NULL), m_param(param)
 		{
 		}
 
 	public:
 		virtual void* Entry()
 		{
-			switch(_target)
+			switch(m_target)
 			{
 			case AddPlugin:
-				_pluginManager.GetPlugins().Add(_param);
-				break;
-			case PluginManagerFunc:
-				(_pluginManager.*_pluginManagerFunction)();
+				m_pluginManager.GetPlugins().Add(m_param);
 				break;
 			case PluginFunc:
-				(_plugin.*_pluginFunction)();
+				(m_plugin.*m_pluginFn)();
+				break;
+			case PluginManagerFunc:
+				(m_pluginManager.*m_pluginManagerFn)();
 				break;
 			default:
 				break;
@@ -87,49 +91,41 @@ private:
 		static void AddPluginAsync(Neurotec::Plugins::NPluginManager manager, wxString plugin)
 		{
 			AsyncRun * target = new AsyncRun(manager, plugin);
-			target->Create();
 			target->Run();
 		}
 		static void PlugAllAsync(Neurotec::Plugins::NPluginManager manager)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPluginManager::PlugAll, manager);
-			target->Create();
 			target->Run();
 		}
 		static void UnplugAllAsync(Neurotec::Plugins::NPluginManager manager)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPluginManager::UnplugAll, manager);
-			target->Create();
 			target->Run();
 		}
 		static void RefreshAsync(Neurotec::Plugins::NPluginManager manager)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPluginManager::Refresh, manager);
-			target->Create();
 			target->Run();
 		}
 		static void PlugAsync(Neurotec::Plugins::NPlugin plugin)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPlugin::Plug, plugin);
-			target->Create();
 			target->Run();
 		}
 		static void UnplugAsync(Neurotec::Plugins::NPlugin plugin)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPlugin::Unplug, plugin);
-			target->Create();
 			target->Run();
 		}
 		static void EnableAsync(Neurotec::Plugins::NPlugin plugin)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPlugin::Enable, plugin);
-			target->Create();
 			target->Run();
 		}
 		static void DisableAsync(Neurotec::Plugins::NPlugin plugin)
 		{
 			AsyncRun * target = new AsyncRun(&Neurotec::Plugins::NPlugin::Disable, plugin);
-			target->Create();
 			target->Run();
 		}
 	};
@@ -352,6 +348,7 @@ private:
 	{
 		Destroy();
 	}
+
 	wxString GetInterfaceVersionsString()
 	{
 		if(!pluginManager.GetHandle())
@@ -411,7 +408,7 @@ private:
 	{
 		if(event.GetId() == ID_PLUGINMANAGER_PLUGIN_ADDED)
 		{
-			OnPluginAdded(*(Neurotec::Plugins::NPlugin*)event.GetClientData());
+			OnPluginAdded(reinterpret_cast<Neurotec::Plugins::HNPlugin>(event.GetClientData()));
 		}
 		else if(event.GetId() == ID_PLUGINMANAGER_DISABLED_PLUGINS_CHANGED)
 		{
@@ -419,13 +416,13 @@ private:
 		}
 		else if(event.GetId() == ID_PLUGINMANAGER_PLUGIN_CHANGED)
 		{
-			OnPluginChanged(*(Neurotec::Plugins::NPlugin*)event.GetClientData());
+			OnPluginChanged(reinterpret_cast<Neurotec::Plugins::HNPlugin>(event.GetClientData()));
 		}
 	}
 
 	static void PluginChanged(Neurotec::Plugins::NPlugin::PropertyChangedEventArgs args)
 	{
-		wxPluginManagerDlg * dialog = (wxPluginManagerDlg*)args.GetParam();
+		wxPluginManagerDlg * dialog = reinterpret_cast<wxPluginManagerDlg*>(args.GetParam());
 		wxCommandEvent event;
 		event.SetEventType(wxEVT_PLUGIN_MANAGER_DLG);
 		event.SetId(ID_PLUGINMANAGER_PLUGIN_CHANGED);
@@ -763,6 +760,7 @@ private:
 		UpdateTotalInfo();
 		OnSelectedPluginChanged();
 	}
+
 	void OnSelectedPluginChanged()
 	{
 		int count = listPlugins->GetSelectedItemCount();
@@ -852,7 +850,7 @@ private:
 	{
 		if (args.GetAction() == Neurotec::Collections::nccaAdd)
 		{
-			wxPluginManagerDlg * dialog = (wxPluginManagerDlg*)args.GetParam();
+			wxPluginManagerDlg * dialog = reinterpret_cast<wxPluginManagerDlg*>(args.GetParam());
 			for (int i = 0; i < args.GetNewItems().GetCount(); i++)
 			{
 				wxCommandEvent event;
@@ -866,7 +864,7 @@ private:
 
 	static void PluginManager_DisabledPluginCanged(::Neurotec::Collections::CollectionChangedEventArgs< ::Neurotec::NString> args)
 	{
-		wxPluginManagerDlg * dialog = (wxPluginManagerDlg*)args.GetParam();
+		wxPluginManagerDlg * dialog = reinterpret_cast<wxPluginManagerDlg*>(args.GetParam());
 		wxCommandEvent event;
 		event.SetEventType(wxEVT_PLUGIN_MANAGER_DLG);
 		event.SetId(ID_PLUGINMANAGER_DISABLED_PLUGINS_CHANGED);

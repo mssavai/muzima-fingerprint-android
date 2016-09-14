@@ -10,6 +10,7 @@ namespace Neurotec { namespace Biometrics { namespace Gui
 {
 
 wxDECLARE_EVENT(wxEVT_IRIS_PROPERTY_CHANGED, wxCommandEvent);
+wxDECLARE_EVENT(wxEVT_IRIS_OBJECTS_COLLECTION_CHANGED, wxCommandEvent);
 
 class wxNIrisView: public Neurotec::Gui::wxNView
 {
@@ -35,6 +36,7 @@ public:
 		m_innerBoundaryWidth = 2;
 
 		this->Bind(wxEVT_IRIS_PROPERTY_CHANGED, &wxNIrisView::UpdateIrisView, this);
+		this->Bind(wxEVT_IRIS_OBJECTS_COLLECTION_CHANGED, &wxNIrisView::UpdateAttributes, this);
 
 		Clear();
 	}
@@ -246,13 +248,43 @@ private:
 
 	void UpdateIrisView(wxCommandEvent &event)
 	{
-		::std::auto_ptr<wxImage> image(dynamic_cast<wxImage*>(event.GetEventObject()));
+#ifdef N_CPP11
+		typedef std::unique_ptr<wxImage> SmartPtrImage;
+#else
+		typedef std::auto_ptr<wxImage> SmartPtrImage;
+#endif
+		SmartPtrImage image(dynamic_cast<wxImage*>(event.GetEventObject()));
 		if (image.get())
 		{
 			m_bitmap = wxBitmap(*(image.get()));
 			SetViewSize(m_bitmap.GetWidth(), m_bitmap.GetHeight());
 		}
 		else Clear();
+
+		Refresh(false);
+	}
+
+	void UpdateAttributes(wxCommandEvent &event)
+	{
+#ifdef N_CPP11
+		typedef std::unique_ptr<NArrayWrapper<NEAttributes> > SmartPtrAttributes;
+#else
+		typedef std::auto_ptr<NArrayWrapper<NEAttributes> > SmartPtrAttributes;
+#endif
+		SmartPtrAttributes attributes((NArrayWrapper<NEAttributes> *)event.GetClientData());
+		switch(event.GetInt())
+		{
+		case ::Neurotec::Collections::nccaAdd:
+			OnAttributesAdded(this, *(attributes.get()));
+			break;
+		case ::Neurotec::Collections::nccaRemove:
+			OnAttributesRemoved(this, *(attributes.get()));
+			break;
+		case ::Neurotec::Collections::nccaReset:
+			OnAttributesReset(this);
+			break;
+		default: break;
+		};
 
 		Refresh(false);
 	}
@@ -291,11 +323,37 @@ private:
 			{
 				if (view->m_attributes[j].Equals(attributes[i]))
 				{
+					NEAttributes::InnerBoundaryPointCollection innerBoundaryPointCollection =
+						view->m_attributes[j].GetInnerBoundaryPoints();
+
+					NEAttributes::OuterBoundaryPointCollection outerBoundaryPointCollection =
+						view->m_attributes[j].GetOuterBoundaryPoints();
+
+					innerBoundaryPointCollection.RemoveCollectionChangedCallback(&wxNIrisView::OnIrisBoundaryPointsCollectionChanged, view);
+					outerBoundaryPointCollection.RemoveCollectionChangedCallback(&wxNIrisView::OnIrisBoundaryPointsCollectionChanged, view);
+
 					view->m_attributes.erase(view->m_attributes.begin() + j);
 					break;
 				}
 			}
 		}
+	}
+
+	static void OnAttributesReset(wxNIrisView *view)
+	{
+		for (unsigned int i = 0; i < view->m_attributes.size(); i++)
+		{
+			NEAttributes::InnerBoundaryPointCollection innerBoundaryPointCollection =
+				view->m_attributes[i].GetInnerBoundaryPoints();
+
+			NEAttributes::OuterBoundaryPointCollection outerBoundaryPointCollection =
+				view->m_attributes[i].GetOuterBoundaryPoints();
+
+			innerBoundaryPointCollection.RemoveCollectionChangedCallback(&wxNIrisView::OnIrisBoundaryPointsCollectionChanged, view);
+			outerBoundaryPointCollection.RemoveCollectionChangedCallback(&wxNIrisView::OnIrisBoundaryPointsCollectionChanged, view);
+		}
+
+		view->m_attributes.clear();
 	}
 
 	static void OnIrisBoundaryPointsCollectionChanged(Neurotec::Collections::CollectionChangedEventArgs<Neurotec::Geometry::NPoint> args)
@@ -306,21 +364,37 @@ private:
 
 	static void IrisObjectsCollectionChangedCallback(::Neurotec::Collections::CollectionChangedEventArgs<NEAttributes> args)
 	{
-		wxNIrisView *view = static_cast<wxNIrisView *>(args.GetParam());
+		NArrayWrapper<NEAttributes> * pAttributes = NULL;
+		NArrayWrapper<NEAttributes> attributes(0);
+		NCollectionChangedAction action = args.GetAction();
+		NBool postEvent = false;
 
-		switch(args.GetAction())
+		switch(action)
 		{
 		case ::Neurotec::Collections::nccaAdd:
-			OnAttributesAdded(view, args.GetNewItems());
+			attributes = args.GetNewItems();
+			pAttributes = new NArrayWrapper<NEAttributes>(attributes.begin(), attributes.end());
+			postEvent = true;
 			break;
 		case ::Neurotec::Collections::nccaRemove:
-			OnAttributesRemoved(view, args.GetOldItems());
+			attributes = args.GetOldItems();
+			pAttributes = new NArrayWrapper<NEAttributes>(attributes.begin(), attributes.end());
+			postEvent = true;
 			break;
 		case ::Neurotec::Collections::nccaReset:
-			OnAttributesRemoved(view, args.GetOldItems());
+			postEvent = true;
 			break;
 		default: break;
 		};
+
+		if (postEvent)
+		{
+			wxNIrisView * view = static_cast<wxNIrisView *>(args.GetParam());
+			wxCommandEvent event(wxEVT_IRIS_OBJECTS_COLLECTION_CHANGED);
+			event.SetInt(action);
+			event.SetClientData(pAttributes);
+			wxPostEvent(view, event);
+		}
 	}
 
 	static void IrisPropertyChangedCallback(NIris::PropertyChangedEventArgs args)

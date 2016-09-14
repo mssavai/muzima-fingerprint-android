@@ -48,6 +48,76 @@ public:
 	{
 		SetString(NOdbcBiometricConnectionSetTableNameN, value);
 	}
+
+	NString GetSubjectIdColumn() const
+	{
+		return GetString(NOdbcBiometricConnectionGetSubjectIdColumn);
+	}
+
+	void SetSubjectIdColumn(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetSubjectIdColumnN, value);
+	}
+
+	NString GetTemplateColumn() const
+	{
+		return GetString(NOdbcBiometricConnectionGetTemplateColumn);
+	}
+
+	void SetTemplateColumn(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetTemplateColumnN, value);
+	}
+
+	NString GetSelectAllQuery() const
+	{
+		return GetString(NOdbcBiometricConnectionGetSelectAllQuery);
+	}
+
+	void SetSelectAllQuery(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetSelectAllQueryN, value);
+	}
+
+	NString GetEnrollQuery() const
+	{
+		return GetString(NOdbcBiometricConnectionGetEnrollQuery);
+	}
+
+	void SetEnrollQuery(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetEnrollQueryN, value);
+	}
+
+	NString GetDeleteQuery() const
+	{
+		return GetString(NOdbcBiometricConnectionGetDeleteQuery);
+	}
+
+	void SetDeleteQuery(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetDeleteQueryN, value);
+	}
+
+	NString GetClearQuery() const
+	{
+		return GetString(NOdbcBiometricConnectionGetClearQuery);
+	}
+
+	void SetClearQuery(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetClearQueryN, value);
+	}
+
+	NString GetSelectSubjectQuery() const
+	{
+		return GetString(NOdbcBiometricConnectionGetSelectSubjectQuery);
+	}
+
+	void SetSelectSubjectQuery(const NStringWrapper & value)
+	{
+		SetString(NOdbcBiometricConnectionSetSelectSubjectQueryN, value);
+	}
 };
 
 }}}

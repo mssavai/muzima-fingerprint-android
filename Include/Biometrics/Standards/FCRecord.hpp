@@ -14,12 +14,23 @@ using ::Neurotec::Images::HNImage;
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
-#undef FCR_MAX_FACE_IMAGE_COUNT
+#undef FCR_VERSION_ANSI_1_0
+#undef FCR_VERSION_ISO_1_0
+#undef FCR_VERSION_ISO_3_0
+#undef FCR_VERSION_ANSI_CURRENT
+#undef FCR_VERSION_ISO_CURRENT
 
+#undef FCR_MAX_FACE_IMAGE_COUNT
 #undef FCR_PROCESS_FIRST_FACE_IMAGE_ONLY
 
-const NInt FCR_MAX_FACE_IMAGE_COUNT = N_USHORT_MAX;
+const NVersion FCR_VERSION_ANSI_1_0(0x0100);
+const NVersion FCR_VERSION_ISO_1_0(0x0100);
+const NVersion FCR_VERSION_ISO_3_0(0x0300);
 
+const NVersion FCR_VERSION_ANSI_CURRENT(FCR_VERSION_ANSI_1_0);
+const NVersion FCR_VERSION_ISO_CURRENT(FCR_VERSION_ISO_3_0);
+
+const NInt FCR_MAX_FACE_IMAGE_COUNT = N_USHORT_MAX;
 const NUInt FCR_PROCESS_FIRST_FACE_IMAGE_ONLY = 0x00000100;
 
 class FCRecord : public NObject
@@ -28,7 +39,7 @@ class FCRecord : public NObject
 
 public:
 	class FaceImageCollection : public ::Neurotec::Collections::NCollectionBase<FcrFaceImage, FCRecord,
-		FCRecordGetFaceImageCount, FCRecordGetFaceImageEx>
+		FCRecordGetFaceImageCount, FCRecordGetFaceImage>
 	{
 		FaceImageCollection(const FCRecord & owner)
 		{
@@ -51,7 +62,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(FCRecordRemoveFaceImage(this->GetOwnerHandle(), index));
+			NCheck(FCRecordRemoveFaceImageAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -59,35 +70,19 @@ public:
 			NCheck(FCRecordClearFaceImages(this->GetOwnerHandle()));
 		}
 
-		FcrFaceImage Add(FcrFaceImageType faceImageType, FcrImageDataType imageDataType, NUShort width, NUShort height, FcrImageColorSpace imageColorSpace, NByte vendorImageColorSpace,
-			const ::Neurotec::IO::NBuffer & imageData, NUInt flags = 0)
+		NInt Add(const FcrFaceImage & value)
 		{
-			HFcrFaceImage hFaceImage;
-			NCheck(FCRecordAddFaceImageN(this->GetOwnerHandle(), faceImageType, imageDataType, width, height, imageColorSpace, vendorImageColorSpace, imageData.GetHandle(), flags | N_OBJECT_REF_RET, &hFaceImage));
-			return FromHandle<FcrFaceImage>(hFaceImage, true);
-		}
-
-		FcrFaceImage Add(FcrFaceImageType faceImageType, FcrImageDataType imageDataType, NUShort width, NUShort height, FcrImageColorSpace imageColorSpace, NByte vendorImageColorSpace,
-			const void * pImageData, NSizeType imageDataLength, NUInt flags = 0)
-		{
-			HFcrFaceImage hFaceImage;
-			NCheck(FCRecordAddFaceImage(this->GetOwnerHandle(), faceImageType, imageDataType, width, height, imageColorSpace, vendorImageColorSpace, pImageData, imageDataLength, flags | N_OBJECT_REF_RET, &hFaceImage));
-			return FromHandle<FcrFaceImage>(hFaceImage, true);
-		}
-
-		FcrFaceImage Add(const ::Neurotec::Images::NImage & image, FcrFaceImageType faceImageType, FcrImageDataType imageDataType, NUInt flags = 0)
-		{
-			HFcrFaceImage hFaceImage;
-			NCheck(FCRecordAddFaceImageFromNImage(this->GetOwnerHandle(), image.GetHandle(), faceImageType, imageDataType, flags | N_OBJECT_REF_RET, &hFaceImage));
-			return FromHandle<FcrFaceImage>(hFaceImage, true);
+			NInt index;
+			NCheck(FCRecordAddFaceImageEx(this->GetOwnerHandle(), value.GetHandle(), &index));
+			return index;
 		}
 	};
 
 private:
-	static HFCRecord Create(BdifStandard standard, NUInt flags)
+	static HFCRecord Create(BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HFCRecord handle;
-		NCheck(FCRecordCreate(flags, standard, &handle));
+		NCheck(FCRecordCreateEx(standard, version.GetValue(), flags, &handle));
 		return handle;
 	}
 
@@ -105,30 +100,23 @@ private:
 		return handle;
 	}
 
-	static HFCRecord Create(const FCRecord & srcRecord, BdifStandard standard, NUInt flags)
+	static HFCRecord Create(const FCRecord & srcRecord, BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HFCRecord handle;
-		NCheck(FCRecordCreateFromFCRecord(srcRecord.GetHandle(), flags, standard, &handle));
+		NCheck(FCRecordCreateFromFCRecordEx(srcRecord.GetHandle(), flags, standard, version.GetValue(), &handle));
 		return handle;
 	}
 
-	static HFCRecord Create(const ::Neurotec::Images::NImage & image, FcrFaceImageType faceImageType, FcrImageDataType imageDataType, BdifStandard standard, NUInt flags)
+	static HFCRecord Create(const ::Neurotec::Images::NImage & image, FcrFaceImageType faceImageType, FcrImageDataType imageDataType, BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HFCRecord handle;
-		NCheck(FCRecordCreateFromNImage(image.GetHandle(), faceImageType, imageDataType, flags, standard, &handle));
+		NCheck(FCRecordCreateFromNImageEx(image.GetHandle(), faceImageType, imageDataType, flags, standard, version.GetValue(), &handle));
 		return handle;
 	}
 
 public:
-	static NSizeType CalculateSize(BdifStandard standard, const NSizeType * arFaceImageSizes, NInt faceImageCount)
-	{
-		NSizeType size;
-		NCheck(FCRecordCalculateSize(standard, faceImageCount, arFaceImageSizes, &size));
-		return size;
-	}
-
-	explicit FCRecord(BdifStandard standard, NUInt flags = 0)
-		: NObject(Create(standard, flags), true)
+	explicit FCRecord(BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(standard, version, flags), true)
 	{
 	}
 
@@ -142,13 +130,13 @@ public:
 	{
 	}
 
-	FCRecord(const FCRecord & srcRecord, BdifStandard standard, NUInt flags = 0)
-		: NObject(Create(srcRecord, standard, flags), true)
+	FCRecord(const FCRecord & srcRecord, BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(srcRecord, standard, version, flags), true)
 	{
 	}
 
-	FCRecord(const ::Neurotec::Images::NImage & image, FcrFaceImageType faceImageType, FcrImageDataType imageDataType, BdifStandard standard, NUInt flags = 0)
-		: NObject(Create(image, faceImageType, imageDataType, standard, flags), true)
+	FCRecord(const ::Neurotec::Images::NImage & image, FcrFaceImageType faceImageType, FcrImageDataType imageDataType, BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(image, faceImageType, imageDataType, standard, version, flags), true)
 	{
 	}
 
@@ -157,6 +145,39 @@ public:
 		BdifStandard value;
 		NCheck(FCRecordGetStandard(GetHandle(), &value));
 		return value;
+	}
+
+	NVersion GetVersion() const
+	{
+		NVersion_ value;
+		NCheck(FCRecordGetVersion(GetHandle(), &value));
+		return NVersion(value);
+	}
+
+	bool GetCertificationFlag() const
+	{
+		NBool value;
+		NCheck(FCRecordGetCertificationFlag(GetHandle(), &value));
+		return value != 0;
+	}
+
+	BdifFaceTemporalSemantics GetTemporalSemantics() const
+	{
+		BdifFaceTemporalSemantics value;
+		NCheck(FCRecordGetTemporalSemantics(GetHandle(), &value));
+		return value;
+	}
+
+	NUShort GetTemporalSemanticsInMilliseconds() const
+	{
+		NUShort value;
+		NCheck(FCRecordGetTemporalSemanticsInMilliseconds(GetHandle(), &value));
+		return value;
+	}
+
+	void SetTemporalSemantics(const BdifFaceTemporalSemantics value,  NUShort valueInMilliseconds)
+	{
+		NCheck(FCRecordSetTemporalSemantics(GetHandle(), value, valueInMilliseconds));
 	}
 
 	FaceImageCollection GetFaceImages()

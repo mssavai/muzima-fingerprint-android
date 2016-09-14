@@ -36,6 +36,24 @@ N_DECLARE_OBJECT_TYPE(ANType15Record, ANFPImageAsciiBinaryRecord)
 
 #define AN_TYPE_15_RECORD_MAX_QUALITY_METRIC_COUNT 4
 
+NResult N_API ANType15RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType15Record * phRecord);
+
+NResult N_API ANType15RecordCreateFromNImageN(NVersion_ version, NInt idc, HNString hSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType15Record * phRecord);
+#ifndef N_NO_ANSI_FUNC
+NResult ANType15RecordCreateFromNImageA(NVersion_ version, NInt idc, const NAChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType15Record * phRecord);
+#endif
+#ifndef N_NO_UNICODE
+NResult ANType15RecordCreateFromNImageW(NVersion_ version, NInt idc, const NWChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType15Record * phRecord);
+#endif
+#ifdef N_DOCUMENTATION
+NResult ANType15RecordCreateFromNImage(NVersion_ version, NInt idc, const NChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType15Record * phRecord);
+#endif
+#define ANType15RecordCreateFromNImage N_FUNC_AW(ANType15RecordCreateFromNImage)
+
 #ifdef N_CPP
 }
 #endif

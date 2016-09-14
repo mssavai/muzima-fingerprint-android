@@ -14,8 +14,10 @@
 #include <Biometrics/Standards/FCRecord.h>
 #include <Biometrics/Standards/FIRecord.h>
 #include <Biometrics/Standards/FMRecord.h>
+#include <Biometrics/Standards/FMCRecord.h>
 #include <Biometrics/Standards/IIRecord.h>
 #include <Biometrics/Standards/BdifTypes.h>
+#include <Biometrics/Standards/CbeffRecord.h>
 
 #ifdef N_CPP
 extern "C"
@@ -63,9 +65,11 @@ NResult N_API NSubjectSetTemplateAN(HNSubject hSubject, HANTemplate hValue);
 NResult N_API NSubjectSetTemplateFC(HNSubject hSubject, HFCRecord hValue);
 NResult N_API NSubjectSetTemplateFI(HNSubject hSubject, HFIRecord hValue);
 NResult N_API NSubjectSetTemplateFM(HNSubject hSubject, HFMRecord hValue);
+NResult N_API NSubjectSetTemplateFMC(HNSubject hSubject, HFMCRecord hValue);
 NResult N_API NSubjectSetTemplateII(HNSubject hSubject, HIIRecord hValue);
+NResult N_API NSubjectSetTemplateCbeff(HNSubject hSubject, HCbeffRecord hValue);
 NResult N_API NSubjectGetTemplateBuffer(HNSubject hSubject, HNBuffer * phValue);
-NResult N_API NSubjectGetTemplateBufferWithFormat(HNSubject hSubject, NUShort formatOwner, NUShort formatType, HNBuffer * phValue);
+NResult N_API NSubjectGetTemplateBufferWithFormatEx(HNSubject hSubject, NUShort formatOwner, NUShort formatType, NVersion_ version, HNBuffer * phValue);
 NResult N_API NSubjectSetTemplateBuffer(HNSubject hSubject, HNBuffer hValue);
 NResult N_API NSubjectSetTemplateBufferWithFormat(HNSubject hSubject, HNBuffer hValue, NUShort formatOwner, NUShort formatType);
 NResult N_API NSubjectToANTemplateN(HNSubject hSubject, NVersion_ version, HNString hTot, HNString hDai, HNString hOri, HNString hTcn, HANTemplate * phValue);
@@ -82,6 +86,7 @@ NResult N_API NSubjectToANTemplate(HNSubject hSubject, NVersion_ version, const 
 NResult N_API NSubjectToFCRecord(HNSubject hSubject, BdifStandard standard, NVersion_ version, HFCRecord * phValue);
 NResult N_API NSubjectToFIRecord(HNSubject hSubject, BdifStandard standard, NVersion_ version, HFIRecord * phValue);
 NResult N_API NSubjectToFMRecord(HNSubject hSubject, BdifStandard standard, NVersion_ version, HFMRecord * phValue);
+NResult N_API NSubjectToFMCRecord(HNSubject hSubject, BdifStandard standard, NVersion_ version, FmcrMinutiaFormat minutiaFormat, HFMCRecord * phValue);
 NResult N_API NSubjectToIIRecord(HNSubject hSubject, BdifStandard standard, NVersion_ version, HIIRecord * phValue);
 
 NResult N_API NSubjectGetId(HNSubject hSubject, HNString * phValue);

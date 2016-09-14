@@ -47,6 +47,8 @@ NResult N_API NBiometricSetFileNameW(HNBiometric hBiometric, const NWChar * szVa
 NResult N_API NBiometricSetFileName(HNBiometric hBiometric, const NChar * szValue);
 #endif
 #define NBiometricSetFileName N_FUNC_AW(NBiometricSetFileName)
+NResult N_API NBiometricGetSampleBuffer(HNBiometric hBiometric, HNBuffer * phValue);
+NResult N_API NBiometricSetSampleBuffer(HNBiometric hBiometric, HNBuffer hValue);
 NResult N_API NBiometricGetError(HNBiometric hBiometric, HNError * phValue);
 
 #ifdef N_CPP

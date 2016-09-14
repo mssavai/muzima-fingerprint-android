@@ -11,6 +11,15 @@ namespace Neurotec { namespace Gui
 
 #ifdef N_FRAMEWORK_WX
 
+	wxDEFINE_EVENT(wxEVT_N_VIEW_ZOOM_CHANGED, wxCommandEvent);
+	wxDEFINE_EVENT(wxEVT_N_VIEW_ZOOM_TO_FIT_CHANGED, wxCommandEvent);
+
+BEGIN_EVENT_TABLE(wxNViewZoomSlider, wxWindow)
+	EVT_SLIDER(wxID_ANY, wxNViewZoomSlider::OnSliderValueChanged)
+	EVT_SPINCTRL(wxID_ANY, wxNViewZoomSlider::OnSpinValueChanged)
+	EVT_CHECKBOX(wxID_ANY, wxNViewZoomSlider::OnChbZoomToFitChanged)
+END_EVENT_TABLE()
+
 BEGIN_EVENT_TABLE(wxNView, wxScrolledWindow)
 	EVT_ERASE_BACKGROUND(wxNView::OnEraseBackGround)
 	EVT_PAINT(wxNView::OnPaint)

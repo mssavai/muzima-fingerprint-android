@@ -31,35 +31,9 @@ N_DECLARE_STATIC_OBJECT_TYPE(NProcessorInfo)
 NResult N_API NProcessorInfoGetCount(NInt * pValue);
 
 NResult N_API NProcessorInfoGetVendorNameN(HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NProcessorInfoGetVendorNameN instead")
-NResult N_API NProcessorInfoGetVendorNameExA(NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NProcessorInfoGetVendorNameN instead")
-NResult N_API NProcessorInfoGetVendorNameExW(NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NProcessorInfoGetVendorNameEx(NChar * szValue, NInt valueSize);
-#endif
-#define NProcessorInfoGetVendorNameEx N_FUNC_AW(NProcessorInfoGetVendorNameEx)
-
 NResult N_API NProcessorInfoGetVendor(NProcessorVendor * pValue);
 NResult N_API NProcessorInfoGetModelInfo(NInt * pFamily, NInt * pModel, NInt * pStepping);
-
 NResult N_API NProcessorInfoGetModelNameN(HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NProcessorInfoGetModelNameN instead")
-NResult N_API NProcessorInfoGetModelNameExA(NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NProcessorInfoGetModelNameN instead")
-NResult N_API NProcessorInfoGetModelNameExW(NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NProcessorInfoGetModelNameEx(NChar * szValue, NInt valueSize);
-#endif
-#define NProcessorInfoGetModelNameEx N_FUNC_AW(NProcessorInfoGetModelNameEx)
 
 NResult N_API NProcessorInfoIsMmxSupportedEx(NBool * pValue);
 NResult N_API NProcessorInfoIs3DNowSupportedEx(NBool * pValue);

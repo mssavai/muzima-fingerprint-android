@@ -182,6 +182,22 @@ public:
 	{
 		NCheck(NTemplateClear(GetHandle()));
 	}
+
+	static NTemplate Merge(const NArrayWrapper< ::Neurotec::IO::NBuffer>& buffers, NUInt flags = 0)
+	{
+		HNTemplate handle;
+		NCheck(NTemplateMerge(const_cast<HNBuffer *>(buffers.GetPtr()), buffers.GetCount(), flags, &handle));
+		return FromHandle<NTemplate>(handle);
+	}
+
+	template<typename InputIt>
+	static NTemplate Merge(InputIt first, InputIt last, NUInt flags = 0)
+	{
+		NArrayWrapper< ::Neurotec::IO::NBuffer> buffers(first, last);
+		HNTemplate handle;
+		NCheck(NTemplateMerge(const_cast<HNBuffer *>(buffers.GetPtr()), buffers.GetCount(), flags, &handle));
+		return FromHandle<NTemplate>(handle);
+	}
 };
 
 }}

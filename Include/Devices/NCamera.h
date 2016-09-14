@@ -33,6 +33,7 @@ typedef NResult (N_CALLBACK NCameraStillCapturedCallback)(HNCamera hDevice, HNSt
 N_DECLARE_TYPE(NCameraStillCapturedCallback)
 
 NResult N_API NCameraGetFrame(HNCamera hDevice, HNImage * phImage);
+NResult N_API NCameraGetFrameEx(HNCamera hDevice, NTimeSpan_ * pTimeStamp, NTimeSpan_ * pDuration, HNImage * phImage);
 NResult N_API NCameraIsFocusSupported(HNCamera hDevice, NBool * pValue);
 NResult N_API NCameraIsFocusRegionSupported(HNCamera hDevice, NBool * pValue);
 NResult N_API NCameraGetFocusRegion(HNCamera hDevice, struct NRectF_ * pValue, NBool * pHasValue);

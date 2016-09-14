@@ -159,6 +159,13 @@ typedef struct NdmInterfaceV1_
 	NResult (N_CALLBACK GetDeviceMethods)(NHandle hDevice, HNDeviceMethodDescriptor * * parhMethods, NInt * pMethodCount);
 	// Optional
 	NResult (N_CALLBACK GetDeviceEvents)(NHandle hDevice, HNDeviceEventDescriptor * * parhEvents, NInt * pEventCount);
+	//--------
+	// V1.6
+	//--------
+	// Optional
+	NResult (N_CALLBACK GetCameraFrameEx)(NHandle hDevice, NTimeSpan_ * pTimeStamp, NTimeSpan_ * pDuration, HNImage * phImage, void * pParam);
+	// Optional
+	NResult (N_CALLBACK GetMicrophoneSoundSampleEx)(NHandle hDevice, NTimeSpan_ * pTimeStamp, NTimeSpan_ * pDuration, HNSoundBuffer * phSoundBuffer, void * pParam);
 } NdmInterfaceV1;
 
 typedef struct NdmHostInterfaceV1_

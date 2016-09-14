@@ -51,12 +51,12 @@ public:
 #endif
 
 #if defined(N_FRAMEWORK_WX)
-	NVideoWriterOptions(const wxWindow * pParent)
+	explicit NVideoWriterOptions(const wxWindow * pParent)
 		: NObject(Create(pParent), true)
 	{
 	}
 #elif defined(N_FRAMEWORK_MFC)
-	NVideoWriterOptions(const CWnd * pParent)
+	explicit NVideoWriterOptions(const CWnd * pParent)
 		: NObject(Create(pParent), true)
 	{
 	}

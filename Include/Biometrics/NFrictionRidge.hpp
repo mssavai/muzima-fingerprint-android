@@ -14,6 +14,7 @@ using ::Neurotec::Images::HNImage;
 namespace Neurotec { namespace Biometrics
 {
 
+#include <Core/NNoDeprecate.h>
 class NFrictionRidge : public NBiometric
 {
 	N_DECLARE_OBJECT_CLASS(NFrictionRidge, NBiometric)
@@ -97,11 +98,36 @@ public:
 		NCheck(NFrictionRidgeSetImage(GetHandle(), value.GetHandle()));
 	}
 
+	N_DEPRECATED("function is deprecated, use GetBinarizedImage or GetSkeletonizedImage instead")
 	::Neurotec::Images::NImage GetProcessedImage() const
 	{
 		HNImage hValue;
 		NCheck(NFrictionRidgeGetProcessedImage(GetHandle(), &hValue));
 		return FromHandle< ::Neurotec::Images::NImage>(hValue, true);
+	}
+
+	::Neurotec::Images::NImage GetBinarizedImage() const
+	{
+		HNImage hValue;
+		NCheck(NFrictionRidgeGetBinarizedImage(GetHandle(), &hValue));
+		return FromHandle< ::Neurotec::Images::NImage>(hValue, true);
+	}
+
+	void SetBinarizedImage(const ::Neurotec::Images::NImage & value) const
+	{
+		NCheck(NFrictionRidgeSetBinarizedImage(GetHandle(), value.GetHandle()));
+	}
+
+	::Neurotec::Images::NImage GetRidgeSkeletonImage() const
+	{
+		HNImage hValue;
+		NCheck(NFrictionRidgeGetRidgeSkeletonImage(GetHandle(), &hValue));
+		return FromHandle< ::Neurotec::Images::NImage>(hValue, true);
+	}
+
+	void SetRidgeSkeletonImage(const ::Neurotec::Images::NImage & value)
+	{
+		NCheck(NFrictionRidgeSetRidgeSkeletonImage(GetHandle(), value.GetHandle()));
 	}
 
 	NFPosition GetPosition() const
@@ -150,5 +176,7 @@ public:
 };
 
 }}
+
+#include <Core/NReDeprecate.h>
 
 #endif // !N_FRICTION_RIDGE_HPP_INCLUDED

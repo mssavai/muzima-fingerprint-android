@@ -34,7 +34,32 @@ class ANType5Record : public ANFImageBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType5Record, ANFImageBinaryRecord)
 
+private:
+	static HANType5Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType5Record handle;
+		NCheck(ANType5RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType5Record Create(NVersion version, NInt idc, bool isr, ANBinaryImageCompressionAlgorithm bca, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+		HANType5Record handle;
+		NCheck(ANType5RecordCreateFromNImage(version.GetValue(), idc, isr, bca, image.GetHandle(), flags, &handle));
+		return handle;
+	}
+
 public:
+	explicit ANType5Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANFImageBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType5Record(NVersion version, NInt idc, bool isr, ANBinaryImageCompressionAlgorithm bca, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANFImageBinaryRecord(Create(version, idc, isr, bca, image, flags), true)
+	{
+	}
+
 	ANBinaryImageCompressionAlgorithm GetCompressionAlgorithm() const
 	{
 		ANBinaryImageCompressionAlgorithm value;
@@ -47,6 +72,11 @@ public:
 		NByte value;
 		NCheck(ANType5RecordGetVendorCompressionAlgorithm(GetHandle(), &value));
 		return value;
+	}
+
+	void SetCompressionAlgorithm(ANBinaryImageCompressionAlgorithm value, NByte vendorValue)
+	{
+		NCheck(ANType5RecordSetCompressionAlgorithm(GetHandle(), value, vendorValue));
 	}
 };
 

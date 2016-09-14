@@ -11,6 +11,7 @@ namespace Neurotec { namespace Biometrics
 }}
 
 N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NFMinutiaOrder)
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics, NFMinutiaTruncationAlgorithm)
 
 namespace Neurotec { namespace Biometrics
 {
@@ -68,13 +69,14 @@ const NUInt NFR_SAVE_V1 = 0x10000000;
 const NUInt NFR_SAVE_V2 = 0x20000000;
 const NUInt NFR_SAVE_V3 = 0x30000000;
 
+#include <Core/NNoDeprecate.h>
 class NFRecord : public NObject
 {
 	N_DECLARE_OBJECT_CLASS(NFRecord, NObject)
 
 public:
-	class MinutiaCollection : public ::Neurotec::Collections::NCollectionBase<NFMinutia, NFRecord,
-		NFRecordGetMinutiaCount, NFRecordGetMinutia>
+	class MinutiaCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<NFMinutia, NFRecord,
+		NFRecordGetMinutiaCount, NFRecordGetMinutia, NFRecordGetMinutiae>
 	{
 		MinutiaCollection(const NFRecord & owner)
 		{
@@ -96,6 +98,9 @@ public:
 			NCheck(NFRecordSetMinutiaCapacity(this->GetOwnerHandle(), value));
 		}
 
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<NFMinutia, NFRecord, NFRecordGetMinutiaCount, NFRecordGetMinutia, NFRecordGetMinutiae>::GetAll;
+
+		N_DEPRECATED("use NArrayWrapper<NFMinutia> GetAll() instead")
 		NInt GetAll(NFMinutia * arValues, NInt valuesLength) const
 		{
 			NInt count;
@@ -110,9 +115,9 @@ public:
 
 		NInt Add(const NFMinutia & value)
 		{
-			NInt count = this->GetCount();
-			NCheck(NFRecordAddMinutia(this->GetOwnerHandle(), &value));
-			return count;
+			NInt index;
+			NCheck(NFRecordAddMinutiaEx(this->GetOwnerHandle(), &value, &index));
+			return index;
 		}
 
 		void Insert(NInt index, const NFMinutia & value)
@@ -122,7 +127,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NFRecordRemoveMinutia(this->GetOwnerHandle(), index));
+			NCheck(NFRecordRemoveMinutiaAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -160,6 +165,15 @@ public:
 			return value;
 		}
 
+		NArrayWrapper<NFMinutiaNeighbor> GetAll(NInt baseIndex) const
+		{
+			NFMinutiaNeighbor::NativeType * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(NFRecordGetMinutiaNeighbors(this->GetOwnerHandle(), baseIndex, &arValues, &valueCount));
+			return NArrayWrapper<NFMinutiaNeighbor>(arValues, valueCount);
+		}
+
+		N_DEPRECATED("use NArrayWrapper<NFMinutiaNeighbor> GetAll(NInt baseIndex) instead")
 		NInt GetAll(NInt baseIndex, NFMinutiaNeighbor * arValues, NInt valuesLength) const
 		{
 			NInt count;
@@ -173,8 +187,8 @@ public:
 		}
 	};
 
-	class CoreCollection : public ::Neurotec::Collections::NCollectionBase<NFCore, NFRecord,
-		NFRecordGetCoreCount, NFRecordGetCore>
+	class CoreCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<NFCore, NFRecord,
+		NFRecordGetCoreCount, NFRecordGetCore, NFRecordGetCores>
 	{
 		CoreCollection(const NFRecord & owner)
 		{
@@ -194,6 +208,9 @@ public:
 			NCheck(NFRecordSetCoreCapacity(this->GetOwnerHandle(), value));
 		}
 
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<NFCore, NFRecord, NFRecordGetCoreCount, NFRecordGetCore, NFRecordGetCores>::GetAll;
+
+		N_DEPRECATED("use NArrayWrapper<NFCore> GetAll() instead")
 		NInt GetAll(NFCore * arValues, NInt valuesLength) const
 		{
 			NInt count;
@@ -208,8 +225,8 @@ public:
 
 		NInt Add(const NFCore & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(NFRecordAddCore(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(NFRecordAddCoreEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -220,7 +237,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NFRecordRemoveCore(this->GetOwnerHandle(), index));
+			NCheck(NFRecordRemoveCoreAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -231,8 +248,8 @@ public:
 		friend class NFRecord;
 	};
 
-	class DeltaCollection : public ::Neurotec::Collections::NCollectionBase<NFDelta, NFRecord,
-		NFRecordGetDeltaCount, NFRecordGetDelta>
+	class DeltaCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<NFDelta, NFRecord,
+		NFRecordGetDeltaCount, NFRecordGetDelta, NFRecordGetDeltas>
 	{
 		DeltaCollection(const NFRecord & owner)
 		{
@@ -253,6 +270,9 @@ public:
 			NCheck(NFRecordSetDeltaCapacity(this->GetOwnerHandle(), value));
 		}
 
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<NFDelta, NFRecord, NFRecordGetDeltaCount, NFRecordGetDelta, NFRecordGetDeltas>::GetAll;
+
+		N_DEPRECATED("use NArrayWrapper<NFDelta> GetAll() instead")
 		NInt GetAll(NFDelta * arValues, NInt valuesLength) const
 		{
 			NInt count;
@@ -267,8 +287,8 @@ public:
 
 		NInt Add(const NFDelta & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(NFRecordAddDelta(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(NFRecordAddDeltaEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -279,7 +299,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NFRecordRemoveDelta(this->GetOwnerHandle(), index));
+			NCheck(NFRecordRemoveDeltaAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -288,8 +308,8 @@ public:
 		}
 	};
 
-	class DoubleCoreCollection : public ::Neurotec::Collections::NCollectionBase<NFDoubleCore, NFRecord,
-		NFRecordGetDoubleCoreCount, NFRecordGetDoubleCore>
+	class DoubleCoreCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<NFDoubleCore, NFRecord,
+		NFRecordGetDoubleCoreCount, NFRecordGetDoubleCore, NFRecordGetDoubleCores>
 	{
 		DoubleCoreCollection(const NFRecord & owner)
 		{
@@ -310,6 +330,9 @@ public:
 			NCheck(NFRecordSetDoubleCoreCapacity(this->GetOwnerHandle(), value));
 		}
 
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<NFDoubleCore, NFRecord, NFRecordGetDoubleCoreCount, NFRecordGetDoubleCore, NFRecordGetDoubleCores>::GetAll;
+
+		N_DEPRECATED("use NArrayWrapper<NFDoubleCore> GetAll() instead")
 		NInt GetAll(NFDoubleCore * arValues, NInt valuesLength) const
 		{
 			NInt count;
@@ -324,8 +347,8 @@ public:
 
 		NInt Add(const NFDoubleCore & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(NFRecordAddDoubleCore(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(NFRecordAddDoubleCoreEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -336,7 +359,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NFRecordRemoveDoubleCore(this->GetOwnerHandle(), index));
+			NCheck(NFRecordRemoveDoubleCoreAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -345,8 +368,8 @@ public:
 		}
 	};
 
-	class PossiblePositionCollection : public ::Neurotec::Collections::NCollectionBase<NFPosition, NFRecord,
-		NFRecordGetPossiblePositionCount, NFRecordGetPossiblePosition>
+	class PossiblePositionCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<NFPosition, NFRecord,
+		NFRecordGetPossiblePositionCount, NFRecordGetPossiblePosition, NFRecordGetPossiblePositionsEx>
 	{
 		PossiblePositionCollection(const NFRecord & owner)
 		{
@@ -356,6 +379,10 @@ public:
 		friend class NFRecord;
 
 	public:
+
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<NFPosition, NFRecord, NFRecordGetPossiblePositionCount, NFRecordGetPossiblePosition, NFRecordGetPossiblePositionsEx>::GetAll;
+
+		N_DEPRECATED("use NArrayWrapper<NFPosition> GetAll() instead")
 		NInt GetAll(NFPosition * arValues, NInt valuesLength) const
 		{
 			NInt count;
@@ -370,8 +397,8 @@ public:
 
 		NInt Add(NFPosition value)
 		{
-			NInt index = this->GetCount();
-			NCheck(NFRecordAddPossiblePosition(this->GetOwnerHandle(), value));
+			NInt index;
+			NCheck(NFRecordAddPossiblePositionEx(this->GetOwnerHandle(), value, &index));
 			return index;
 		}
 
@@ -382,7 +409,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NFRecordRemovePossiblePosition(this->GetOwnerHandle(), index));
+			NCheck(NFRecordRemovePossiblePositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -395,6 +422,11 @@ private:
 	static NType NFMinutiaOrderNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(NFMinutiaOrder), true);
+	}
+
+	static NType NFMinutiaTruncationAlgorithmNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(NFMinutiaTruncationAlgorithm), true);
 	}
 
 	static HNFRecord Create(bool isPalm, NUShort width, NUShort height,
@@ -650,6 +682,16 @@ public:
 		NCheck(NFRecordTruncateMinutiaeByQuality((HNFRecord)GetHandle(), threshold, maxCount));
 	}
 
+	void TruncateMinutiae(NFMinutiaTruncationAlgorithm minutiaeTruncation, NInt maxCount)
+	{
+		NCheck(NFRecordTruncateMinutiaeEx((HNFRecord)GetHandle(), minutiaeTruncation, maxCount));
+	}
+
+	void CropArea(NInt x, NInt y, NInt width, NInt height)
+	{
+		NCheck(NFRecordCropArea((HNFRecord)GetHandle(), x, y, width, height));
+	}
+
 	bool GetRequiresUpdate() const
 	{
 		NBool value;
@@ -791,9 +833,19 @@ public:
 		return GetSize(NFR_SAVE_V1 | flags);
 	}
 
+	::Neurotec::IO::NBuffer  SaveV1(NUInt flags = 0) const
+	{
+		return Save(NFR_SAVE_V1 | flags);
+	}
+
 	NSizeType SaveV1(void * pBuffer, NSizeType bufferSize, NUInt flags = 0) const
 	{
-		return SaveV1(pBuffer, bufferSize, NFR_SAVE_V1 | flags);
+		return Save(pBuffer, bufferSize, NFR_SAVE_V1 | flags);
+	}
+
+	NSizeType SaveV1(::Neurotec::IO::NBuffer & buffer, NUInt flags = 0) const
+	{
+		return Save(buffer, NFR_SAVE_V1 | flags);
 	}
 
 	MinutiaCollection GetMinutiae()
@@ -856,6 +908,7 @@ public:
 		return PossiblePositionCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}
 

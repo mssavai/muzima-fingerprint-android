@@ -1,6 +1,7 @@
 #ifndef N_BIOMETRIC_TASK_H_INCLUDED
 #define N_BIOMETRIC_TASK_H_INCLUDED
 
+#include <Core/NString.h>
 #include <Core/NExpandableObject.h>
 #include <Core/NTimeSpan.h>
 #include <Biometrics/NSubject.h>
@@ -31,6 +32,10 @@ typedef enum NBiometricOperations_
 	nboDelete = 8192,
 	nboList = 16384,
 	nboClear = 32768,
+	nboGetCount = 65536,
+	nboListIds = 131072,
+	nboListGalleries = 262144,
+	nboCheckForUpdate = 524288,
 	nboAll = -1
 } NBiometricOperations;
 
@@ -49,6 +54,8 @@ NResult N_API NBiometricTaskGetBiometric(HNBiometricTask hBiometricTask, HNBiome
 NResult N_API NBiometricTaskSetBiometric(HNBiometricTask hBiometricTask, HNBiometric hValue);
 NResult N_API NBiometricTaskGetConnection(HNBiometricTask hBiometricTask, HNBiometricConnection * phValue);
 NResult N_API NBiometricTaskSetConnection(HNBiometricTask hBiometricTask, HNBiometricConnection hValue);
+NResult N_API NBiometricTaskGetGalleryId(HNBiometricTask hBiometricTask, HNString * phGalleryId);
+NResult N_API NBiometricTaskSetGalleryId(HNBiometricTask hBiometricTask, HNString hGalleryId);
 NResult N_API NBiometricTaskGetStatistics(HNBiometricTask hBiometricTask, HNPropertyBag * phValue);
 NResult N_API NBiometricTaskGetError(HNBiometricTask hBiometricTask, HNError * phValue);
 

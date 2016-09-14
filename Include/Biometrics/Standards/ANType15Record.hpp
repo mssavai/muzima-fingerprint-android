@@ -65,8 +65,36 @@ const NInt AN_TYPE_15_RECORD_MAX_QUALITY_METRIC_COUNT = 4;
 class ANType15Record : public ANFPImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType15Record, ANFPImageAsciiBinaryRecord)
-};
 
+private:
+	static HANType15Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType15Record handle;
+		NCheck(ANType15RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType15Record Create(NVersion version, NInt idc, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+
+		HANType15Record handle;
+		NCheck(ANType15RecordCreateFromNImageN(version.GetValue(), idc, src.GetHandle(), slc, cga, image.GetHandle(), flags, &handle));
+		return handle;
+	}
+
+public:
+	explicit ANType15Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANFPImageAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType15Record(NVersion version, NInt idc, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANFPImageAsciiBinaryRecord(Create(version, idc, src, slc, cga, image, flags), true)
+	{
+	}
+};
 }}}
 
 #endif // !AN_TYPE_15_RECORD_HPP_INCLUDED

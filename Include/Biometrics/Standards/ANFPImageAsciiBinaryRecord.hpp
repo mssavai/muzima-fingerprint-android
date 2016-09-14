@@ -30,7 +30,7 @@ const NInt AN_FP_IMAGE_ASCII_BINARY_RECORD_MAX_PRINT_POSITION_COUNT = 12;
 
 class ANFPositionDescriptor : public ANFPositionDescriptor_
 {
-	N_DECLARE_STRUCT_CLASS(ANFPositionDescriptor)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFPositionDescriptor)
 
 public:
 	ANFPositionDescriptor(BdifFPPosition position, ANFMajorCase portion)
@@ -42,7 +42,7 @@ public:
 
 class ANFPrintPosition : public ANFPrintPosition_
 {
-	N_DECLARE_STRUCT_CLASS(ANFPrintPosition)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFPrintPosition)
 
 public:
 	ANFPrintPosition(ANFMajorCase fingerView, ANFMajorCase segment, NInt left, NInt right, NInt top, NInt bottom)
@@ -58,7 +58,7 @@ public:
 
 class ANFPQualityMetric : public ANFPQualityMetric_
 {
-	N_DECLARE_STRUCT_CLASS(ANFPQualityMetric)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFPQualityMetric)
 
 public:
 	ANFPQualityMetric(BdifFPPosition position, NByte score, NUShort algorithmVendorId, NUShort algorithmProductId)
@@ -79,13 +79,14 @@ N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANFPQualityMetric)
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
+#include <Core/NNoDeprecate.h>
 class ANFPImageAsciiBinaryRecord : public ANImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANFPImageAsciiBinaryRecord, ANImageAsciiBinaryRecord)
 
 public:
-	class PositionCollection : public ::Neurotec::Collections::NCollectionBase<BdifFPPosition, ANFPImageAsciiBinaryRecord,
-		ANFPImageAsciiBinaryRecordGetPositionCount, ANFPImageAsciiBinaryRecordGetPosition>
+	class PositionCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFPPosition, ANFPImageAsciiBinaryRecord,
+		ANFPImageAsciiBinaryRecordGetPositionCount, ANFPImageAsciiBinaryRecordGetPosition, ANFPImageAsciiBinaryRecordGetPositions>
 	{
 		PositionCollection(const ANFPImageAsciiBinaryRecord & owner)
 		{
@@ -94,12 +95,8 @@ public:
 
 		friend class ANFPImageAsciiBinaryRecord;
 	public:
-		NInt GetAll(BdifFPPosition * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANFPImageAsciiBinaryRecordGetPositionsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFPPosition, ANFPImageAsciiBinaryRecord,
+			ANFPImageAsciiBinaryRecordGetPositionCount, ANFPImageAsciiBinaryRecordGetPosition, ANFPImageAsciiBinaryRecordGetPositions>::GetAll;
 
 		void Set(NInt index, BdifFPPosition value)
 		{
@@ -108,8 +105,8 @@ public:
 
 		NInt Add(BdifFPPosition value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANFPImageAsciiBinaryRecordAddPosition(this->GetOwnerHandle(), value));
+			NInt index;
+			NCheck(ANFPImageAsciiBinaryRecordAddPositionEx(this->GetOwnerHandle(), value, &index));
 			return index;
 		}
 
@@ -120,7 +117,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANFPImageAsciiBinaryRecordRemovePosition(this->GetOwnerHandle(), index));
+			NCheck(ANFPImageAsciiBinaryRecordRemovePositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -129,8 +126,8 @@ public:
 		}
 	};
 
-	class PrintPositionCollection : public ::Neurotec::Collections::NCollectionBase<ANFPrintPosition, ANFPImageAsciiBinaryRecord,
-		ANFPImageAsciiBinaryRecordGetPrintPositionCount, ANFPImageAsciiBinaryRecordGetPrintPosition>
+	class PrintPositionCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPrintPosition, ANFPImageAsciiBinaryRecord,
+		ANFPImageAsciiBinaryRecordGetPrintPositionCount, ANFPImageAsciiBinaryRecordGetPrintPosition, ANFPImageAsciiBinaryRecordGetPrintPositions>
 	{
 		PrintPositionCollection(const ANFPImageAsciiBinaryRecord & owner)
 		{
@@ -139,12 +136,8 @@ public:
 
 		friend class ANFPImageAsciiBinaryRecord;
 	public:
-		NInt GetAll(ANFPrintPosition * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANFPImageAsciiBinaryRecordGetPrintPositionsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPrintPosition, ANFPImageAsciiBinaryRecord,
+			ANFPImageAsciiBinaryRecordGetPrintPositionCount, ANFPImageAsciiBinaryRecordGetPrintPosition, ANFPImageAsciiBinaryRecordGetPrintPositions>::GetAll;
 
 		void Set(NInt index, const ANFPrintPosition & value)
 		{
@@ -153,8 +146,8 @@ public:
 
 		NInt Add(const ANFPrintPosition & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANFPImageAsciiBinaryRecordAddPrintPosition(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANFPImageAsciiBinaryRecordAddPrintPositionEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -165,7 +158,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANFPImageAsciiBinaryRecordRemovePrintPosition(this->GetOwnerHandle(), index));
+			NCheck(ANFPImageAsciiBinaryRecordRemovePrintPositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -174,8 +167,8 @@ public:
 		}
 	};
 
-	class QualityMetricCollection : public ::Neurotec::Collections::NCollectionBase<ANFPQualityMetric, ANFPImageAsciiBinaryRecord,
-		ANFPImageAsciiBinaryRecordGetQualityMetricCount, ANFPImageAsciiBinaryRecordGetQualityMetric>
+	class QualityMetricCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPQualityMetric, ANFPImageAsciiBinaryRecord,
+		ANFPImageAsciiBinaryRecordGetQualityMetricCount, ANFPImageAsciiBinaryRecordGetQualityMetric, ANFPImageAsciiBinaryRecordGetQualityMetrics>
 	{
 		QualityMetricCollection(const ANFPImageAsciiBinaryRecord & owner)
 		{
@@ -184,12 +177,8 @@ public:
 
 		friend class ANFPImageAsciiBinaryRecord;
 	public:
-		NInt GetAll(ANFPQualityMetric * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANFPImageAsciiBinaryRecordGetQualityMetricsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPQualityMetric, ANFPImageAsciiBinaryRecord,
+			ANFPImageAsciiBinaryRecordGetQualityMetricCount, ANFPImageAsciiBinaryRecordGetQualityMetric, ANFPImageAsciiBinaryRecordGetQualityMetrics>::GetAll;
 
 		void Set(NInt index, const ANFPQualityMetric & value)
 		{
@@ -198,8 +187,8 @@ public:
 
 		NInt Add(const ANFPQualityMetric & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANFPImageAsciiBinaryRecordAddQualityMetric(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANFPImageAsciiBinaryRecordAddQualityMetricEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -210,7 +199,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANFPImageAsciiBinaryRecordRemoveQualityMetric(this->GetOwnerHandle(), index));
+			NCheck(ANFPImageAsciiBinaryRecordRemoveQualityMetricAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -267,6 +256,7 @@ public:
 		return QualityMetricCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

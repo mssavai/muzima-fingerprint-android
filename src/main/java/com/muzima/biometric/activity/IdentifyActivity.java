@@ -18,7 +18,6 @@ import com.neurotec.devices.NDeviceManager;
 import com.neurotec.devices.NDeviceType;
 import com.neurotec.io.NBuffer;
 import com.neurotec.lang.NCore;
-import com.muzima.biometric.licensing.LicensingManager;
 import com.muzima.biometric.licensing.LicensingState;
 import com.neurotec.util.concurrent.CompletionHandler;
 
@@ -150,6 +149,8 @@ public final class IdentifyActivity extends Activity implements LicensingManager
         showMessage("Capturing....");
         mBiometricClient.setFingersTemplateSize(NTemplateSize.LARGE);
         mBiometricClient.createTemplate(subject, subject, captureHandler);
+        //returnIntent(null);
+
     }
 
     @Override

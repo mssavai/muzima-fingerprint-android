@@ -9,6 +9,8 @@ namespace Neurotec { namespace Biometrics { namespace Standards
 #include <Biometrics/Standards/ANRecord.h>
 }}}
 
+N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANValidationLevel)
+
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
@@ -65,7 +67,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANRecordRemoveField(this->GetOwnerHandle(), index));
+			NCheck(ANRecordRemoveFieldAt(this->GetOwnerHandle(), index));
 		}
 
 		ANField Add(NInt fieldNumber, const NStringWrapper & value, NInt * pIndex = NULL)
@@ -102,7 +104,20 @@ public:
 		}
 	};
 
+private:
+	static HANRecord Create(const ANRecordType & recordType, NVersion version, NInt idc, NUInt flags)
+	{
+		HANRecord handle;
+		NCheck(ANRecordCreate(recordType.GetHandle(), version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
 public:
+	explicit ANRecord(const ANRecordType & recordType, NVersion version, NInt idc, NUInt flags = 0)
+		: NObject(Create(recordType, version, idc, flags), true)
+	{
+	}
+
 	void BeginUpdate()
 	{
 		NCheck(ANRecordBeginUpdate(GetHandle()));
@@ -125,6 +140,18 @@ public:
 		return value != 0;
 	}
 
+	ANValidationLevel GetValidationLevel() const
+	{
+		ANValidationLevel value;
+		NCheck(ANRecordGetValidationLevel(GetHandle(), &value));
+		return value;
+	}
+
+	void Validate()
+	{
+		NCheck(ANRecordValidate(GetHandle()));
+	}
+
 	NSizeType GetLength() const
 	{
 		NSizeType value;
@@ -132,11 +159,23 @@ public:
 		return value;
 	}
 
+	NVersion GetVersion() const
+	{
+		NVersion_ value;
+		NCheck(ANRecordGetVersion(GetHandle(), &value));
+		return NVersion(value);
+	}
+
 	NInt GetIdc() const
 	{
 		NInt value;
 		NCheck(ANRecordGetIdc(GetHandle(), &value));
 		return value;
+	}
+
+	void SetIdc(NInt value)
+	{
+		NCheck(ANRecordSetIdc(GetHandle(), value));
 	}
 
 	::Neurotec::IO::NBuffer GetData() const

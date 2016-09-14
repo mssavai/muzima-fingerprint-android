@@ -167,10 +167,39 @@ class ANType17Record : public ANImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType17Record, ANImageAsciiBinaryRecord)
 
+private:
+	static HANType17Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+
+		HANType17Record handle;
+		NCheck(ANType17RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType17Record Create(NVersion version, NInt idc, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+
+		HANType17Record handle;
+		NCheck(ANType17RecordCreateFromNImageN(version.GetValue(), idc, src.GetHandle(), slc, cga, image.GetHandle(), flags, &handle));
+		return handle;
+	}
+
 public:
 	static NType ANIrisAcquisitionLightingSpectrumNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(ANIrisAcquisitionLightingSpectrum), true);
+	}
+
+	explicit ANType17Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANImageAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType17Record(NVersion version, NInt idc, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANImageAsciiBinaryRecord(Create(version, idc, src, slc, cga, image, flags), true)
+	{
 	}
 
 	BdifEyePosition GetFeatureIdentifier() const

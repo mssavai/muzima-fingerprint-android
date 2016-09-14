@@ -52,7 +52,7 @@ NResult N_API ANFieldInsertItemEx(HANField hField, NInt index, const NChar * szV
 #endif
 #define ANFieldInsertItemEx N_FUNC_AW(ANFieldInsertItemEx)
 
-NResult N_API ANFieldRemoveItem(HANField hField, NInt index);
+NResult N_API ANFieldRemoveItemAt(HANField hField, NInt index);
 NResult N_API ANFieldRemoveItemRange(HANField hField, NInt index, NInt count);
 
 NResult N_API ANFieldGetSubFieldCount(HANField hField, NInt * pValue);
@@ -84,7 +84,7 @@ NResult N_API ANFieldInsertSubFieldEx(HANField hField, NInt index, const NChar *
 #endif
 #define ANFieldInsertSubFieldEx N_FUNC_AW(ANFieldInsertSubFieldEx)
 
-NResult N_API ANFieldRemoveSubField(HANField hField, NInt index);
+NResult N_API ANFieldRemoveSubFieldAt(HANField hField, NInt index);
 NResult N_API ANFieldRemoveSubFieldRange(HANField hField, NInt index, NInt count);
 
 NResult N_API ANFieldGetValueN(HANField hField, HNString * phValue);

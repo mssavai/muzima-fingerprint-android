@@ -60,6 +60,13 @@ public:
 	};
 
 private:
+	static HNFAttributes Create()
+	{
+		HNFAttributes handle;
+		NCheck(NFAttributesCreateEx(&handle));
+		return handle;
+	}
+
 	static HNFAttributes Create(NFImpressionType impressionType, NFPosition position)
 	{
 		HNFAttributes handle;
@@ -68,6 +75,11 @@ private:
 	}
 
 public:
+	NFAttributes()
+		: NBiometricAttributes(Create(), true)
+	{
+	}
+
 	NFAttributes(NFImpressionType impressionType, NFPosition position)
 		: NBiometricAttributes(Create(impressionType, position), true)
 	{
@@ -82,11 +94,21 @@ public:
 		return value;
 	}
 
+	void SetImpressionType(NFImpressionType value)
+	{
+		NCheck(NFAttributesSetImpressionType(GetHandle(), value));
+	}
+
 	NFPosition GetPosition() const
 	{
 		NFPosition value;
 		NCheck(NFAttributesGetPosition(GetHandle(), &value));
 		return value;
+	}
+
+	void SetPosition(NFPosition value)
+	{
+		NCheck(NFAttributesSetPosition(GetHandle(), value));
 	}
 
 	NInt GetImageIndex() const
@@ -135,6 +157,18 @@ public:
 	void SetPatternClass(NFPatternClass value)
 	{
 		NCheck(NFAttributesSetPatternClass(GetHandle(), value));
+	}
+
+	NByte GetPatternClassConfidence() const
+	{
+		NByte value;
+		NCheck(NFAttributesGetPatternClassConfidence(GetHandle(), &value));
+		return value;
+	}
+
+	void SetPatternClassConfidence(NByte value)
+	{
+		NCheck(NFAttributesSetPatternClassConfidence(GetHandle(), value));
 	}
 
 	NfiqQuality GetNfiqQuality() const

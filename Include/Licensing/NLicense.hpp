@@ -2,6 +2,8 @@
 #define N_LICENSE_HPP_INCLUDED
 
 #include <Core/NObject.hpp>
+#include <Licensing/NLicenseInfo.hpp>
+
 namespace Neurotec { namespace Licensing
 {
 #include <Licensing/NLicense.h>
@@ -9,29 +11,6 @@ namespace Neurotec { namespace Licensing
 
 namespace Neurotec { namespace Licensing
 {
-
-class NLicenseInfo : public NLicenseInfo_
-{
-	N_DECLARE_STRUCT_CLASS(NLicenseInfo)
-
-public:
-	NLicenseInfo(bool isObtained, NInt distributorId, NInt serialNumber)
-	{
-		IsObtained = isObtained ? NTrue : NFalse;
-		DistributorId = distributorId;
-		SerialNumber = serialNumber;
-	}
-
-	bool GetIsObtained() const
-	{
-		return IsObtained != 0;
-	}
-
-	void SetIsObtained(bool value)
-	{
-		IsObtained = value ? NTrue : NFalse;
-	}
-};
 
 class NLicense
 {
@@ -62,14 +41,30 @@ public:
 		NCheck(NLicenseReleaseComponentsN(components.GetHandle()));
 	}
 
-	static void GetInfo(const NStringWrapper & product, NLicenseInfo * pLicenseInfo)
+	static void Add(const NStringWrapper & license)
 	{
-		NCheck(NLicenseGetInfoN(product.GetHandle(), pLicenseInfo));
+		NCheck(NLicenseAddN(license.GetHandle()));
 	}
 
-	static void GetInfoForComponent(const NStringWrapper & component, NLicenseInfo * pLicenseInfo)
+	static NLicenseInfo GetLicenseInfoOnline(const NStringWrapper & product)
 	{
-		NCheck(NLicenseGetInfoForComponentN(component.GetHandle(), pLicenseInfo));
+		HNLicenseInfo handle;
+		NCheck(NLicenseGetLicenseInfoOnlineN(product.GetHandle(), &handle));
+		return NObject::FromHandle<NLicenseInfo>(handle);
+	}
+
+	static NLicenseInfo GetObtainedLicenseInfo(const NStringWrapper & product)
+	{
+		HNLicenseInfo handle;
+		NCheck(NLicenseGetObtainedLicenseInfoN(product.GetHandle(), &handle));
+		return NObject::FromHandle<NLicenseInfo>(handle);
+	}
+
+	static NLicenseInfo GetObtainedLicenseInfoForComponent(const NStringWrapper & component)
+	{
+		HNLicenseInfo handle;
+		NCheck(NLicenseGetObtainedLicenseInfoForComponentN(component.GetHandle(), &handle));
+		return NObject::FromHandle<NLicenseInfo>(handle);
 	}
 
 	static bool IsComponentActivated(const NStringWrapper & name)

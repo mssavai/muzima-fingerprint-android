@@ -20,11 +20,6 @@ public:
 		NCheck(Internal::NListInit(this, elementSize, NULL));
 	}
 
-	template<typename T> NList()
-	{
-		NCheck(Internal::NListInit(this, 0, NTypeTraits<T>::GetNativeType().GetHandle()));
-	}
-
 	NList(const NType & elementType)
 	{
 		NCheck(Internal::NListInit(this, 0, elementType.GetHandle()));
@@ -40,11 +35,6 @@ public:
 		NCheck(Internal::NListInitWithCapacity(this, elementSize, NULL, capacity));
 	}
 
-	template<typename T> NList(NInt capacity)
-	{
-		NCheck(Internal::NListInit(this, 0, NTypeTraits<T>::GetNativeType().GetHandle(), capacity));
-	}
-
 	NList(NSizeType elementSize, const NType & elementType, NInt capacity)
 	{
 		NCheck(Internal::NListInitWithCapacity(this, elementSize, elementType.GetHandle(), capacity));
@@ -58,11 +48,6 @@ public:
 	NList(NInt capacity, NInt maxCapacity, NInt growthDelta, NSizeType alignment)
 	{
 		NCheck(Internal::NListInitEx(this, 0, NULL, capacity, maxCapacity, growthDelta, alignment));
-	}
-
-	template<typename T> NList(NInt capacity, NInt maxCapacity, NInt growthDelta, NSizeType alignment)
-	{
-		NCheck(Internal::NListInitEx(this, 0, NTypeTraits<T>::GetNativeType().GetHandle(), capacity, maxCapacity, growthDelta, alignment));
 	}
 
 	NList(const NType & elementType, NInt capacity, NInt maxCapacity, NInt growthDelta, NSizeType alignment)
@@ -111,14 +96,6 @@ public:
 		return result;
 	}
 
-	template<typename T> NInt IndexOf(const T & value, NInt startIndex, NInt count)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListIndexOfInRange(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), startIndex, count, &result));
-		return result;
-	}
-
 	NInt IndexOf(const NType & valueType, const void * pValue, NSizeType valueSize, NInt startIndex, NInt count)
 	{
 		NInt result;
@@ -137,14 +114,6 @@ public:
 	{
 		NInt result;
 		NCheck(Internal::NListIndexOfFrom(this, NULL, pValue, valueSize, startIndex, &result));
-		return result;
-	}
-
-	template<typename T> NInt IndexOf(const T & value, NInt startIndex)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListIndexOfFrom(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), startIndex, &result));
 		return result;
 	}
 
@@ -169,14 +138,6 @@ public:
 		return result;
 	}
 
-	template<typename T> NInt IndexOf(const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListIndexOf(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), &result));
-		return result;
-	}
-
 	NInt IndexOf(const NType & valueType, const void * pValue, NSizeType valueSize)
 	{
 		NInt result;
@@ -195,14 +156,6 @@ public:
 	{
 		NInt result;
 		NCheck(Internal::NListLastIndexOfInRange(this, NULL, pValue, valueSize, startIndex, count, &result));
-		return result;
-	}
-
-	template<typename T> NInt LastIndexOf(const T & value, NInt startIndex, NInt count)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListLastIndexOfInRange(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), startIndex, count, &result));
 		return result;
 	}
 
@@ -227,14 +180,6 @@ public:
 		return result;
 	}
 
-	template<typename T> NInt LastIndexOf(const T & value, NInt startIndex)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListLastIndexOfFrom(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), startIndex, &result));
-		return result;
-	}
-
 	NInt LastIndexOf(const NType & valueType, const void * pValue, NSizeType valueSize, NInt startIndex)
 	{
 		NInt result;
@@ -253,14 +198,6 @@ public:
 	{
 		NInt result;
 		NCheck(Internal::NListLastIndexOf(this, NULL, pValue, valueSize, &result));
-		return result;
-	}
-
-	template<typename T> NInt LastIndexOf(const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListLastIndexOf(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), &result));
 		return result;
 	}
 
@@ -285,14 +222,6 @@ public:
 		return result != 0;
 	}
 
-	template<typename T> bool Contains(const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NBool result;
-		NCheck(Internal::NListContains(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), &result));
-		return result != 0;
-	}
-
 	bool Contains(const NType & valueType, const void * pValue, NSizeType valueSize)
 	{
 		NBool result;
@@ -311,13 +240,6 @@ public:
 	{
 		void * pValue;
 		NCheck(Internal::NListGetStart(this, elementSize, NULL, &pValue));
-		return pValue;
-	}
-
-	template<typename T> typename NTypeTraits<T>::NativeType * GetStart()
-	{
-		typename NTypeTraits<T>::NativeType * pValue;
-		NCheck(Internal::NListGetStart(this, 0, NTypeTraits<T>::GetNativeType().GetHandle(), (void * *)&pValue));
 		return pValue;
 	}
 
@@ -342,13 +264,6 @@ public:
 		return pValue;
 	}
 
-	template<typename T> typename NTypeTraits<T>::NativeType * GetEnd()
-	{
-		typename NTypeTraits<T>::NativeType * pValue;
-		NCheck(Internal::NListGetEnd(this, 0, NTypeTraits<T>::GetNativeType().GetHandle(), (void * *)&pValue));
-		return pValue;
-	}
-
 	void * GetEnd(const NType & elementType)
 	{
 		void * pValue;
@@ -367,13 +282,6 @@ public:
 	{
 		void * pValue;
 		NCheck(Internal::NListGetPtr(this, index, elementSize, NULL, &pValue));
-		return pValue;
-	}
-
-	template<typename T> typename NTypeTraits<T>::NativeType * GetPtr(NInt index)
-	{
-		typename NTypeTraits<T>::NativeType * pValue;
-		NCheck(Internal::NListGetPtr(this, index, 0, NTypeTraits<T>::GetNativeType().GetHandle(), (void * *)&pValue));
 		return pValue;
 	}
 
@@ -396,13 +304,6 @@ public:
 		NCheck(Internal::NListGet(this, index, NULL, pValue, valueSize));
 	}
 
-	template<typename T> T Get(NInt index)
-	{
-		typename NTypeTraits<T>::NativeType value;
-		NCheck(Internal::NListGet(this, index, NTypeTraits<T>::GetNativeType().GetHandle(), &value, sizeof(value)));
-		return NTypeTraits<T>::FromNative(value);
-	}
-
 	void Get(NInt index, const NType & valueType, void * pValue, NSizeType valueSize)
 	{
 		NCheck(Internal::NListGet(this, index, valueType.GetHandle(), pValue, valueSize));
@@ -416,12 +317,6 @@ public:
 	void Set(NInt index, const void * pValue, NSizeType valueSize)
 	{
 		NCheck(Internal::NListSet(this, index, NULL, pValue, valueSize));
-	}
-
-	template<typename T> void Set(NInt index, const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NCheck(Internal::NListSet(this, index, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v)));
 	}
 
 	void Set(NInt index, const NType & valueType, const void * pValue, NSizeType valueSize)
@@ -439,12 +334,6 @@ public:
 		NCheck(Internal::NListAdd(this, NULL, pValue, valueSize));
 	}
 
-	template<typename T> void Add(const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NCheck(Internal::NListAdd(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v)));
-	}
-
 	void Add(const NType & valueType, const void * pValue, NSizeType valueSize)
 	{
 		NCheck(Internal::NListAdd(this, valueType.GetHandle(), pValue, valueSize));
@@ -458,13 +347,6 @@ public:
 	void AddRange(const void * pValues, NSizeType valuesSize, NInt valuesLength)
 	{
 		NCheck(Internal::NListAddRange(this, NULL, pValues, valuesSize, valuesLength));
-	}
-
-	template<typename T> void AddRange(const T * arValues, NInt valuesLength)
-	{
-		typename NTypeTraits<T>::NativeArrayType values(arValues, valuesLength, false);
-		NCheck(Internal::NListAddRange(this, NTypeTraits<T>::GetNativeType().GetHandle(), values.GetPtr(),
-			(NSizeType)valuesLength * sizeof(NTypeTraits<T>::NativeType), valuesLength));
 	}
 
 	void AddRange(const NType & valueType, const void * pValues, NSizeType valuesSize, NInt valuesLength)
@@ -487,12 +369,6 @@ public:
 		NCheck(Internal::NListInsert(this, index, NULL, pValue, valueSize));
 	}
 
-	template<typename T> void Insert(NInt index, const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NCheck(Internal::NListInsert(this, index, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v)));
-	}
-
 	void Insert(NInt index, const NType & valueType, const void * pValue, NSizeType valueSize)
 	{
 		NCheck(Internal::NListInsert(this, index, valueType.GetHandle(), pValue, valueSize));
@@ -506,13 +382,6 @@ public:
 	void InsertRange(NInt index, const void * pValues, NSizeType valuesSize, NInt valuesLength)
 	{
 		NCheck(Internal::NListInsertRange(this, index, NULL, pValues, valuesSize, valuesLength));
-	}
-
-	template<typename T> void InsertRange(NInt index, const T * arValues, NInt valuesLength)
-	{
-		typename NTypeTraits<T>::NativeArrayType values(arValues, valuesLength, false);
-		NCheck(Internal::NListInsertRange(this, index, NTypeTraits<T>::GetNativeType().GetHandle(), values.GetPtr(),
-			(NSizeType)valuesLength * sizeof(NTypeTraits<T>::NativeType), valuesLength));
 	}
 
 	void InsertRange(NInt index, const NType & valueType, const void * pValues, NSizeType valuesSize, NInt valuesLength)
@@ -547,14 +416,6 @@ public:
 		return result;
 	}
 
-	template<typename T> NInt Remove(const T & value)
-	{
-		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NInt result;
-		NCheck(Internal::NListRemove(this, NTypeTraits<T>::GetNativeType().GetHandle(), &v, sizeof(v), &result));
-		return result;
-	}
-
 	NInt Remove(const NType & valueType, const void * pValue, NSizeType valueSize)
 	{
 		NInt result;
@@ -579,14 +440,6 @@ public:
 		return NCheck(Internal::NListCopyToRange(this, index, count, NULL, pValues, valuesSize, valuesLength));
 	}
 
-	template<typename T> NInt CopyTo(NInt index, NInt count, T * arValues, NInt valuesLength)
-	{
-		typename NTypeTraits<T>::NativeArrayType values(arValues ? valuesLength : 0);
-		NInt realCount = NCheck(Internal::NListCopyToRange(this, index, count, NTypeTraits<T>::GetNativeType().GetHandle(), arValues ? NTypeTraits<T>::GetNativeArray(values, arValues) : NULL,
-			(NSizeType)valuesLength * sizeof(NTypeTraits<T>::NativeType), valuesLength));
-		return values.CopyTo(arValues, valuesLength, realCount);
-	}
-
 	NInt CopyTo(NInt index, NInt count, const NType & valueType, void * pValues, NSizeType valuesSize, NInt valuesLength)
 	{
 		return NCheck(Internal::NListCopyToRange(this, index, count, valueType.GetHandle(), pValues, valuesSize, valuesLength));
@@ -600,14 +453,6 @@ public:
 	NInt CopyTo(void * pValues, NSizeType valuesSize, NInt valuesLength)
 	{
 		return NCheck(Internal::NListCopyTo(this, NULL, pValues, valuesSize, valuesLength));
-	}
-
-	template<typename T> NInt CopyTo(T * arValues, NInt valuesLength)
-	{
-		typename NTypeTraits<T>::NativeArrayType values(arValues ? valuesLength : 0);
-		NInt count = NCheck(Internal::NListCopyTo(this, NTypeTraits<T>::GetNativeType().GetHandle(), arValues ? NTypeTraits<T>::GetNativeArray(values, arValues) : NULL,
-			(NSizeType)valuesLength * sizeof(NTypeTraits<T>::NativeType), valuesLength));
-		return values.CopyTo(arValues, valuesLength, count);
 	}
 
 	NInt CopyTo(const NType & valueType, void * pValues, NSizeType valuesSize, NInt valuesLength)
@@ -625,14 +470,6 @@ public:
 		void * pValues;
 		NCheck(Internal::NListToArrayRange(this, index, count, elementSize, NULL, &pValues, pCount));
 		return pValues;
-	}
-
-	template<typename T> NArrayWrapper<T> ToArray(NInt index, NInt count)
-	{
-		void * pValues;
-		NInt realCount;
-		NCheck(Internal::NListToArrayRange(this, index, count, 0, NTypeTraits<T>::GetNativeType().GetHandle(), &pValues, &realCount));
-		return NArrayWrapper<T>(pValues, realCount);
 	}
 
 	void * ToArray(NInt index, NInt count, const NType & valueType, NInt * pCount)
@@ -656,14 +493,6 @@ public:
 		return pValues;
 	}
 
-	template<typename T> NArrayWrapper<T> ToArray()
-	{
-		void * pValues;
-		NInt count;
-		NCheck(Internal::NListToArray(this, 0, NTypeTraits<T>::GetNativeType().GetHandle(), &pValues, &count));
-		return NArrayWrapper<T>(pValues, count);
-	}
-
 	void * ToArray(const NType & valueType, NInt * pCount)
 	{
 		void * pValues;
@@ -683,14 +512,6 @@ public:
 		void * pValues;
 		NCheck(Internal::NListDetachArray(this, elementSize, NULL, &pValues, pCount));
 		return pValues;
-	}
-
-	template<typename T> NArrayWrapper<T> DetachArray()
-	{
-		void * pValues;
-		NInt count;
-		NCheck(Internal::NListDetachArray(this, 0, NTypeTraits<T>::GetNativeType().GetHandle(), &pValues, &count));
-		return NArrayWrapper<T>(pValues, count);
 	}
 
 	void * DetachArray(const NType & valueType, NInt * pCount)

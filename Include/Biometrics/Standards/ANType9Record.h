@@ -148,67 +148,74 @@ NResult N_API ANFPatternClassDispose(struct ANFPatternClass_ * pValue);
 NResult N_API ANFPatternClassCopy(const struct ANFPatternClass_ * pSrcValue, struct ANFPatternClass_ * pDstValue);
 NResult N_API ANFPatternClassSet(const struct ANFPatternClass_ * pSrcValue, struct ANFPatternClass_ * pDstValue);
 
+NResult N_API ANType9RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType9Record * phRecord);
+NResult N_API ANType9RecordCreateFromNFRecord(NVersion_ version, NInt idc, NBool fmt, HNFRecord hNFRecord, NUInt flags, HANType9Record * phRecord);
+
+NResult N_API ANType9RecordToNFRecord(HANType9Record hRecord, NUInt flags, HNFRecord * phNFRecord);
+
 NResult N_API ANType9RecordGetPositionCount(HANType9Record hRecord, NInt * pValue);
 NResult N_API ANType9RecordGetPosition(HANType9Record hRecord, NInt index, BdifFPPosition * pValue);
-NResult N_API ANType9RecordGetPositionsEx(HANType9Record hRecord, BdifFPPosition * arValue, NInt valueLength);
+NResult N_API ANType9RecordGetPositions(HANType9Record hRecord, BdifFPPosition * * parValues, NInt * pValueCount);
 NResult N_API ANType9RecordSetPosition(HANType9Record hRecord, NInt index, BdifFPPosition value);
-NResult N_API ANType9RecordAddPosition(HANType9Record hRecord, BdifFPPosition value);
+NResult N_API ANType9RecordAddPositionEx(HANType9Record hRecord, BdifFPPosition value, NInt * pIndex);
 NResult N_API ANType9RecordInsertPosition(HANType9Record hRecord, NInt index, BdifFPPosition value);
-NResult N_API ANType9RecordRemovePosition(HANType9Record hRecord, NInt index);
+NResult N_API ANType9RecordRemovePositionAt(HANType9Record hRecord, NInt index);
 NResult N_API ANType9RecordClearPositions(HANType9Record hRecord);
 
 NResult N_API ANType9RecordGetPatternClassCount(HANType9Record hRecord, NInt * pValue);
 NResult N_API ANType9RecordGetPatternClass(HANType9Record hRecord, NInt index, struct ANFPatternClass_ * pValue);
 NResult N_API ANType9RecordSetPatternClass(HANType9Record hRecord, NInt index, const struct ANFPatternClass_ * pValue);
-NResult N_API ANType9RecordAddPatternClass(HANType9Record hRecord, const struct ANFPatternClass_ * pValue);
+NResult N_API ANType9RecordAddPatternClassEx(HANType9Record hRecord, const struct ANFPatternClass_ * pValue, NInt * pIndex);
 NResult N_API ANType9RecordInsertPatternClass(HANType9Record hRecord, NInt index, const struct ANFPatternClass_ * pValue);
-NResult N_API ANType9RecordRemovePatternClass(HANType9Record hRecord, NInt index);
+NResult N_API ANType9RecordRemovePatternClassAt(HANType9Record hRecord, NInt index);
 NResult N_API ANType9RecordClearPatternClasses(HANType9Record hRecord);
 
 NResult N_API ANType9RecordGetCoreCount(HANType9Record hRecord, NInt * pValue);
 NResult N_API ANType9RecordGetCore(HANType9Record hRecord, NInt index, struct ANFCore_ * pValue);
-NResult N_API ANType9RecordGetCoresEx(HANType9Record hRecord, struct ANFCore_ * arValue, NInt valueLength);
+NResult N_API ANType9RecordGetCores(HANType9Record hRecord, struct ANFCore_ * * parValues, NInt * pValueCount);
 NResult N_API ANType9RecordSetCore(HANType9Record hRecord, NInt index, const struct ANFCore_ * pValue);
-NResult N_API ANType9RecordAddCore(HANType9Record hRecord, const struct ANFCore_ * pValue);
+NResult N_API ANType9RecordAddCoreEx(HANType9Record hRecord, const struct ANFCore_ * pValue, NInt * pIndex);
 NResult N_API ANType9RecordInsertCore(HANType9Record hRecord, NInt index, const struct ANFCore_ * pValue);
-NResult N_API ANType9RecordRemoveCore(HANType9Record hRecord, NInt index);
+NResult N_API ANType9RecordRemoveCoreAt(HANType9Record hRecord, NInt index);
 NResult N_API ANType9RecordClearCores(HANType9Record hRecord);
 
 NResult N_API ANType9RecordGetDeltaCount(HANType9Record hRecord, NInt * pValue);
 NResult N_API ANType9RecordGetDelta(HANType9Record hRecord, NInt index, struct ANFDelta_ * pValue);
-NResult N_API ANType9RecordGetDeltasEx(HANType9Record hRecord, struct ANFDelta_ * arValue, NInt valueLength);
+NResult N_API ANType9RecordGetDeltas(HANType9Record hRecord, struct ANFDelta_ * * parValues, NInt * pValueCount);
 NResult N_API ANType9RecordSetDelta(HANType9Record hRecord, NInt index, const struct ANFDelta_ * pValue);
-NResult N_API ANType9RecordAddDelta(HANType9Record hRecord, const struct ANFDelta_ * pValue);
+NResult N_API ANType9RecordAddDeltaEx(HANType9Record hRecord, const struct ANFDelta_ * pValue, NInt * pIndex);
 NResult N_API ANType9RecordInsertDelta(HANType9Record hRecord, NInt index, const struct ANFDelta_ * pValue);
-NResult N_API ANType9RecordRemoveDelta(HANType9Record hRecord, NInt index);
+NResult N_API ANType9RecordRemoveDeltaAt(HANType9Record hRecord, NInt index);
 NResult N_API ANType9RecordClearDeltas(HANType9Record hRecord);
 
 NResult N_API ANType9RecordGetMinutiaCount(HANType9Record hRecord, NInt * pValue);
 NResult N_API ANType9RecordGetMinutia(HANType9Record hRecord, NInt index, struct ANFPMinutia_ * pValue);
-NResult N_API ANType9RecordGetMinutiaeEx(HANType9Record hRecord, struct ANFPMinutia_ * arValue, NInt valueLength);
+NResult N_API ANType9RecordGetMinutiae(HANType9Record hRecord, struct ANFPMinutia_ * * parValues, NInt * pValueCount);
 NResult N_API ANType9RecordSetMinutia(HANType9Record hRecord, NInt index, const struct ANFPMinutia_ * pValue);
-NResult N_API ANType9RecordAddMinutia(HANType9Record hRecord, const struct ANFPMinutia_ * pValue);
+NResult N_API ANType9RecordAddMinutiaEx(HANType9Record hRecord, const struct ANFPMinutia_ * pValue, NInt * pIndex);
 NResult N_API ANType9RecordInsertMinutia(HANType9Record hRecord, NInt index, const struct ANFPMinutia_ * pValue);
-NResult N_API ANType9RecordRemoveMinutia(HANType9Record hRecord, NInt index);
+NResult N_API ANType9RecordRemoveMinutiaAt(HANType9Record hRecord, NInt index);
 NResult N_API ANType9RecordClearMinutiae(HANType9Record hRecord);
 
 NResult N_API ANType9RecordGetMinutiaNeighborCount(HANType9Record hRecord, NInt minutiaIndex, NInt * pValue);
 NResult N_API ANType9RecordGetMinutiaNeighbor(HANType9Record hRecord, NInt minutiaIndex, NInt index, struct BdifFPMinutiaNeighbor_ * pValue);
-NResult N_API ANType9RecordGetMinutiaNeighborsEx(HANType9Record hRecord, NInt minutiaIndex, struct BdifFPMinutiaNeighbor_ * arValue, NInt valueLength);
+NResult N_API ANType9RecordGetMinutiaNeighbors(HANType9Record hRecord, NInt minutiaIndex, struct BdifFPMinutiaNeighbor_ * * parValues, NInt * pValueCount);
 NResult N_API ANType9RecordSetMinutiaNeighbor(HANType9Record hRecord, NInt minutiaIndex, NInt index, const struct BdifFPMinutiaNeighbor_ * pValue);
-NResult N_API ANType9RecordAddMinutiaNeighbor(HANType9Record hRecord, NInt minutiaIndex, const struct BdifFPMinutiaNeighbor_ * pValue);
+NResult N_API ANType9RecordAddMinutiaNeighborEx(HANType9Record hRecord, NInt minutiaIndex, const struct BdifFPMinutiaNeighbor_ * pValue, NInt * pIndex);
 NResult N_API ANType9RecordInsertMinutiaNeighbor(HANType9Record hRecord, NInt minutiaIndex, NInt index, const struct BdifFPMinutiaNeighbor_ * pValue);
-NResult N_API ANType9RecordRemoveMinutiaNeighbor(HANType9Record hRecord, NInt minutiaIndex, NInt index);
+NResult N_API ANType9RecordRemoveMinutiaNeighborAt(HANType9Record hRecord, NInt minutiaIndex, NInt index);
 NResult N_API ANType9RecordClearMinutiaNeighbors(HANType9Record hRecord, NInt minutiaIndex);
-
-NResult N_API ANType9RecordToNFRecord(HANType9Record hRecord, NUInt flags, HNFRecord * phNFRecord);
 
 NResult N_API ANType9RecordGetImpressionType(HANType9Record hRecord, BdifFPImpressionType * pValue);
 NResult N_API ANType9RecordSetImpressionType(HANType9Record hRecord, BdifFPImpressionType value);
 NResult N_API ANType9RecordGetMinutiaeFormat(HANType9Record hRecord, NBool * pValue);
+NResult N_API ANType9RecordSetMinutiaeFormat(HANType9Record hRecord, NBool value);
 NResult N_API ANType9RecordHasMinutiae(HANType9Record hRecord, NBool * pValue);
+NResult N_API ANType9RecordSetHasMinutiae(HANType9Record hRecord, NBool value);
 NResult N_API ANType9RecordHasMinutiaeRidgeCounts(HANType9Record hRecord, NBool * pValue);
 NResult N_API ANType9RecordHasMinutiaeRidgeCountsIndicator(HANType9Record hRecord, NBool * pValue);
+NResult N_API ANType9RecordSetHasMinutiaeRidgeCounts(HANType9Record hRecord, NBool hasMinutiaeRidgeCountsIndicator, NBool rdg);
+
 NResult N_API ANType9RecordGetOfrs(HANType9Record hRecord, struct ANOfrs_ * pValue, NBool * pHasValue);
 NResult N_API ANType9RecordGetOfrsNameN(HANType9Record hRecord, HNString * phValue);
 NResult N_API ANType9RecordGetOfrsMethod(HANType9Record hRecord, ANFPMinutiaeMethod * pValue);

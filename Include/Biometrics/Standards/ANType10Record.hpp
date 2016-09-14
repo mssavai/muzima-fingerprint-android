@@ -173,7 +173,7 @@ const NInt AN_TYPE_10_RECORD_MAX_SMT_SIZE = 99;
 
 class ANSmt : public ANSmt_
 {
-	N_DECLARE_DISPOSABLE_STRUCT_CLASS(ANSmt)
+	N_DECLARE_EQUATABLE_DISPOSABLE_STRUCT_CLASS(ANSmt)
 
 public:
 	ANSmt(ANSmtSource source, ANTattooClass tattooClass, ANTattooSubclass tattooSubclass, const NStringWrapper & description)
@@ -251,6 +251,7 @@ N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANHairColor)
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
+#include <Core/NNoDeprecate.h>
 class ANType10Record : public ANImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType10Record, ANImageAsciiBinaryRecord)
@@ -273,8 +274,8 @@ public:
 
 		NInt Add(const NStringWrapper & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType10RecordAddPhysicalPhotoCharacteristicN(this->GetOwnerHandle(), value.GetHandle()));
+			NInt index;
+			NCheck(ANType10RecordAddPhysicalPhotoCharacteristicExN(this->GetOwnerHandle(), value.GetHandle(), &index));
 			return index;
 		}
 
@@ -285,7 +286,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemovePhysicalPhotoCharacteristic(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemovePhysicalPhotoCharacteristicAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -311,8 +312,8 @@ public:
 
 		NInt Add(const NStringWrapper & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType10RecordAddOtherPhotoCharacteristicN(this->GetOwnerHandle(), value.GetHandle()));
+			NInt index;
+			NCheck(ANType10RecordAddOtherPhotoCharacteristicExN(this->GetOwnerHandle(), value.GetHandle(), &index));
 			return index;
 		}
 
@@ -323,7 +324,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemoveOtherPhotoCharacteristic(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemoveOtherPhotoCharacteristicAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -332,8 +333,8 @@ public:
 		}
 	};
 
-	class SubjectQualityScoreCollection : public ::Neurotec::Collections::NCollectionBase<ANQualityMetric, ANType10Record,
-		ANType10RecordGetSubjectQualityScoreCount, ANType10RecordGetSubjectQualityScore>
+	class SubjectQualityScoreCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANQualityMetric, ANType10Record,
+		ANType10RecordGetSubjectQualityScoreCount, ANType10RecordGetSubjectQualityScore, ANType10RecordGetSubjectQualityScores>
 	{
 		SubjectQualityScoreCollection(const ANType10Record & owner)
 		{
@@ -342,12 +343,8 @@ public:
 
 		friend class ANType10Record;
 	public:
-		NInt GetAll(ANQualityMetric * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType10RecordGetSubjectQualityScoresEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANQualityMetric, ANType10Record,
+			ANType10RecordGetSubjectQualityScoreCount, ANType10RecordGetSubjectQualityScore, ANType10RecordGetSubjectQualityScores>::GetAll;
 
 		void Set(NInt index, const ANQualityMetric & value)
 		{
@@ -356,8 +353,8 @@ public:
 
 		NInt Add(const ANQualityMetric & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType10RecordAddSubjectQualityScore(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType10RecordAddSubjectQualityScoreEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -368,7 +365,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemoveSubjectQualityScore(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemoveSubjectQualityScoreAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -394,8 +391,8 @@ public:
 
 		NInt Add(const NStringWrapper & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType10RecordAddSubjectFacialCharacteristicN(this->GetOwnerHandle(), value.GetHandle()));
+			NInt index;
+			NCheck(ANType10RecordAddSubjectFacialCharacteristicExN(this->GetOwnerHandle(), value.GetHandle(), &index));
 			return index;
 		}
 
@@ -406,7 +403,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemoveSubjectFacialCharacteristic(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemoveSubjectFacialCharacteristicAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -415,8 +412,8 @@ public:
 		}
 	};
 
-	class FacialFeaturePointCollection : public ::Neurotec::Collections::NCollectionBase<BdifFaceFeaturePoint, ANType10Record,
-		ANType10RecordGetFacialFeaturePointCount, ANType10RecordGetFacialFeaturePoint>
+	class FacialFeaturePointCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFaceFeaturePoint, ANType10Record,
+		ANType10RecordGetFacialFeaturePointCount, ANType10RecordGetFacialFeaturePoint, ANType10RecordGetFacialFeaturePoints>
 	{
 		FacialFeaturePointCollection(const ANType10Record & owner)
 		{
@@ -426,12 +423,8 @@ public:
 		friend class ANType10Record;
 
 	public:
-		NInt GetAll(BdifFaceFeaturePoint * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType10RecordGetFacialFeaturePointsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFaceFeaturePoint, ANType10Record,
+			ANType10RecordGetFacialFeaturePointCount, ANType10RecordGetFacialFeaturePoint, ANType10RecordGetFacialFeaturePoints>::GetAll;
 
 		void Set(NInt index, const BdifFaceFeaturePoint & value)
 		{
@@ -440,8 +433,8 @@ public:
 
 		NInt Add(const BdifFaceFeaturePoint & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType10RecordAddFacialFeaturePoint(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType10RecordAddFacialFeaturePointEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -452,7 +445,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemoveFacialFeaturePoint(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemoveFacialFeaturePointAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -478,8 +471,8 @@ public:
 
 		NInt Add(const NStringWrapper & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType10RecordAddNcicDesignationCodeN(this->GetOwnerHandle(), value.GetHandle()));
+			NInt index;
+			NCheck(ANType10RecordAddNcicDesignationCodeExN(this->GetOwnerHandle(), value.GetHandle(), &index));
 			return index;
 		}
 
@@ -490,7 +483,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemoveNcicDesignationCode(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemoveNcicDesignationCodeAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -515,7 +508,9 @@ public:
 
 		NInt Add(const ANSmt & value)
 		{
-			return ANType10RecordAddSmtEx(this->GetOwnerHandle(), &value);
+			NInt index;
+			NCheck(ANType10RecordAddSmt(this->GetOwnerHandle(), &value, &index));
+			return index;
 		}
 
 		void Insert(NInt index, const ANSmt & value)
@@ -525,7 +520,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType10RecordRemoveSmt(this->GetOwnerHandle(), index));
+			NCheck(ANType10RecordRemoveSmtAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -544,7 +539,7 @@ public:
 		}
 
 		friend class ANType10Record;
-	protected:
+	public:
 		NInt GetCount(NInt baseIndex) const
 		{
 			NInt value;
@@ -559,11 +554,12 @@ public:
 			return value;
 		}
 
-		NInt GetAll(NInt baseIndex, ANColor * arValues, NInt valuesLength) const
+		NArrayWrapper<ANColor> GetAll(NInt baseIndex) const
 		{
-			NInt count;
-			NCheck(count = ANType10RecordGetSmtColorsEx(this->GetOwnerHandle(), baseIndex, arValues, valuesLength));
-			return count;
+			ANColor * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(ANType10RecordGetSmtColors(this->GetOwnerHandle(), baseIndex, &arValues, &valueCount));
+			return NArrayWrapper<ANColor>(arValues, valueCount);
 		}
 
 		void Set(NInt baseIndex, NInt index, ANColor value)
@@ -573,8 +569,8 @@ public:
 
 		NInt Add(NInt baseIndex, ANColor value)
 		{
-			NInt index = this->GetCount(baseIndex);
-			NCheck(ANType10RecordAddSmtColor(this->GetOwnerHandle(), baseIndex, value));
+			NInt index;
+			NCheck(ANType10RecordAddSmtColorEx(this->GetOwnerHandle(), baseIndex, value, &index));
 			return index;
 		}
 
@@ -585,7 +581,7 @@ public:
 
 		void RemoveAt(NInt baseIndex, NInt index)
 		{
-			NCheck(ANType10RecordRemoveSmtColor(this->GetOwnerHandle(), baseIndex, index));
+			NCheck(ANType10RecordRemoveSmtColorAt(this->GetOwnerHandle(), baseIndex, index));
 		}
 
 		void Clear(NInt baseIndex)
@@ -593,6 +589,21 @@ public:
 			NCheck(ANType10RecordClearSmtColors(this->GetOwnerHandle(), baseIndex));
 		}
 	};
+
+private:
+	static HANType10Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType10Record handle;
+		NCheck(ANType10RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType10Record Create(NVersion version, NInt idc, ANImageType imt, const NStringWrapper & src, BdifScaleUnits slc, ANImageCompressionAlgorithm cga, const NStringWrapper & smt, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+		HANType10Record handle;
+		NCheck(ANType10RecordCreateFromNImageN(version.GetValue(), idc, imt, src.GetHandle(), slc, cga, smt.GetHandle(), image.GetHandle(), flags, &handle));
+		return handle;
+	}
 
 public:
 	static NType ANImageTypeNativeTypeOf()
@@ -625,11 +636,26 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(ANColor), true);
 	}
 
+	explicit ANType10Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANImageAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType10Record(NVersion version, NInt idc, ANImageType imt, const NStringWrapper & src, BdifScaleUnits slc, ANImageCompressionAlgorithm cga, const NStringWrapper & smt, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANImageAsciiBinaryRecord(Create(version, idc, imt, src, slc, cga, smt, image, flags), true)
+	{
+	}
+
 	ANImageType GetImageType() const
 	{
 		ANImageType value;
 		NCheck(ANType10RecordGetImageType(GetHandle(), &value));
 		return value;
+	}
+
+	void SetImageType(ANImageType value)
+	{
+		NCheck(ANType10RecordSetImageType(GetHandle(), value));
 	}
 
 	NInt GetSubjectAcquisitionProfile() const
@@ -932,6 +958,7 @@ public:
 		return SmtColorsCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

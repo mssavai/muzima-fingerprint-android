@@ -66,13 +66,14 @@ const NInt AN_TYPE_13_RECORD_FIELD_DATA = AN_RECORD_FIELD_DATA;
 const NInt AN_TYPE_13_RECORD_MAX_SEARCH_POSITION_DESCRIPTOR_COUNT = 9;
 const NInt AN_TYPE_13_RECORD_MAX_QUALITY_METRIC_COUNT = 4;
 
+#include <Core/NNoDeprecate.h>
 class ANType13Record : public ANFPImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType13Record, ANFPImageAsciiBinaryRecord)
 
 public:
-	class SearchPositionDescriptorCollection : public ::Neurotec::Collections::NCollectionBase<ANFPositionDescriptor, ANType13Record,
-		ANType13RecordGetSearchPositionDescriptorCount, ANType13RecordGetSearchPositionDescriptor>
+	class SearchPositionDescriptorCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPositionDescriptor, ANType13Record,
+		ANType13RecordGetSearchPositionDescriptorCount, ANType13RecordGetSearchPositionDescriptor, ANType13RecordGetSearchPositionDescriptors>
 	{
 		SearchPositionDescriptorCollection(const ANType13Record & owner)
 		{
@@ -80,12 +81,8 @@ public:
 		}
 
 	public:
-		NInt GetAll(ANFPositionDescriptor * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType13RecordGetSearchPositionDescriptorsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPositionDescriptor, ANType13Record,
+			ANType13RecordGetSearchPositionDescriptorCount, ANType13RecordGetSearchPositionDescriptor, ANType13RecordGetSearchPositionDescriptors>::GetAll;
 
 		void Set(NInt index, const ANFPositionDescriptor & value)
 		{
@@ -94,8 +91,8 @@ public:
 
 		NInt Add(const ANFPositionDescriptor & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType13RecordAddSearchPositionDescriptor(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType13RecordAddSearchPositionDescriptorEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -106,7 +103,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType13RecordRemoveSearchPositionDescriptor(this->GetOwnerHandle(), index));
+			NCheck(ANType13RecordRemoveSearchPositionDescriptorAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -117,7 +114,34 @@ public:
 		friend class ANType13Record;
 	};
 
+private:
+	static HANType13Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType13Record handle;
+		NCheck(ANType13RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType13Record Create(NVersion version, NInt idc, BdifFPImpressionType imp, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+
+		HANType13Record handle;
+		NCheck(ANType13RecordCreateFromNImageN(version.GetValue(), idc, imp, src.GetHandle(), slc, cga, image.GetHandle(), flags, &handle));
+		return handle;
+	}
 public:
+	explicit ANType13Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANFPImageAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType13Record(NVersion version, NInt idc, BdifFPImpressionType imp, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANFPImageAsciiBinaryRecord(Create(version, idc, imp, src, slc, cga, image, flags), true)
+	{
+	}
+
 	SearchPositionDescriptorCollection GetSearchPositionDescriptors()
 	{
 		return SearchPositionDescriptorCollection(*this);
@@ -128,6 +152,7 @@ public:
 		return SearchPositionDescriptorCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

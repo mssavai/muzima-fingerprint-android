@@ -105,6 +105,8 @@ namespace Neurotec { namespace Biometrics { namespace Standards
 #undef CBEFF_BO_TESTING_2
 #undef CBEFF_BO_NOT_FOR_USE
 
+#undef CBEFF_BO_VENDOR_UNKNOWN
+
 const NUShort CBEFF_BO_SAFLINK = 0x0001;
 const NUShort CBEFF_BO_BIOSCRYPT = 0x0002;
 const NUShort CBEFF_BO_IDENTIX = 0x0003;
@@ -199,6 +201,8 @@ const NUShort CBEFF_BO_PRIVATE = 0xFEFE;
 const NUShort CBEFF_BO_TESTING_1 = 0xFFF0;
 const NUShort CBEFF_BO_TESTING_2 = 0xFFFE;
 const NUShort CBEFF_BO_NOT_FOR_USE = 0xFFFF;
+
+const NUShort CBEFF_BO_VENDOR_UNKNOWN = 0x0103;
 
 class CbeffBiometricOrganizations
 {

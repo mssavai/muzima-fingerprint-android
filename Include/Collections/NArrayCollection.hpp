@@ -55,7 +55,7 @@ public:
 	{
 		typename NTypeTraits<T>::NativeType value;
 		NCheck(NArrayCollectionGet(GetHandle(), baseIndex, index, NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &value, sizeof(value)));
-		return NTypeTraits<T>::FromNative(value);
+		return NTypeTraits<T>::FromNative(value, true);
 	}
 
 	NArrayWrapper<NValue> ToArray(NInt baseIndex) const

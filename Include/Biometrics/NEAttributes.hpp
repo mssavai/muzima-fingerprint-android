@@ -30,7 +30,7 @@ public:
 			SetOwner(owner);
 		}
 
-	protected:
+	public:
 		NInt GetCapacity() const
 		{
 			NInt value;
@@ -133,7 +133,19 @@ private:
 		return handle;
 	}
 
+	static HNEAttributes Create()
+	{
+		HNEAttributes handle;
+		NCheck(NEAttributesCreateEx(&handle));
+		return handle;
+	}
+
 public:
+	NEAttributes()
+		: NBiometricAttributes(Create(), true)
+	{
+	}
+
 	explicit NEAttributes(NEPosition position)
 		: NBiometricAttributes(Create(position), true)
 	{
@@ -146,6 +158,11 @@ public:
 		NEPosition value;
 		NCheck(NEAttributesGetPosition(GetHandle(), &value));
 		return value;
+	}
+
+	void SetPosition(NEPosition value)
+	{
+		NCheck(NEAttributesSetPosition(GetHandle(), value));
 	}
 
 	NInt GetImageIndex() const
@@ -179,11 +196,21 @@ public:
 		return value;
 	}
 
+	void SetUsableIrisArea(NByte value)
+	{
+		NCheck(NEAttributesSetUsableIrisArea(GetHandle(), value));
+	}
+
 	NByte GetIrisScleraContrast() const
 	{
 		NByte value;
 		NCheck(NEAttributesGetIrisScleraContrast(GetHandle(), &value));
 		return value;
+	}
+
+	void SetIrisScleraContrast(NByte value)
+	{
+		NCheck(NEAttributesSetIrisScleraContrast(GetHandle(), value));
 	}
 
 	NByte GetIrisPupilContrast() const
@@ -193,11 +220,21 @@ public:
 		return value;
 	}
 
+	void SetIrisPupilContrast(NByte value)
+	{
+		NCheck(NEAttributesSetIrisPupilContrast(GetHandle(), value));
+	}
+
 	NByte GetPupilBoundaryCircularity() const
 	{
 		NByte value;
 		NCheck(NEAttributesGetPupilBoundaryCircularity(GetHandle(), &value));
 		return value;
+	}
+
+	void SetPupilBoundaryCircularity(NByte value)
+	{
+		NCheck(NEAttributesSetPupilBoundaryCircularity(GetHandle(), value));
 	}
 
 	NByte GetGrayScaleUtilisation() const
@@ -207,11 +244,21 @@ public:
 		return value;
 	}
 
+	void SetGrayScaleUtilisation(NByte value)
+	{
+		NCheck(NEAttributesSetGrayScaleUtilisation(GetHandle(), value));
+	}
+
 	NByte GetIrisRadius() const
 	{
 		NByte value;
 		NCheck(NEAttributesGetIrisRadius(GetHandle(), &value));
 		return value;
+	}
+
+	void SetIrisRadius(NByte value)
+	{
+		NCheck(NEAttributesSetIrisRadius(GetHandle(), value));
 	}
 
 	NByte GetPupilToIrisRatio() const
@@ -221,11 +268,21 @@ public:
 		return value;
 	}
 
+	void SetPupilToIrisRatio(NByte value)
+	{
+		NCheck(NEAttributesSetPupilToIrisRatio(GetHandle(), value));
+	}
+
 	NByte GetIrisPupilConcentricity() const
 	{
 		NByte value;
 		NCheck(NEAttributesGetIrisPupilConcentricity(GetHandle(), &value));
 		return value;
+	}
+
+	void SetIrisPupilConcentricity(NByte value)
+	{
+		NCheck(NEAttributesSetIrisPupilConcentricity(GetHandle(), value));
 	}
 
 	NByte GetMarginAdequacy() const
@@ -235,6 +292,11 @@ public:
 		return value;
 	}
 
+	void SetMarginAdequacy(NByte value)
+	{
+		NCheck(NEAttributesSetMarginAdequacy(GetHandle(), value));
+	}
+
 	NByte GetSharpness() const
 	{
 		NByte value;
@@ -242,11 +304,21 @@ public:
 		return value;
 	}
 
+	void SetSharpness(NByte value)
+	{
+		NCheck(NEAttributesSetSharpness(GetHandle(), value));
+	}
+
 	NByte GetInterlace() const
 	{
 		NByte value;
 		NCheck(NEAttributesGetInterlace(GetHandle(), &value));
 		return value;
+	}
+
+	void SetInterlace(NByte value)
+	{
+		NCheck(NEAttributesSetInterlace(GetHandle(), value));
 	}
 
 	bool IsInnerBoundaryAvailable() const

@@ -20,8 +20,13 @@ N_DECLARE_OBJECT_TYPE(ANType3Record, ANFImageBinaryRecord)
 #define AN_TYPE_3_RECORD_FIELD_GCA  AN_F_IMAGE_BINARY_RECORD_FIELD_CA
 #define AN_TYPE_3_RECORD_FIELD_DATA AN_RECORD_FIELD_DATA
 
+NResult N_API ANType3RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType3Record * phRecord);
+NResult N_API ANType3RecordCreateFromNImage(NVersion_ version, NInt idc, NBool isr, ANImageCompressionAlgorithm ca,
+	HNImage hImage, NUInt flags, HANType3Record * phRecord);
+
 NResult N_API ANType3RecordGetCompressionAlgorithm(HANType3Record hRecord, ANImageCompressionAlgorithm * pValue);
 NResult N_API ANType3RecordGetVendorCompressionAlgorithm(HANType3Record hRecord, NByte * pValue);
+NResult N_API ANType3RecordSetCompressionAlgorithm(HANType3Record hRecord, ANImageCompressionAlgorithm value, NByte vendorValue);
 
 #ifdef N_CPP
 }

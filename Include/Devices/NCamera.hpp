@@ -82,10 +82,18 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(NCameraStillCapturedCallback), true);
 	}
 
-	::Neurotec::Images::NImage GetFrame()
+	static NType NCameraStatusNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(NCameraStatus), true);
+	}
+
+	::Neurotec::Images::NImage GetFrame(NTimeSpan * pTimeStamp = NULL, NTimeSpan * pDuration = NULL)
 	{
 		HNImage hImage = NULL;
-		NCheck(NCameraGetFrame(GetHandle(), &hImage));
+		NTimeSpan_ ts = 0, d = 0;
+		NCheck(NCameraGetFrameEx(GetHandle(), pTimeStamp ? &ts : NULL, pDuration ? &d : NULL, &hImage));
+		if (pTimeStamp) *pTimeStamp = NTimeSpan(ts);
+		if (pDuration) *pDuration = NTimeSpan(d);
 		return FromHandle< ::Neurotec::Images::NImage>(hImage);
 	}
 

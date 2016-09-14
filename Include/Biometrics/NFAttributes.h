@@ -13,11 +13,14 @@ extern "C"
 N_DECLARE_OBJECT_TYPE(NFAttributes, NBiometricAttributes)
 
 NResult N_API NFAttributesCreate(NFImpressionType impressionType, NFPosition position, HNFAttributes * phAttributes);
+NResult N_API NFAttributesCreateEx(HNFAttributes * phAttributes);
 
 NResult N_API NFAttributesGetTemplate(HNFAttributes hAttributes, HNFRecord * phValue);
 NResult N_API NFAttributesSetTemplate(HNFAttributes hAttributes, HNFRecord hValue);
 NResult N_API NFAttributesGetImpressionType(HNFAttributes hAttributes, NFImpressionType * pValue);
+NResult N_API NFAttributesSetImpressionType(HNFAttributes hAttributes, NFImpressionType value);
 NResult N_API NFAttributesGetPosition(HNFAttributes hAttributes, NFPosition * pValue);
+NResult N_API NFAttributesSetPosition(HNFAttributes hAttributes, NFPosition value);
 NResult N_API NFAttributesGetImageIndex(HNFAttributes hAttributes, NInt * pValue);
 NResult N_API NFAttributesSetImageIndex(HNFAttributes hAttributes, NInt value);
 NResult N_API NFAttributesGetBoundingRect(HNFAttributes hAttributes, struct NRect_ * pValue);

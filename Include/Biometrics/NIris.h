@@ -13,6 +13,8 @@ extern "C"
 N_DECLARE_OBJECT_TYPE(NIris, NBiometric)
 
 NResult N_API NIrisCreate(HNIris * phIris);
+NResult N_API NIrisFromImageAndTemplate(HNImage hImage, HNERecord hTemplate, HNIris * phIris);
+
 NResult N_API NIrisGetImage(HNIris hIris, HNImage * phValue);
 NResult N_API NIrisSetImage(HNIris hIris, HNImage hValue);
 NResult N_API NIrisGetPosition(HNIris hIris, NEPosition * pValue);

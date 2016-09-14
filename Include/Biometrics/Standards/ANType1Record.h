@@ -137,7 +137,7 @@ NResult N_API ANType1RecordSetCharset(HANType1Record hRecord, NInt index, const 
 
 NResult N_API ANType1RecordAddCharsetEx(HANType1Record hRecord, const struct ANCharset_ * pValue, NInt * pIndex);
 NResult N_API ANType1RecordInsertCharset(HANType1Record hRecord, NInt index, const struct ANCharset_ * pValue);
-NResult N_API ANType1RecordRemoveCharset(HANType1Record hRecord, NInt index);
+NResult N_API ANType1RecordRemoveCharsetAt(HANType1Record hRecord, NInt index);
 NResult N_API ANType1RecordClearCharsets(HANType1Record hRecord);
 NResult N_API ANType1RecordContainsCharset(HANType1Record hRecord, NInt charsetIndex, NBool * pValue);
 
@@ -218,7 +218,11 @@ NResult N_API ANType1RecordSetTransactionControlReference(HANType1Record hRecord
 #define ANType1RecordSetTransactionControlReference N_FUNC_AW(ANType1RecordSetTransactionControlReference)
 
 NResult N_API ANType1RecordGetNativeScanningResolution(HANType1Record hRecord, NUInt * pValue);
+NResult N_API ANType1RecordSetNativeScanningResolution(HANType1Record hRecord, NUInt value);
 NResult N_API ANType1RecordGetNominalTransmittingResolution(HANType1Record hRecord, NUInt * pValue);
+NResult N_API ANType1RecordSetNativeScanningResolutionPpi(HANType1Record hRecord, NFloat value);
+NResult N_API ANType1RecordSetNominalTransmittingResolution(HANType1Record hRecord, NUInt value);
+NResult N_API ANType1RecordSetNominalTransmittingResolutionPpi(HANType1Record hRecord, NFloat value);
 
 NResult N_API ANType1RecordGetDomain(HANType1Record hRecord, struct ANDomain_ * pValue, NBool * pHasValue);
 NResult N_API ANType1RecordGetDomainNameN(HANType1Record hRecord, HNString * phValue);

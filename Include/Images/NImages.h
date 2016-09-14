@@ -1,7 +1,8 @@
 #ifndef N_IMAGES_H_INCLUDED
 #define N_IMAGES_H_INCLUDED
 
-#include <Images/NRgbImage.h>
+#include <Images/NImage.h>
+#include <Images/NRgb.h>
 
 #ifdef N_CPP
 extern "C"

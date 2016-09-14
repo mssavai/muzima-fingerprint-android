@@ -15,7 +15,7 @@ class NCore
 	N_DECLARE_STATIC_OBJECT_CLASS(NCore)
 
 public:
-	class ErrorSuppressedEventArgs : EventArgs
+	class ErrorSuppressedEventArgs : public EventArgs
 	{
 	private:
 		NResult errorCode;
@@ -28,14 +28,14 @@ public:
 
 		NError GetError() const
 		{
-			return hError ? NObject::FromHandle<NError>(hError) : NError(errorCode);
+			return hError ? NObject::FromHandle<NError>(hError, false) : NError(errorCode);
 		}
 	};
 
 private:
 
 	template<typename F>
-	class ErrorSuppressedEventHandler : EventHandlerBase<F>
+	class ErrorSuppressedEventHandler : public EventHandlerBase<F>
 	{
 	public:
 		ErrorSuppressedEventHandler(const F & callback)
@@ -94,7 +94,7 @@ public:
 	static NCallback AddErrorSuppressedCallback(const F & callback, void * pParam = NULL)
 	{
 		NCallback cb = NTypes::CreateCallback<ErrorSuppressedEventHandler<F> >(callback, pParam);
-		NCheck(NCoreAddErrorSuppressed(callback.GetHandle()));
+		NCheck(NCoreAddErrorSuppressed(cb.GetHandle()));
 		return cb;
 	}
 
@@ -107,7 +107,7 @@ public:
 	static NCallback RemoveErrorSuppressedCallback(const F & callback, void * pParam = NULL)
 	{
 		NCallback cb = NTypes::CreateCallback<ErrorSuppressedEventHandler<F> >(callback, pParam);
-		NCheck(RemoveErrorSuppressedCallback(callback.GetHandle()));
+		RemoveErrorSuppressedCallback(cb.GetHandle());
 		return cb;
 	}
 

@@ -61,7 +61,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(NFTemplateRemoveRecord(this->GetOwnerHandle(), index));
+			NCheck(NFTemplateRemoveRecordAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()

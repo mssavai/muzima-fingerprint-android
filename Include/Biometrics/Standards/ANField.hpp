@@ -59,7 +59,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANFieldRemoveItem(this->GetOwnerHandle(), index));
+			NCheck(ANFieldRemoveItemAt(this->GetOwnerHandle(), index));
 		}
 
 		void RemoveRange(NInt index, NInt count)
@@ -92,7 +92,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANFieldRemoveSubField(this->GetOwnerHandle(), index));
+			NCheck(ANFieldRemoveSubFieldAt(this->GetOwnerHandle(), index));
 		}
 
 		void RemoveRange(NInt index, NInt count)

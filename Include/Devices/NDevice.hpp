@@ -24,6 +24,11 @@ public:
 	class ChildCollection;
 
 public:
+	static NType NDeviceTypeNativeTypeOf()
+	{
+		return NObject::GetObject<NType>(N_TYPE_OF(NDeviceType), true);
+	}
+
 	NDeviceManager GetOwner() const;
 
 	::Neurotec::Plugins::NPlugin GetPlugin() const
@@ -38,25 +43,25 @@ public:
 		return type;
 	}
 
-	NBool IsAvailable() const
+	bool IsAvailable() const
 	{
 		NBool isAvailable;
 		NCheck(NDeviceIsAvailable(GetHandle(), &isAvailable));
-		return isAvailable;
+		return isAvailable != 0;
 	}
 
-	NBool IsPrivate() const
+	bool IsPrivate() const
 	{
 		NBool isPrivate;
 		NCheck(NDeviceIsPrivate(GetHandle(), &isPrivate));
-		return isPrivate;
+		return isPrivate != 0;
 	}
 
-	NBool IsDisconnectable() const
+	bool IsDisconnectable() const
 	{
 		NBool isPrivate;
 		NCheck(NDeviceIsDisconnectable(GetHandle(), &isPrivate));
-		return isPrivate;
+		return isPrivate != 0;
 	}
 
 	NDevice GetParent() const

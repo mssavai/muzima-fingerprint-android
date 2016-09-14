@@ -117,61 +117,79 @@ typedef struct ANFAlternateSegment_ ANFAlternateSegment;
 
 N_DECLARE_TYPE(ANFAlternateSegment)
 
+NResult N_API ANType14RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType14Record * phRecord);
+
+NResult N_API ANType14RecordCreateFromNImageN(NVersion_ version, NInt idc, HNString hSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType14Record * phRecord);
+#ifndef N_NO_ANSI_FUNC
+NResult ANType14RecordCreateFromNImageA(NVersion_ version, NInt idc, const NAChar * szSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType14Record * phRecord);
+#endif
+#ifndef N_NO_UNICODE
+NResult ANType14RecordCreateFromNImageW(NVersion_ version, NInt idc, const NWChar * szSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType14Record * phRecord);
+#endif
+#ifdef N_DOCUMENTATION
+NResult ANType14RecordCreateFromNImage(NVersion_ version, NInt idc, const NChar * szSrc,
+	BdifScaleUnits slc, ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType14Record * phRecord);
+#endif
+#define ANType14RecordCreateFromNImage N_FUNC_AW(ANType14RecordCreateFromNImage)
+
 NResult N_API ANType14RecordGetPrintPositionDescriptor(HANType14Record hRecord, struct ANFPositionDescriptor_ * pValue, NBool * pHasValue);
 NResult N_API ANType14RecordSetPrintPositionDescriptor(HANType14Record hRecord, const struct ANFPositionDescriptor_ * pValue);
 
 NResult N_API ANType14RecordGetAmputationCount(HANType14Record hRecord, NInt * pValue);
 NResult N_API ANType14RecordGetAmputation(HANType14Record hRecord, NInt index, struct ANFAmputation_ * pValue);
-NResult N_API ANType14RecordGetAmputationsEx(HANType14Record hRecord, struct ANFAmputation_ * arValue, NInt valueLength);
+NResult N_API ANType14RecordGetAmputations(HANType14Record hRecord, struct ANFAmputation_ * * parValues, NInt * pValueCount);
 NResult N_API ANType14RecordSetAmputation(HANType14Record hRecord, NInt index, const struct ANFAmputation_ * pValue);
-NResult N_API ANType14RecordAddAmputation(HANType14Record hRecord, const struct ANFAmputation_ * pValue);
+NResult N_API ANType14RecordAddAmputationEx(HANType14Record hRecord, const struct ANFAmputation_ * pValue, NInt * pIndex);
 NResult N_API ANType14RecordInsertAmputation(HANType14Record hRecord, NInt index, const struct ANFAmputation_ * pValue);
-NResult N_API ANType14RecordRemoveAmputation(HANType14Record hRecord, NInt index);
+NResult N_API ANType14RecordRemoveAmputationAt(HANType14Record hRecord, NInt index);
 NResult N_API ANType14RecordClearAmputations(HANType14Record hRecord);
 
 NResult N_API ANType14RecordGetSegmentCount(HANType14Record hRecord, NInt * pValue);
 NResult N_API ANType14RecordGetSegment(HANType14Record hRecord, NInt index, struct ANFSegment_ * pValue);
-NResult N_API ANType14RecordGetSegmentsEx(HANType14Record hRecord, struct ANFSegment_ * arValue, NInt valueLength);
+NResult N_API ANType14RecordGetSegments(HANType14Record hRecord, struct ANFSegment_ * * parValues, NInt * pValueCount);
 NResult N_API ANType14RecordSetSegment(HANType14Record hRecord, NInt index, const struct ANFSegment_ * pValue);
-NResult N_API ANType14RecordAddSegment(HANType14Record hRecord, const struct ANFSegment_ * pValue);
+NResult N_API ANType14RecordAddSegmentEx(HANType14Record hRecord, const struct ANFSegment_ * pValue, NInt * pIndex);
 NResult N_API ANType14RecordInsertSegment(HANType14Record hRecord, NInt index, const struct ANFSegment_ * pValue);
-NResult N_API ANType14RecordRemoveSegment(HANType14Record hRecord, NInt index);
+NResult N_API ANType14RecordRemoveSegmentAt(HANType14Record hRecord, NInt index);
 NResult N_API ANType14RecordClearSegments(HANType14Record hRecord);
 
 NResult N_API ANType14RecordGetNistQualityMetricCount(HANType14Record hRecord, NInt * pValue);
 NResult N_API ANType14RecordGetNistQualityMetric(HANType14Record hRecord, NInt index, struct ANNistQualityMetric_ * pValue);
-NResult N_API ANType14RecordGetNistQualityMetricsEx(HANType14Record hRecord, struct ANNistQualityMetric_ * arValue, NInt valueLength);
+NResult N_API ANType14RecordGetNistQualityMetrics(HANType14Record hRecord, struct ANNistQualityMetric_ * * parValues, NInt * pValueCount);
 NResult N_API ANType14RecordSetNistQualityMetric(HANType14Record hRecord, NInt index, const struct ANNistQualityMetric_ * pValue);
-NResult N_API ANType14RecordAddNistQualityMetric(HANType14Record hRecord, const struct ANNistQualityMetric_ * pValue);
+NResult N_API ANType14RecordAddNistQualityMetricEx(HANType14Record hRecord, const struct ANNistQualityMetric_ * pValue, NInt * pIndex);
 NResult N_API ANType14RecordInsertNistQualityMetric(HANType14Record hRecord, NInt index, const struct ANNistQualityMetric_ * pValue);
-NResult N_API ANType14RecordRemoveNistQualityMetric(HANType14Record hRecord, NInt index);
+NResult N_API ANType14RecordRemoveNistQualityMetricAt(HANType14Record hRecord, NInt index);
 NResult N_API ANType14RecordClearNistQualityMetrics(HANType14Record hRecord);
 
 NResult N_API ANType14RecordGetSegmentationQualityMetricCount(HANType14Record hRecord, NInt * pValue);
 NResult N_API ANType14RecordGetSegmentationQualityMetric(HANType14Record hRecord, NInt index, struct ANFPQualityMetric_ * pValue);
-NResult N_API ANType14RecordGetSegmentationQualityMetricsEx(HANType14Record hRecord, struct ANFPQualityMetric_ * arValue, NInt valueLength);
+NResult N_API ANType14RecordGetSegmentationQualityMetrics(HANType14Record hRecord, struct ANFPQualityMetric_ * * parValues, NInt * pValueCount);
 NResult N_API ANType14RecordSetSegmentationQualityMetric(HANType14Record hRecord, NInt index, const struct ANFPQualityMetric_ * pValue);
-NResult N_API ANType14RecordAddSegmentationQualityMetric(HANType14Record hRecord, const struct ANFPQualityMetric_ * pValue);
+NResult N_API ANType14RecordAddSegmentationQualityMetricEx(HANType14Record hRecord, const struct ANFPQualityMetric_ * pValue, NInt * pIndex);
 NResult N_API ANType14RecordInsertSegmentationQualityMetric(HANType14Record hRecord, NInt index, const struct ANFPQualityMetric_ * pValue);
-NResult N_API ANType14RecordRemoveSegmentationQualityMetric(HANType14Record hRecord, NInt index);
+NResult N_API ANType14RecordRemoveSegmentationQualityMetricAt(HANType14Record hRecord, NInt index);
 NResult N_API ANType14RecordClearSegmentationQualityMetrics(HANType14Record hRecord);
 
 NResult N_API ANType14RecordGetAlternateSegmentCount(HANType14Record hRecord, NInt * pValue);
 NResult N_API ANType14RecordGetAlternateSegment(HANType14Record hRecord, NInt index, struct ANFAlternateSegment_ * pValue);
-NResult N_API ANType14RecordGetAlternateSegmentsEx(HANType14Record hRecord, struct ANFAlternateSegment_ * arValue, NInt valueLength);
+NResult N_API ANType14RecordGetAlternateSegments(HANType14Record hRecord, struct ANFAlternateSegment_ * * parValues, NInt * pValueCount);
 NResult N_API ANType14RecordSetAlternateSegment(HANType14Record hRecord, NInt index, const struct ANFAlternateSegment_ * pValue);
-NResult N_API ANType14RecordAddAlternateSegment(HANType14Record hRecord, const struct ANFAlternateSegment_ * pValue);
+NResult N_API ANType14RecordAddAlternateSegmentEx(HANType14Record hRecord, const struct ANFAlternateSegment_ * pValue, NInt * pIndex);
 NResult N_API ANType14RecordInsertAlternateSegment(HANType14Record hRecord, NInt index, const struct ANFAlternateSegment_ * pValue);
-NResult N_API ANType14RecordRemoveAlternateSegment(HANType14Record hRecord, NInt index);
+NResult N_API ANType14RecordRemoveAlternateSegmentAt(HANType14Record hRecord, NInt index);
 NResult N_API ANType14RecordClearAlternateSegments(HANType14Record hRecord);
 
 NResult N_API ANType14RecordGetAlternateSegmentVertexCount(HANType14Record hRecord, NInt segmentIndex, NInt * pValue);
 NResult N_API ANType14RecordGetAlternateSegmentVertex(HANType14Record hRecord, NInt segmentIndex, NInt index, struct NPoint_ * pValue);
-NResult N_API ANType14RecordGetAlternateSegmentVerticesEx(HANType14Record hRecord, NInt segmentIndex, struct NPoint_ * arValue, NInt valueLength);
+NResult N_API ANType14RecordGetAlternateSegmentVertices(HANType14Record hRecord, NInt segmentIndex, struct NPoint_ * * parValues, NInt * pValueCount);
 NResult N_API ANType14RecordSetAlternateSegmentVertex(HANType14Record hRecord, NInt segmentIndex, NInt index, const struct NPoint_ * pValue);
-NResult N_API ANType14RecordAddAlternateSegmentVertex(HANType14Record hRecord, NInt segmentIndex, const struct NPoint_ * pValue);
+NResult N_API ANType14RecordAddAlternateSegmentVertexEx(HANType14Record hRecord, NInt segmentIndex, const struct NPoint_ * pValue, NInt * pIndex);
 NResult N_API ANType14RecordInsertAlternateSegmentVertex(HANType14Record hRecord, NInt segmentIndex, NInt index, const struct NPoint_ * pValue);
-NResult N_API ANType14RecordRemoveAlternateSegmentVertex(HANType14Record hRecord, NInt segmentIndex, NInt index);
+NResult N_API ANType14RecordRemoveAlternateSegmentVertexAt(HANType14Record hRecord, NInt segmentIndex, NInt index);
 NResult N_API ANType14RecordClearAlternateSegmentVertices(HANType14Record hRecord, NInt segmentIndex);
 
 #ifdef N_CPP

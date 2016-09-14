@@ -132,7 +132,7 @@ public:
 
 class ANFSegment : public ANFSegment_
 {
-	N_DECLARE_STRUCT_CLASS(ANFSegment)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFSegment)
 
 public:
 	ANFSegment(BdifFPPosition position, NInt left, NInt right, NInt top, NInt bottom)
@@ -147,7 +147,7 @@ public:
 
 class ANNistQualityMetric : public ANNistQualityMetric_
 {
-	N_DECLARE_STRUCT_CLASS(ANNistQualityMetric)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANNistQualityMetric)
 
 public:
 	ANNistQualityMetric(BdifFPPosition position, NByte score)
@@ -178,13 +178,14 @@ N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANFAlternateSegment
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
+#include <Core/NNoDeprecate.h>
 class ANType14Record : public ANFPImageAsciiBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType14Record, ANFPImageAsciiBinaryRecord)
 
 public:
-	class AmputationCollection : public ::Neurotec::Collections::NCollectionBase<ANFAmputation, ANType14Record,
-		ANType14RecordGetAmputationCount, ANType14RecordGetAmputation>
+	class AmputationCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFAmputation, ANType14Record,
+		ANType14RecordGetAmputationCount, ANType14RecordGetAmputation, ANType14RecordGetAmputations>
 	{
 		AmputationCollection(const ANType14Record & owner)
 		{
@@ -193,12 +194,8 @@ public:
 
 		friend class ANType14Record;
 	public:
-		NInt GetAll(ANFAmputation * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType14RecordGetAmputationsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFAmputation, ANType14Record,
+			ANType14RecordGetAmputationCount, ANType14RecordGetAmputation, ANType14RecordGetAmputations>::GetAll;
 
 		void Set(NInt index, const ANFAmputation & value)
 		{
@@ -207,8 +204,8 @@ public:
 
 		NInt Add(const ANFAmputation & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType14RecordAddAmputation(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType14RecordAddAmputationEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -219,7 +216,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType14RecordRemoveAmputation(this->GetOwnerHandle(), index));
+			NCheck(ANType14RecordRemoveAmputationAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -228,8 +225,8 @@ public:
 		}
 	};
 
-	class SegmentCollection : public ::Neurotec::Collections::NCollectionBase<ANFSegment, ANType14Record,
-		ANType14RecordGetSegmentCount, ANType14RecordGetSegment>
+	class SegmentCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFSegment, ANType14Record,
+		ANType14RecordGetSegmentCount, ANType14RecordGetSegment, ANType14RecordGetSegments>
 	{
 		SegmentCollection(const ANType14Record & owner)
 		{
@@ -238,12 +235,8 @@ public:
 
 		friend class ANType14Record;
 	public:
-		NInt GetAll(ANFSegment * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType14RecordGetSegmentsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFSegment, ANType14Record,
+			ANType14RecordGetSegmentCount, ANType14RecordGetSegment, ANType14RecordGetSegments>::GetAll;
 
 		void Set(NInt index, const ANFSegment & value)
 		{
@@ -252,8 +245,8 @@ public:
 
 		NInt Add(const ANFSegment & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType14RecordAddSegment(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType14RecordAddSegmentEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -264,7 +257,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType14RecordRemoveSegment(this->GetOwnerHandle(), index));
+			NCheck(ANType14RecordRemoveSegmentAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -273,8 +266,8 @@ public:
 		}
 	};
 
-	class NistQualityMetricCollection : public ::Neurotec::Collections::NCollectionBase<ANNistQualityMetric, ANType14Record,
-		ANType14RecordGetNistQualityMetricCount, ANType14RecordGetNistQualityMetric>
+	class NistQualityMetricCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANNistQualityMetric, ANType14Record,
+		ANType14RecordGetNistQualityMetricCount, ANType14RecordGetNistQualityMetric, ANType14RecordGetNistQualityMetrics>
 	{
 		NistQualityMetricCollection(const ANType14Record & owner)
 		{
@@ -283,12 +276,8 @@ public:
 
 		friend class ANType14Record;
 	public:
-		NInt GetAll(ANNistQualityMetric * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType14RecordGetNistQualityMetricsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANNistQualityMetric, ANType14Record,
+			ANType14RecordGetNistQualityMetricCount, ANType14RecordGetNistQualityMetric, ANType14RecordGetNistQualityMetrics>::GetAll;
 
 		void Set(NInt index, const ANNistQualityMetric & value)
 		{
@@ -297,8 +286,8 @@ public:
 
 		NInt Add(const ANNistQualityMetric & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType14RecordAddNistQualityMetric(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType14RecordAddNistQualityMetricEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -309,7 +298,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType14RecordRemoveNistQualityMetric(this->GetOwnerHandle(), index));
+			NCheck(ANType14RecordRemoveNistQualityMetricAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -318,8 +307,8 @@ public:
 		}
 	};
 
-	class SegmentationQualityMetricCollection : public ::Neurotec::Collections::NCollectionBase<ANFPQualityMetric, ANType14Record,
-		ANType14RecordGetSegmentationQualityMetricCount, ANType14RecordGetSegmentationQualityMetric>
+	class SegmentationQualityMetricCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPQualityMetric, ANType14Record,
+		ANType14RecordGetSegmentationQualityMetricCount, ANType14RecordGetSegmentationQualityMetric, ANType14RecordGetSegmentationQualityMetrics>
 	{
 		SegmentationQualityMetricCollection(const ANType14Record & owner)
 		{
@@ -328,12 +317,8 @@ public:
 
 		friend class ANType14Record;
 	public:
-		NInt GetAll(ANFPQualityMetric * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType14RecordGetSegmentationQualityMetricsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPQualityMetric, ANType14Record,
+			ANType14RecordGetSegmentationQualityMetricCount, ANType14RecordGetSegmentationQualityMetric, ANType14RecordGetSegmentationQualityMetrics>::GetAll;
 
 		void Set(NInt index, const ANFPQualityMetric & value)
 		{
@@ -342,8 +327,8 @@ public:
 
 		NInt Add(const ANFPQualityMetric & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType14RecordAddSegmentationQualityMetric(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType14RecordAddSegmentationQualityMetricEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -354,7 +339,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType14RecordRemoveSegmentationQualityMetric(this->GetOwnerHandle(), index));
+			NCheck(ANType14RecordRemoveSegmentationQualityMetricAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -363,8 +348,8 @@ public:
 		}
 	};
 
-	class AlternateSegmentCollection : public ::Neurotec::Collections::NCollectionBase<ANFAlternateSegment, ANType14Record,
-		ANType14RecordGetAlternateSegmentCount, ANType14RecordGetAlternateSegment>
+	class AlternateSegmentCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFAlternateSegment, ANType14Record,
+		ANType14RecordGetAlternateSegmentCount, ANType14RecordGetAlternateSegment, ANType14RecordGetAlternateSegments>
 	{
 		AlternateSegmentCollection(const ANType14Record & owner)
 		{
@@ -373,12 +358,8 @@ public:
 
 		friend class ANType14Record;
 	public:
-		NInt GetAll(ANFAlternateSegment * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType14RecordGetAlternateSegmentsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFAlternateSegment, ANType14Record,
+			ANType14RecordGetAlternateSegmentCount, ANType14RecordGetAlternateSegment, ANType14RecordGetAlternateSegments>::GetAll;
 
 		void Set(NInt index, const ANFAlternateSegment & value)
 		{
@@ -387,8 +368,8 @@ public:
 
 		NInt Add(const ANFAlternateSegment & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType14RecordAddAlternateSegment(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType14RecordAddAlternateSegmentEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -399,7 +380,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType14RecordRemoveAlternateSegment(this->GetOwnerHandle(), index));
+			NCheck(ANType14RecordRemoveAlternateSegmentAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -436,11 +417,12 @@ public:
 			return value;
 		}
 
-		NInt GetAll(NInt baseIndex, ::Neurotec::Geometry::NPoint * arValues, NInt valuesLength) const
+		NArrayWrapper< ::Neurotec::Geometry::NPoint> GetAll(NInt baseIndex) const
 		{
-			NInt count;
-			NCheck(count = ANType14RecordGetAlternateSegmentVerticesEx(this->GetOwnerHandle(), baseIndex, arValues, valuesLength));
-			return count;
+			::Neurotec::Geometry::NPoint::NativeType * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(ANType14RecordGetAlternateSegmentVertices(this->GetOwnerHandle(), baseIndex, &arValues, &valueCount));
+			return NArrayWrapper< ::Neurotec::Geometry::NPoint>(arValues, valueCount);
 		}
 
 		void Set(NInt baseIndex, NInt index, const ::Neurotec::Geometry::NPoint & value)
@@ -450,8 +432,8 @@ public:
 
 		NInt Add(NInt baseIndex, const ::Neurotec::Geometry::NPoint & value)
 		{
-			NInt index = this->GetCount(baseIndex);
-			NCheck(ANType14RecordAddAlternateSegmentVertex(this->GetOwnerHandle(), baseIndex, &value));
+			NInt index;
+			NCheck(ANType14RecordAddAlternateSegmentVertexEx(this->GetOwnerHandle(), baseIndex, &value, &index));
 			return index;
 		}
 
@@ -462,7 +444,7 @@ public:
 
 		void RemoveAt(NInt baseIndex, NInt index)
 		{
-			NCheck(ANType14RecordRemoveAlternateSegmentVertex(this->GetOwnerHandle(), baseIndex, index));
+			NCheck(ANType14RecordRemoveAlternateSegmentVertexAt(this->GetOwnerHandle(), baseIndex, index));
 		}
 
 		void Clear(NInt baseIndex)
@@ -471,10 +453,38 @@ public:
 		}
 	};
 
+private:
+	static HANType14Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType14Record handle;
+		NCheck(ANType14RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType14Record Create(NVersion version, NInt idc, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+
+		HANType14Record handle;
+		NCheck(ANType14RecordCreateFromNImageN(version.GetValue(), idc, src.GetHandle(), slc, cga, image.GetHandle(), flags, &handle));
+		return handle;
+	}
+
 public:
 	static NType ANFAmputationTypeNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(ANFAmputationType), true);
+	}
+
+	explicit ANType14Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANFPImageAsciiBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType14Record(NVersion version, NInt idc, const NStringWrapper & src, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANFPImageAsciiBinaryRecord(Create(version, idc, src, slc, cga, image, flags), true)
+	{
 	}
 
 	bool GetPrintPositionDescriptor(ANFPositionDescriptor * pValue) const
@@ -549,6 +559,7 @@ public:
 		return AlternateSegmentVerticesCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

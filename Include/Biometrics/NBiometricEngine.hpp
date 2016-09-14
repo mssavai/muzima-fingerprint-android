@@ -1,5 +1,6 @@
 #include <Biometrics/NBiometricTask.hpp>
 #include <Biometrics/NBiometricEngineTypes.hpp>
+#include <Biometrics/NBiographicDataSchema.hpp>
 
 #ifndef N_BIOMETRIC_ENGINE_HPP_INCLUDED
 #define N_BIOMETRIC_ENGINE_HPP_INCLUDED
@@ -61,6 +62,21 @@ public:
 	{
 		HNAsyncOperation hAsyncOperation;
 		NCheck(NBiometricEnginePerformTaskAsync(GetHandle(), biometricTask.GetHandle(), &hAsyncOperation));
+		return FromHandle<NAsyncOperation>(hAsyncOperation);
+	}
+
+	NArrayWrapper<NString> ListGalleries() const
+	{
+		HNString * arhValues;
+		NInt valueCount;
+		NCheck(NBiometricEngineListGalleries(GetHandle(), &arhValues, &valueCount));
+		return NArrayWrapper<NString>(arhValues, valueCount);
+	}
+
+	NAsyncOperation ListGalleriesAsync() const
+	{
+		HNAsyncOperation hAsyncOperation;
+		NCheck(NBiometricEngineListGalleriesAsync(GetHandle(), &hAsyncOperation));
 		return FromHandle<NAsyncOperation>(hAsyncOperation);
 	}
 
@@ -176,6 +192,49 @@ public:
 		return FromHandle<NAsyncOperation>(hAsyncOperation);
 	}
 
+	NBiometricStatus Update(const NSubject & subject) const
+	{
+		NBiometricStatus result;
+		NCheck(NBiometricEngineUpdate(GetHandle(), subject.GetHandle(), &result));
+		return result;
+	}
+
+	NAsyncOperation UpdateAsync(const NSubject & subject) const
+	{
+		HNAsyncOperation hAsyncOperation;
+		NCheck(NBiometricEngineUpdateAsync(GetHandle(), subject.GetHandle(), &hAsyncOperation));
+		return FromHandle<NAsyncOperation>(hAsyncOperation);
+	}
+
+	NInt GetCount() const
+	{
+		NInt result;
+		NCheck(NBiometricEngineGetCount(GetHandle(), &result));
+		return result;
+	}
+
+	NAsyncOperation GetCountAsync() const
+	{
+		HNAsyncOperation hAsyncOperation;
+		NCheck(NBiometricEngineGetCountAsync(GetHandle(), &hAsyncOperation));
+		return FromHandle<NAsyncOperation>(hAsyncOperation);
+	}
+
+	NArrayWrapper<NString> ListIds() const
+	{
+		HNString * arhValues;
+		NInt valueCount;
+		NCheck(NBiometricEngineListIds(GetHandle(), &arhValues, &valueCount));
+		return NArrayWrapper<NString>(arhValues, valueCount);
+	}
+
+	NAsyncOperation ListIdsAsync() const
+	{
+		HNAsyncOperation hAsyncOperation;
+		NCheck(NBiometricEngineListIdsAsync(GetHandle(), &hAsyncOperation));
+		return FromHandle<NAsyncOperation>(hAsyncOperation);
+	}
+
 	NArrayWrapper<NSubject> List() const
 	{
 		HNSubject * arhValues;
@@ -223,6 +282,36 @@ public:
 	void SetMaximalThreadCount(NInt value)
 	{
 		SetProperty(N_T("MaximalThreadCount"), value);
+	}
+
+	NBiographicDataSchema GetBiographicDataSchema() const
+	{
+		return GetProperty<NBiographicDataSchema>(N_T("BiographicDataSchema"));
+	}
+
+	void SetBiographicDataSchema(const NBiographicDataSchema & value)
+	{
+		SetProperty(N_T("BiographicDataSchema"), value);
+	}
+
+	NString GetSelectedGalleryId() const
+	{
+		return GetProperty<NString>(N_T("SelectedGalleryId"));
+	}
+
+	void SetSelectedGalleryId(const NStringWrapper & value)
+	{
+		SetProperty(N_T("SelectedGalleryId"), value);
+	}
+
+	BiometricTemplateFormat GetBiometricTemplateFormat() const
+	{
+		return GetProperty<BiometricTemplateFormat>(N_T("BiometricTemplateFormat"));
+	}
+
+	void SetBiometricTemplateFormat(BiometricTemplateFormat value)
+	{
+		SetProperty(N_T("BiometricTemplateFormat"), value);
 	}
 
 	bool GetFingersDeterminePatternClass() const
@@ -275,14 +364,36 @@ public:
 		SetProperty(N_T("Fingers.QualityThreshold"), value);
 	}
 
+	N_DEPRECATED("function is deprecated, use GetFingersReturnBinarizedImage or GetFingersReturnRidgeSkeletonImage")
 	bool GetFingersReturnProcessedImage() const
 	{
 		return GetProperty<bool>(N_T("Fingers.ReturnProcessedImage"));
 	}
 
+	N_DEPRECATED("function is deprecated, use SetFingersReturnBinarizedImage or SetFingersReturnRidgeSkeletonImage")
 	void SetFingersReturnProcessedImage(bool value)
 	{
 		SetProperty(N_T("Fingers.ReturnProcessedImage"), value);
+	}
+
+	bool GetFingersReturnBinarizedImage() const
+	{
+		return GetProperty<bool>(N_T("Fingers.ReturnBinarizedImage"));
+	}
+
+	void SetFingersReturnBinarizedImage(bool value)
+	{
+		SetProperty(N_T("Fingers.ReturnBinarizedImage"), value);
+	}
+
+	bool GetFingersReturnRidgeSkeletonImage() const
+	{
+		return GetProperty<bool>(N_T("Fingers.ReturnRidgeSkeletonImage"));
+	}
+
+	void SetFingersReturnRidgeSkeletonImage(bool value)
+	{
+		SetProperty(N_T("Fingers.ReturnRidgeSkeletonImage"), value);
 	}
 
 	NFloat GetFingersMaximalRotation() const
@@ -395,6 +506,16 @@ public:
 		SetProperty(N_T("Faces.DetermineGender"), value);
 	}
 
+	bool GetFacesDetermineAge() const
+	{
+		return GetProperty<bool>(N_T("Faces.DetermineAge"));
+	}
+
+	void SetFacesDetermineAge(bool value)
+	{
+		SetProperty(N_T("Faces.DetermineAge"), value);
+	}
+
 	bool GetFacesDetectProperties() const
 	{
 		return GetProperty<bool>(N_T("Faces.DetectProperties"));
@@ -445,16 +566,6 @@ public:
 		SetProperty(N_T("Faces.QualityThreshold"), value);
 	}
 
-	bool GetFacesUseLivenessCheck() const
-	{
-		return GetProperty<bool>(N_T("Faces.UseLivenessCheck"));
-	}
-
-	void SetFacesUseLivenessCheck(bool value)
-	{
-		SetProperty(N_T("Faces.UseLivenessCheck"), value);
-	}
-
 	NByte GetFacesLivenessThreshold() const
 	{
 		return GetProperty<NByte>(N_T("Faces.LivenessThreshold"));
@@ -463,6 +574,26 @@ public:
 	void SetFacesLivenessThreshold(NByte value)
 	{
 		SetProperty(N_T("Faces.LivenessThreshold"), value);
+	}	
+
+	NInt GetFacesLivenessBlinkTimeout() const
+	{
+		return GetProperty<NInt>(N_T("Faces.LivenessBlinkTimeout"));
+	}
+
+	void SetFacesLivenessBlinkTimeout(NInt value)
+	{
+		SetProperty(N_T("Faces.LivenessBlinkTimeout"), value);
+	}
+
+	NLivenessMode GetFacesLivenessMode() const
+	{
+		return GetProperty<NLivenessMode>(N_T("Faces.LivenessMode"));
+	}
+
+	void SetFacesLivenessMode(NLivenessMode value)
+	{
+		SetProperty(N_T("Faces.LivenessMode"), value);
 	}
 
 	NMatchingSpeed GetFacesMatchingSpeed() const
@@ -595,14 +726,36 @@ public:
 		SetProperty(N_T("Palms.QualityThreshold"), value);
 	}
 
+	N_DEPRECATED("function is deprecated, use GetPalmsReturnBinarizedImage or GetPalmsReturnRidgeSkeletonImage")
 	bool GetPalmsReturnProcessedImage() const
 	{
 		return GetProperty<bool>(N_T("Palms.ReturnProcessedImage"));
 	}
 
+	N_DEPRECATED("function is deprecated, use SetPalmsReturnBinarizedImage or SetPalmsReturnRidgeSkeletonImage")
 	void SetPalmsReturnProcessedImage(bool value)
 	{
 		SetProperty(N_T("Palms.ReturnProcessedImage"), value);
+	}
+
+	bool GetPalmsReturnBinarizedImage() const
+	{
+		return GetProperty<bool>(N_T("Palms.ReturnBinarizedImage"));
+	}
+
+	void SetPalmsReturnBinarizedImage(bool value)
+	{
+		SetProperty(N_T("Palms.ReturnBinarizedImage"), value);
+	}
+
+	bool GetPalmsReturnRidgeSkeletonImage() const
+	{
+		return GetProperty<bool>(N_T("Palms.ReturnRidgeSkeletonImage"));
+	}
+
+	void SetPalmsReturnRidgeSkeletonImage(bool value)
+	{
+		SetProperty(N_T("Palms.ReturnRidgeSkeletonImage"), value);
 	}
 
 	NFloat GetPalmsMaximalRotation() const

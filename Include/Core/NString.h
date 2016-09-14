@@ -537,17 +537,6 @@ NResult N_API NStringToString(HNString hString, const NChar * szFormat, HNString
 #endif
 #define NStringToString N_FUNC_AW(NStringToString)
 
-N_DEPRECATED("function is deprecated, do not use")
-NResult N_API NStringToStringOldA(HNString hString, NAChar * szValue, NInt valueSize);
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, do not use")
-NResult N_API NStringToStringOldW(HNString hString, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NStringToStringOld(HNString hString, NChar * szValue, NInt valueSize);
-#endif
-#define NStringToStringOld N_FUNC_AW(NStringToStringOld)
-
 NResult N_API NStringToStrOrCharArrayA(HNString hString, NBool nullTerminate, NAChar * * parValues, NInt * pLength);
 #ifndef N_NO_UNICODE
 NResult N_API NStringToStrOrCharArrayW(HNString hString, NBool nullTerminate, NWChar * * parValues, NInt * pLength);

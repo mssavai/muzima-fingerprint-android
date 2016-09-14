@@ -98,6 +98,16 @@ public:
 		SetString(NBiometricSetFileNameN, value);
 	}
 
+	::Neurotec::IO::NBuffer GetSampleBuffer() const
+	{
+		return GetObject<HandleType, ::Neurotec::IO::NBuffer>(NBiometricGetSampleBuffer, true);
+	}
+
+	void SetSampleBuffer(const ::Neurotec::IO::NBuffer & value)
+	{
+		SetObject(NBiometricSetSampleBuffer, value);
+	}
+
 	NError GetError() const
 	{
 		HNError hError;

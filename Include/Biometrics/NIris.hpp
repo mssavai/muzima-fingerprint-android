@@ -45,6 +45,13 @@ public:
 	{
 	}
 
+	static NIris FromImageAndTemplate(const ::Neurotec::Images::NImage & image, const NERecord & record)
+	{
+		HNIris hIris = NULL;
+		NCheck(NIrisFromImageAndTemplate(image.GetHandle(), record.GetHandle(), &hIris));
+		return FromHandle<NIris>(hIris);
+	}
+
 	::Neurotec::Images::NImage GetImage() const
 	{
 		HNImage hValue;

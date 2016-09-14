@@ -101,11 +101,6 @@ NResult N_API NTypeGetPropertyValueP(HNType hType, HNObject hObject, const NChar
 #endif
 #define NTypeGetPropertyValueP N_FUNC_AW(NTypeGetPropertyValueP)
 
-N_DEPRECATED("function is deprecated, use NTypeGetPropertyN instead")
-NResult N_API NTypeGetParameterExN(HNType hType, HNObject hObject, NUShort partId, NUInt parameterId, HNValue * phValue);
-N_DEPRECATED("function is deprecated, use NTypeGetPropertyP instead")
-NResult N_API NTypeGetParameterEx(HNType hType, HNObject hObject, NUShort partId, NUInt parameterId, NInt typeId, void * pValue, NSizeType valueSize);
-
 NResult N_API NTypeSetPropertyValueN(HNType hType, HNObject hObject, HNString hName, HNValue hValue);
 NResult N_API NTypeSetPropertyValueNN(HNType hType, HNObject hObject, HNString hName, HNType hValueType, NAttributes attributes, const void * arValues, NSizeType valuesSize, NInt valuesLength, NBool hasValue);
 #ifndef N_NO_ANSI_FUNC
@@ -118,11 +113,6 @@ NResult N_API NTypeSetPropertyValuePW(HNType hType, HNObject hObject, const NWCh
 NResult N_API NTypeSetPropertyValueP(HNType hType, HNObject hObject, const NChar * szName, NTypeOfProc pValueTypeOf, NAttributes attributes, const void * arValues, NSizeType valuesSize, NInt valuesLength, NBool hasValue);
 #endif
 #define NTypeSetPropertyValueP N_FUNC_AW(NTypeSetPropertyValueP)
-
-N_DEPRECATED("function is deprecated, use NTypeSetPropertyN instead")
-NResult N_API NTypeSetParameterExN(HNType hType, HNObject hObject, NUShort partId, NUInt parameterId, HNValue hValue);
-N_DEPRECATED("function is deprecated, use NTypeSetPropertyP instead")
-NResult N_API NTypeSetParameterEx(HNType hType, HNObject hObject, NUShort partId, NUInt parameterId, NInt typeId, const void * pValue, NSizeType valueSize);
 
 NResult N_API NTypeResetPropertyValueN(HNType hType, HNObject hObject, HNString hName);
 #ifndef N_NO_ANSI_FUNC
@@ -204,18 +194,6 @@ NResult N_API NTypeRemoveEventHandlerP(HNType hType, HNObject hObject, const NCh
 NResult N_API NTypeGetModule(HNType hType, HNModule * phValue);
 
 NResult N_API NTypeGetNameN(HNType hType, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NTypeGetNameN instead")
-NResult N_API NTypeGetNameExA(HNType hType, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NTypeGetNameN instead")
-NResult N_API NTypeGetNameExW(HNType hType, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NTypeGetNameEx(HNType hType, NChar * szValue, NInt valueSize);
-#endif
-#define NTypeGetNameEx N_FUNC_AW(NTypeGetNameEx)
 
 NResult N_API NTypeGetBaseType(HNType hType, HNType * phValue);
 NResult N_API NTypeGetTypeCode(HNType hType, NTypeCode * pValue);

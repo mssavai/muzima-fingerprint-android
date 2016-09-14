@@ -6,6 +6,7 @@
 #include <Biometrics/NSubject.h>
 #include <Biometrics/NBiometricTask.h>
 #include <Biometrics/NBiometricEngineTypes.h>
+#include <Biometrics/NBiographicDataSchema.h>
 
 #ifdef N_CPP
 extern "C"
@@ -37,10 +38,18 @@ NResult N_API NBiometricEngineClear(HNBiometricEngine hBiometricEngine, NBiometr
 NResult N_API NBiometricEngineClearAsync(HNBiometricEngine hBiometricEngine, HNAsyncOperation * phAsyncOperation);
 NResult N_API NBiometricEngineGet(HNBiometricEngine hBiometricEngine, HNSubject hSubject, NBiometricStatus * pResult);
 NResult N_API NBiometricEngineGetAsync(HNBiometricEngine hBiometricEngine, HNSubject hSubject, HNAsyncOperation * phAsyncOperation);
+NResult N_API NBiometricEngineUpdate(HNBiometricEngine hBiometricEngine, HNSubject hSubject, NBiometricStatus * pResult);
+NResult N_API NBiometricEngineUpdateAsync(HNBiometricEngine hBiometricEngine, HNSubject hSubject, HNAsyncOperation * phAsyncOperation);
+NResult N_API NBiometricEngineGetCount(HNBiometricEngine hBiometricEngine, NInt * pValueCount);
+NResult N_API NBiometricEngineGetCountAsync(HNBiometricEngine hBiometricEngine, HNAsyncOperation * phAsyncOperation);
+NResult N_API NBiometricEngineListIds(HNBiometricEngine hBiometricEngine, HNString ** parhIds, NInt * pIdCount);
+NResult N_API NBiometricEngineListIdsAsync(HNBiometricEngine hBiometricEngine, HNAsyncOperation * phAsyncOperation);
 NResult N_API NBiometricEngineList(HNBiometricEngine hBiometricEngine, HNSubject * * parhValues, NInt * pValueCount);
 NResult N_API NBiometricEngineListAsync(HNBiometricEngine hBiometricEngine, HNAsyncOperation * phAsyncOperation);
 NResult N_API NBiometricEngineDetectFaces(HNBiometricEngine hBiometricEngine, HNImage hImage, HNFace * phResult);
 NResult N_API NBiometricEngineDetectFacesAsync(HNBiometricEngine hBiometricEngine, HNImage hImage, HNAsyncOperation * phAsyncOperation);
+NResult N_API NBiometricEngineListGalleries(HNBiometricEngine hBiometricEngine, HNString ** parhIds, NInt * pIdCount);
+NResult N_API NBiometricEngineListGalleriesAsync(HNBiometricEngine hBiometricEngine, HNAsyncOperation * phAsyncOperation);
 
 #ifdef N_CPP
 }

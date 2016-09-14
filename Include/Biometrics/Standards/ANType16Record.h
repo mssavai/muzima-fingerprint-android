@@ -38,6 +38,24 @@ N_DECLARE_OBJECT_TYPE(ANType16Record, ANImageAsciiBinaryRecord)
 
 #define AN_TYPE_16_RECORD_MAX_USER_DEFINED_IMAGE_LENGTH 35
 
+NResult N_API ANType16RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType16Record * phRecord);
+
+NResult N_API ANType16RecordCreateFromNImageN(NVersion_ version, NInt idc, HNString hUdi, HNString hSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType16Record * phRecord);
+#ifndef N_NO_ANSI_FUNC
+NResult ANType16RecordCreateFromNImageA(NVersion_ version, NInt idc, const NAChar * szUdi, const NAChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType16Record * phRecord);
+#endif
+#ifndef N_NO_UNICODE
+NResult ANType16RecordCreateFromNImageW(NVersion_ version, NInt idc, const NWChar * szUdi, const NWChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType16Record * phRecord);
+#endif
+#ifdef N_DOCUMENTATION
+NResult ANType16RecordCreateFromNImage(NVersion_ version, NInt idc, const NChar * szUdi, const NChar * szSrc, BdifScaleUnits slc,
+	ANImageCompressionAlgorithm cga, HNImage hImage, NUInt flags, HANType16Record * phRecord);
+#endif
+#define ANType16RecordCreateFromNImage N_FUNC_AW(ANType16RecordCreateFromNImage)
+
 NResult N_API ANType16RecordGetUserDefinedImageN(HANType16Record hRecord, HNString * phValue);
 
 NResult N_API ANType16RecordSetUserDefinedImageN(HANType16Record hRecord, HNString hValue);

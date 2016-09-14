@@ -42,10 +42,6 @@ N_DECLARE_OBJECT_TYPE(NArrayCollection, NObjectPart)
 
 NResult N_API NObjectUnrefElements(HNObject * arhObjects, NInt objectCount);
 NResult N_API NObjectUnrefArray(HNObject * arhObjects, NInt objectCount);
-N_DEPRECATED("function is deprecated, use NObjectUnrefElements instead")
-void N_API NObjectFreeElements(HNObject * arhObjects, NInt objectCount);
-N_DEPRECATED("function is deprecated, use NObjectUnrefArray instead")
-void N_API NObjectFreeArray(HNObject * arhObjects, NInt objectCount);
 
 NResult N_API NObjectCopyProperties(HNObject hDstObject, HNObject hSrcObject);
 NResult N_API NObjectSaveManyToStream(const HNObject * arhObjects, NInt objectCount, HNStream hStream, NUInt flags);
@@ -62,8 +58,6 @@ NResult N_API NObjectGetConcurrent(volatile HNObject * phVariable, HNObject * ph
 NResult N_API NObjectSetConcurrent(HNObject hValue, volatile HNObject * phVariable);
 NResult N_API NObjectGetElements(const HNObject * arhObjects, NInt objectCount, HNObject * arhValues, NInt valuesLength);
 NResult N_API NObjectGetArray(const HNObject * arhObjects, NInt objectCount, HNObject * * parhValues, NInt * pValueCount);
-N_DEPRECATED("function is deprecated, use NObjectUnref or NObjectSet instead")
-void N_API NObjectFree(HNObject hObject);
 
 NResult N_API NObjectEquals(HNObject hObject, HNObject hOtherObject, NBool * pResult);
 NResult N_API NObjectCompareTo(HNObject hObject, HNObject hOtherObject, NInt * pResult);
@@ -95,11 +89,6 @@ NResult N_API NObjectGetPropertyP(HNObject hObject, const NChar * szName, NTypeO
 #endif
 #define NObjectGetPropertyP N_FUNC_AW(NObjectGetPropertyP)
 
-N_DEPRECATED("function is deprecated, use NObjectGetPropertyN instead")
-NResult N_API NObjectGetParameterWithPartExN(HNObject hObject, NUShort partId, NUInt parameterId, HNValue * phValue);
-N_DEPRECATED("function is deprecated, use NObjectGetPropertyP instead")
-NResult N_API NObjectGetParameterWithPartEx(HNObject hObject, NUShort partId, NUInt parameterId, NInt typeId, void * pValue, NSizeType valueSize);
-
 NResult N_API NObjectSetPropertyN(HNObject hObject, HNString hName, HNValue hValue);
 NResult N_API NObjectSetPropertyNN(HNObject hObject, HNString hName, HNType hValueType, NAttributes attributes, const void * arValues, NSizeType valuesSize, NInt valuesLength, NBool hasValue);
 #ifndef N_NO_ANSI_FUNC
@@ -112,11 +101,6 @@ NResult N_API NObjectSetPropertyPW(HNObject hObject, const NWChar * szName, NTyp
 NResult N_API NObjectSetPropertyP(HNObject hObject, const NChar * szName, NTypeOfProc pValueTypeOf, NAttributes attributes, const void * arValues, NSizeType valuesSize, NInt valuesLength, NBool hasValue);
 #endif
 #define NObjectSetPropertyP N_FUNC_AW(NObjectSetPropertyP)
-
-N_DEPRECATED("function is deprecated, use NObjectSetPropertyN instead")
-NResult N_API NObjectSetParameterWithPartExN(HNObject hObject, NUShort partId, NUInt parameterId, HNValue hValue);
-N_DEPRECATED("function is deprecated, use NObjectSetPropertyP instead")
-NResult N_API NObjectSetParameterWithPartEx(HNObject hObject, NUShort partId, NUInt parameterId, NInt typeId, const void * pValue, NSizeType valueSize);
 
 NResult N_API NObjectResetPropertyN(HNObject hObject, HNString hName);
 #ifndef N_NO_ANSI_FUNC
@@ -201,8 +185,6 @@ NResult N_API NObjectCaptureProperties(HNObject hObject, HNPropertyBag hProperti
 
 NResult N_API NObjectGetType(HNObject hObject, HNType * phValue);
 NResult N_API NObjectGetOwnerEx(HNObject hObject, HNObject * phValue);
-N_DEPRECATED("function is deprecated, use NObjectGetOwnerEx instead")
-NResult N_API NObjectGetOwner(HNObject hObject, HNObject * phValue);
 NResult N_API NObjectGetFlags(HNObject hObject, NUInt * pValue);
 NResult N_API NObjectSetFlags(HNObject hObject, NUInt value);
 
@@ -224,16 +206,6 @@ NResult N_API NObjectAddPropertyChanged(HNObject hObject, HNCallback hCallback);
 NResult N_API NObjectAddPropertyChangedCallback(HNObject hObject, NObjectPropertyChangedCallback pCallback, void * pParam);
 NResult N_API NObjectRemovePropertyChanged(HNObject hObject, HNCallback hCallback);
 NResult N_API NObjectRemovePropertyChangedCallback(HNObject hObject, NObjectPropertyChangedCallback pCallback, void * pParam);
-
-#define NObjectCopyParameters(hDstObject, hSrcObject) NObjectCopyProperties(hDstObject, hSrcObject)
-#define NObjectGetParameterExN(hObject, parameterId, phValue) NObjectGetParameterWithPartExN(hObject, 0, parameterId, phValue)
-#define NObjectGetParameterEx(hObject, parameterId, typeId, pValue, valueSize) NObjectGetParameterWithPartEx(hObject, 0, parameterId, typeId, pValue, valueSize)
-#define NObjectSetParameterExN(hObject, parameterId, hValue) NObjectSetParameterWithPartExN(hObject, 0, parameterId, hValue)
-#define NObjectSetParameterEx(hObject, parameterId, typeId, pValue, valueSize) NObjectSetParameterWithPartEx(hObject, 0, parameterId, typeId, pValue, valueSize)
-
-#ifdef N_MSVC
-	#pragma deprecated("NObjectCopyParameters", "NObjectGetParameterExN", "NObjectGetParameterEx", "NObjectSetParameterExN", "NObjectSetParameterEx")
-#endif
 
 #ifdef N_CPP
 }

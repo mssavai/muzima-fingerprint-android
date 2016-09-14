@@ -50,18 +50,25 @@ typedef struct ANPenVector_ ANPenVector;
 
 N_DECLARE_TYPE(ANPenVector)
 
+NResult N_API ANType8RecordCreate(NVersion_ version, NInt idc, NUInt flags, HANType8Record * phRecord);
+NResult N_API ANType8RecordCreateFromNImage(NVersion_ version, NInt idc, ANSignatureType st, ANSignatureRepresentationType srt,
+	NBool isr, HNImage hImage, NUInt flags, HANType8Record * phRecord);
+NResult N_API ANType8RecordCreateFromVectors(NVersion_ version, NInt idc, ANSignatureType st, 
+	const struct ANPenVector_ * arPenVectors, NInt penVectorCount, NUInt flags, HANType8Record * phRecord);
+
 NResult N_API ANType8RecordGetPenVectorCount(HANType8Record hRecord, NInt * pValue);
 NResult N_API ANType8RecordGetPenVector(HANType8Record hRecord, NInt index, struct ANPenVector_ * pValue);
-NResult N_API ANType8RecordGetPenVectorsEx(HANType8Record hRecord, struct ANPenVector_ * arValue, NInt valueLength);
+NResult N_API ANType8RecordGetPenVectors(HANType8Record hRecord, struct ANPenVector_ * * parValues, NInt * pValueCount);
 NResult N_API ANType8RecordSetPenVector(HANType8Record hRecord, NInt index, const struct ANPenVector_ * pValue);
-NResult N_API ANType8RecordAddPenVector(HANType8Record hRecord, const struct ANPenVector_ * pValue);
+NResult N_API ANType8RecordAddPenVectorEx(HANType8Record hRecord, const struct ANPenVector_ * pValue, NInt * pIndex);
 NResult N_API ANType8RecordInsertPenVector(HANType8Record hRecord, NInt index, const struct ANPenVector_ * pValue);
-NResult N_API ANType8RecordRemovePenVector(HANType8Record hRecord, NInt index);
+NResult N_API ANType8RecordRemovePenVectorAt(HANType8Record hRecord, NInt index);
 NResult N_API ANType8RecordClearPenVectors(HANType8Record hRecord);
 
 NResult N_API ANType8RecordGetSignatureType(HANType8Record hRecord, ANSignatureType * pValue);
 NResult N_API ANType8RecordSetSignatureType(HANType8Record hRecord, ANSignatureType value);
 NResult N_API ANType8RecordGetSignatureRepresentationType(HANType8Record hRecord, ANSignatureRepresentationType * pValue);
+NResult N_API ANType8RecordSetSignatureRepresentationType(HANType8Record hRecord, ANSignatureRepresentationType value);
 
 #ifdef N_CPP
 }

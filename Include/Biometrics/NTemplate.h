@@ -47,6 +47,8 @@ NResult N_API NTemplateSetPalms(HNTemplate hTemplate, HNFTemplate hValue);
 NResult N_API NTemplateGetVoicesEx(HNTemplate hTemplate, HNSTemplate * phValue);
 NResult N_API NTemplateSetVoices(HNTemplate hTemplate, HNSTemplate hValue);
 NResult N_API NTemplateClear(HNTemplate hTemplate);
+NResult N_API NTemplateMerge(HNBuffer * arhBuffers, NInt buffersCount, NUInt flags, HNTemplate * phResult);
+
 
 #ifdef N_CPP
 }

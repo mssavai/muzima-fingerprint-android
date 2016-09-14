@@ -18,8 +18,6 @@ NResult N_API NMatchingDetailsCreateFromMemoryN(HNBuffer hBuffer, NUInt flags, N
 NResult N_API NMatchingDetailsCreateFromMemory(const void * pBuffer, NSizeType bufferSize, NUInt flags, NSizeType * pSize, HNMatchingDetails * phMatchingDetails);
 NResult N_API NMatchingDetailsCreateFromStream(HNStream hStream, NUInt flags, HNMatchingDetails * phMatchingDetails);
 
-NResult N_API NMatchingDetailsGetId(HNMatchingDetails hMatchingDetails, const void * * pValue);
-
 NResult N_API NMatchingDetailsGetFingersScore(HNMatchingDetails hMatchingDetails, NInt * pValue);
 NResult N_API NMatchingDetailsGetFingerCount(HNMatchingDetails hMatchingDetails, NInt * pValue);
 NResult N_API NMatchingDetailsGetFingerEx(HNMatchingDetails hMatchingDetails, NInt index, HNFMatchingDetails * phValue);

@@ -13,6 +13,8 @@ extern "C"
 N_DECLARE_OBJECT_TYPE(NFace, NBiometric)
 
 NResult N_API NFaceCreate(HNFace * phFace);
+NResult N_API NFaceFromImageAndAttributes(HNImage hImage, HNLAttributes hAttributes, HNFace * phFace);
+
 NResult N_API NFaceGetImage(HNFace hFace, HNImage * phValue);
 NResult N_API NFaceSetImage(HNFace hFace, HNImage hValue);
 

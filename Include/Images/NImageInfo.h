@@ -48,8 +48,6 @@ NResult N_API NImageRotateFlipTypeCreate(NImageRotateFlipType rotate, NImageRota
 
 NResult N_API NImageInfoCreate(HNImageInfo * phInfo);
 
-N_DEPRECATED("function is deprecated, use NImageInfoGetFormatEx instead")
-NResult N_API NImageInfoGetFormat(HNImageInfo hInfo, HNImageFormat * phValue);
 NResult N_API NImageInfoGetFormatEx(HNImageInfo hInfo, HNImageFormat * phValue);
 NResult N_API NImageInfoGetWidth(HNImageInfo hInfo, NUInt * pValue);
 NResult N_API NImageInfoGetHeight(HNImageInfo hInfo, NUInt * pValue);

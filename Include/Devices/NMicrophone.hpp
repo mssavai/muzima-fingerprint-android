@@ -17,10 +17,13 @@ class NMicrophone : public NCaptureDevice
 	N_DECLARE_OBJECT_CLASS(NMicrophone, NCaptureDevice)
 
 public:
-	::Neurotec::Sound::NSoundBuffer GetSoundSample()
+	::Neurotec::Sound::NSoundBuffer GetSoundSample(NTimeSpan * pTimeStamp = NULL, NTimeSpan * pDuration = NULL)
 	{
 		HNSoundBuffer hSoundBuffer = NULL;
-		NCheck(NMicrophoneGetSoundSample(GetHandle(), &hSoundBuffer));
+		NTimeSpan_ ts = 0, d = 0;
+		NCheck(NMicrophoneGetSoundSampleEx(GetHandle(), pTimeStamp ? &ts : NULL, pDuration ? &d : NULL, &hSoundBuffer));
+		if (pTimeStamp) *pTimeStamp = NTimeSpan(ts);
+		if (pDuration) *pDuration = NTimeSpan(d);
 		return FromHandle< ::Neurotec::Sound::NSoundBuffer>(hSoundBuffer);
 	}
 };

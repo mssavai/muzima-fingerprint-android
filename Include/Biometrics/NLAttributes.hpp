@@ -31,7 +31,7 @@ public:
 		}
 
 		friend class NLAttributes;
-	protected:
+	public:
 		NInt GetCapacity() const
 		{
 			NInt value;
@@ -168,6 +168,11 @@ public:
 		return value;
 	}
 
+	void SetSharpness(NByte value)
+	{
+		NCheck(NLAttributesSetSharpness(GetHandle(), value));
+	}
+
 	NByte GetBackgroundUniformity() const
 	{
 		NByte value;
@@ -175,11 +180,21 @@ public:
 		return value;
 	}
 
+	void SetBackgroundUniformity(NByte value)
+	{
+		NCheck(NLAttributesSetBackgroundUniformity(GetHandle(), value));
+	}
+
 	NByte GetGrayscaleDensity() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetGrayscaleDensity(GetHandle(), &value));
 		return value;
+	}
+
+	void SetGrayscaleDensity(NByte value)
+	{
+		NCheck(NLAttributesSetGrayscaleDensity(GetHandle(), value));
 	}
 
 	NLFeaturePoint GetRightEyeCenter() const
@@ -213,11 +228,21 @@ public:
 		return value;
 	}
 
+	void SetNoseTip(const NLFeaturePoint & value)
+	{
+		NCheck(NLAttributesSetNoseTip(GetHandle(), &value));
+	}
+
 	NLFeaturePoint GetMouthCenter() const
 	{
 		NLFeaturePoint value;
 		NCheck(NLAttributesGetMouthCenter(GetHandle(), &value));
 		return value;
+	}
+
+	void SetMouthCenter(const NLFeaturePoint & value)
+	{
+		NCheck(NLAttributesSetMouthCenter(GetHandle(), &value));
 	}
 
 	NGender GetGender() const
@@ -227,11 +252,21 @@ public:
 		return value;
 	}
 
+	void SetGender(NGender value)
+	{
+		NCheck(NLAttributesSetGender(GetHandle(), value));
+	}
+
 	NByte GetGenderConfidence() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetGenderConfidence(GetHandle(), &value));
 		return value;
+	}
+
+	void SetGenderConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetGenderConfidence(GetHandle(), value));
 	}
 
 	NByte GetExpressionConfidence() const
@@ -241,11 +276,21 @@ public:
 		return value;
 	}
 
+	void SetExpressionConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetExpressionConfidence(GetHandle(), value));
+	}
+
 	NByte GetGlassesConfidence() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetGlassesConfidence(GetHandle(), &value));
 		return value;
+	}
+
+	void SetGlassesConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetGlassesConfidence(GetHandle(), value));
 	}
 
 	NByte GetDarkGlassesConfidence() const
@@ -255,11 +300,21 @@ public:
 		return value;
 	}
 
+	void SetDarkGlassesConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetDarkGlassesConfidence(GetHandle(), value));
+	}
+
 	NByte GetBlinkConfidence() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetBlinkConfidence(GetHandle(), &value));
 		return value;
+	}
+
+	void SetBlinkConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetBlinkConfidence(GetHandle(), value));
 	}
 
 	NByte GetMouthOpenConfidence() const
@@ -269,11 +324,57 @@ public:
 		return value;
 	}
 
+	void SetMouthOpenConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetMouthOpenConfidence(GetHandle(), value));
+	}
+
+	NByte GetBeardConfidence() const
+	{
+		NByte value;
+		NCheck(NLAttributesGetBeardConfidence(GetHandle(), &value));
+		return value;
+	}
+
+	void SetBeardConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetBeardConfidence(GetHandle(), value));
+	}
+
+	NByte GetMustacheConfidence() const
+	{
+		NByte value;
+		NCheck(NLAttributesGetMustacheConfidence(GetHandle(), &value));
+		return value;
+	}
+
+	void SetMustacheConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetMustacheConfidence(GetHandle(), value));
+	}
+
+	NByte GetHatConfidence() const
+	{
+		NByte value;
+		NCheck(NLAttributesGetHatConfidence(GetHandle(), &value));
+		return value;
+	}
+
+	void SetHatConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetHatConfidence(GetHandle(), value));
+	}
+
 	NByte GetEmotionNeutralConfidence() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetEmotionNeutralConfidence(GetHandle(), &value));
 		return value;
+	}
+
+	void SetEmotionNeutralConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionNeutralConfidence(GetHandle(), value));
 	}
 
 	NByte GetEmotionAngerConfidence() const
@@ -283,11 +384,21 @@ public:
 		return value;
 	}
 
+	void SetEmotionAngerConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionAngerConfidence(GetHandle(), value));
+	}
+
 	NByte GetEmotionDisgustConfidence() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetEmotionDisgustConfidence(GetHandle(), &value));
 		return value;
+	}
+
+	void SetEmotionDisgustConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionDisgustConfidence(GetHandle(), value));
 	}
 
 	NByte GetEmotionFearConfidence() const
@@ -297,11 +408,21 @@ public:
 		return value;
 	}
 
+	void SetEmotionFearConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionFearConfidence(GetHandle(), value));
+	}
+
 	NByte GetEmotionHappinessConfidence() const
 	{
 		NByte value;
 		NCheck(NLAttributesGetEmotionHappinessConfidence(GetHandle(), &value));
 		return value;
+	}
+
+	void SetEmotionHappinessConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionHappinessConfidence(GetHandle(), value));
 	}
 
 	NByte GetEmotionSadnessConfidence() const
@@ -311,6 +432,11 @@ public:
 		return value;
 	}
 
+	void SetEmotionSadnessConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionSadnessConfidence(GetHandle(), value));
+	}
+
 	NByte GetEmotionSurpriseConfidence() const
 	{
 		NByte value;
@@ -318,11 +444,33 @@ public:
 		return value;
 	}
 
+	void SetEmotionSurpriseConfidence(NByte value)
+	{
+		NCheck(NLAttributesSetEmotionSurpriseConfidence(GetHandle(), value));
+	}
+
+	NByte GetAge() const
+	{
+		NByte value;
+		NCheck(NLAttributesGetAge(GetHandle(), &value));
+		return value;
+	}
+
+	void SetAge(NByte value)
+	{
+		NCheck(NLAttributesSetAge(GetHandle(), value));
+	}
+
 	NInt GetBaseFrameIndex() const
 	{
 		NInt value;
 		NCheck(NLAttributesGetBaseFrameIndex(GetHandle(), &value));
 		return value;
+	}
+
+	void SetBaseFrameIndex(NInt value)
+	{
+		NCheck(NLAttributesSetBaseFrameIndex(GetHandle(), value));
 	}
 
 	::Neurotec::Images::NImage GetThumbnail() const
@@ -354,6 +502,28 @@ public:
 	{
 		return FeaturePointCollection(*this);
 	}
+
+	NLivenessAction GetLivenessAction() const
+	{
+		NLivenessAction value;
+		NCheck(NLAttributesGetLivenessAction(GetHandle(), &value));
+		return value;
+	}
+
+	NByte GetLivenessScore() const
+	{
+		NByte value;
+		NCheck(NLAttributesGetLivenessScore(GetHandle(), &value));
+		return value;
+	}
+
+	NFloat GetLivenessTargetYaw() const
+	{
+		NFloat value;
+		NCheck(NLAttributesGetLivenessTargetYaw(GetHandle(), &value));
+		return value;
+	}
+
 };
 
 }}

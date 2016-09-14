@@ -27,8 +27,6 @@ extern "C"
 NResult N_API NImageWriterWrite(HNImageWriter hWriter, HNImage hImage, HNImageInfo hInfo, NUInt flags);
 NResult N_API NImageWriterGetBuffer(HNImageWriter hWriter, HNBuffer * phValue);
 
-N_DEPRECATED("function is deprecated, use NImageWriterGetFormatEx instead")
-NResult N_API NImageWriterGetFormat(HNImageWriter hWriter, HNImageFormat * phValue);
 NResult N_API NImageWriterGetFormatEx(HNImageWriter hWriter, HNImageFormat * phValue);
 
 #ifdef N_CPP

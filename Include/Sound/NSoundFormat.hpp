@@ -65,6 +65,11 @@ public:
 		NCheck(NSoundFormatCreate(soundType, channelCount, channelFormat, bitsPerChannel, &value));
 	}
 
+	bool IsValid()
+	{
+		return NSoundFormatIsValid(value) != 0;
+	}
+
 	NSizeType GetBlockSize(NInt length) const
 	{
 		NSizeType value;

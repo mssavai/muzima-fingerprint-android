@@ -88,14 +88,14 @@ public:
 		NCheck(NMemoryStreamWriteTo(GetHandle(), dstStream.GetHandle()));
 	}
 
-	NSizeType GetPosition()
+	NSizeType GetCapacity()
 	{
 		NSizeType value;
 		NCheck(NMemoryStreamGetCapacity(GetHandle(), &value));
 		return value;
 	}
 
-	void SetPosition(NSizeType value)
+	void SetCapacity(NSizeType value)
 	{
 		NCheck(NMemoryStreamSetCapacity(GetHandle(), value));
 	}

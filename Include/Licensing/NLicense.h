@@ -2,23 +2,12 @@
 #define N_LICENSE_H_INCLUDED
 
 #include <Core/NObject.h>
+#include <Licensing/NLicenseInfo.h>
 
 #ifdef N_CPP
 extern "C"
 {
 #endif
-
-struct NLicenseInfo_
-{
-	NBool IsObtained;
-	NInt DistributorId;
-	NInt SerialNumber;
-};
-#ifndef N_LICENSE_HPP_INCLUDED
-typedef struct NLicenseInfo_ NLicenseInfo;
-#endif
-
-N_DECLARE_TYPE(NLicenseInfo)
 
 N_DECLARE_STATIC_OBJECT_TYPE(NLicense)
 
@@ -70,29 +59,53 @@ NResult N_API NLicenseReleaseComponents(const NChar * szComponents);
 #endif
 #define NLicenseReleaseComponents N_FUNC_AW(NLicenseReleaseComponents)
 
-NResult N_API NLicenseGetInfoN(HNString hProduct, struct NLicenseInfo_ * pLicenseInfo);
+NResult N_API NLicenseAddN(HNString hLicense);
 #ifndef N_NO_ANSI_FUNC
-NResult N_API NLicenseGetInfoA(const NAChar * szProduct, struct NLicenseInfo_ * pLicenseInfo);
+NResult N_API NLicenseAddA(const NAChar * szLicense);
 #endif
 #ifndef N_NO_UNICODE
-NResult N_API NLicenseGetInfoW(const NWChar * szProduct, struct NLicenseInfo_ * pLicenseInfo);
+NResult N_API NLicenseAddW(const NWChar * szLicense);
 #endif
 #ifdef N_DOCUMENTATION
-NResult N_API NLicenseGetInfo(const NChar * szProduct, NLicenseInfo * pLicenseInfo);
+NResult N_API NLicenseAdd(const NChar * szLicense);
 #endif
-#define NLicenseGetInfo N_FUNC_AW(NLicenseGetInfo)
+#define NLicenseAdd N_FUNC_AW(NLicenseAdd)
 
-NResult N_API NLicenseGetInfoForComponentN(HNString hComponent, struct NLicenseInfo_ * pLicenseInfo);
+NResult N_API NLicenseGetLicenseInfoOnlineN(HNString hLicense, HNLicenseInfo * phLicenseInfo);
 #ifndef N_NO_ANSI_FUNC
-NResult N_API NLicenseGetInfoForComponentA(const NAChar * szComponent, struct NLicenseInfo_ * pLicenseInfo);
+NResult N_API NLicenseGetLicenseInfoOnlineA(const NAChar * szLicense, HNLicenseInfo * phLicenseInfo);
 #endif
 #ifndef N_NO_UNICODE
-NResult N_API NLicenseGetInfoForComponentW(const NWChar * szComponent, struct NLicenseInfo_ * pLicenseInfo);
+NResult N_API NLicenseGetLicenseInfoOnlineW(const NWChar * szLicense, HNLicenseInfo * phLicenseInfo);
 #endif
 #ifdef N_DOCUMENTATION
-NResult N_API NLicenseGetInfoForComponent(const NChar * szComponent, NLicenseInfo * pLicenseInfo);
+NResult N_API NLicenseGetLicenseInfoOnline(const NChar * szLicense, HNLicenseInfo * phLicenseInfo);
 #endif
-#define NLicenseGetInfoForComponent N_FUNC_AW(NLicenseGetInfoForComponent)
+#define NLicenseGetLicenseInfoOnline N_FUNC_AW(NLicenseGetLicenseInfoOnline)
+
+NResult N_API NLicenseGetObtainedLicenseInfoN(HNString hProduct, HNLicenseInfo * phLicenseInfo);
+#ifndef N_NO_ANSI_FUNC
+NResult N_API NLicenseGetObtainedLicenseInfoA(const NAChar * szProduct, HNLicenseInfo * phLicenseInfo);
+#endif
+#ifndef N_NO_UNICODE
+NResult N_API NLicenseGetObtainedLicenseInfoW(const NWChar * szProduct, HNLicenseInfo * phLicenseInfo);
+#endif
+#ifdef N_DOCUMENTATION
+NResult N_API NLicenseGetObtainedLicenseInfo(const NChar * szProduct, HNLicenseInfo * phLicenseInfo);
+#endif
+#define NLicenseGetObtainedLicenseInfo N_FUNC_AW(NLicenseGetObtainedLicenseInfo)
+
+NResult N_API NLicenseGetObtainedLicenseInfoForComponentN(HNString hComponent, HNLicenseInfo * phLicenseInfo);
+#ifndef N_NO_ANSI_FUNC
+NResult N_API NLicenseGetObtainedLicenseInfoForComponentA(const NAChar * szComponent, HNLicenseInfo * phLicenseInfo);
+#endif
+#ifndef N_NO_UNICODE
+NResult N_API NLicenseGetObtainedLicenseInfoForComponentW(const NWChar * szComponent, HNLicenseInfo * phLicenseInfo);
+#endif
+#ifdef N_DOCUMENTATION
+NResult N_API NLicenseGetObtainedLicenseInfoForComponent(const NChar * szComponent, HNLicenseInfo * phLicenseInfo);
+#endif
+#define NLicenseGetObtainedLicenseInfoForComponent N_FUNC_AW(NLicenseGetObtainedLicenseInfoForComponent)
 
 NResult N_API NLicenseIsComponentActivatedN(HNString hName, NBool * pValue);
 #ifndef N_NO_ANSI_FUNC

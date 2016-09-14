@@ -15,7 +15,13 @@ extern "C"
 		#define N_RW_LOCK_SIZE 128
 	#endif
 #elif defined(N_ANDROID)
-	#define N_RW_LOCK_SIZE 40
+	#if defined(N_ARM) || defined(N_X86)
+		#define N_RW_LOCK_SIZE 40
+	#elif defined(N_ARM64) || defined(N_X64)
+		#define N_RW_LOCK_SIZE 56
+	#else
+		#error Unexpected Android architecture
+	#endif
 #elif defined (N_WINDOWS)
 	#define N_RW_LOCK_SIZE N_PTR_SIZE
 #elif defined (N_LINUX)

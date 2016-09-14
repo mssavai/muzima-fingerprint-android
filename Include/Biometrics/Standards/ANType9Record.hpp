@@ -115,7 +115,7 @@ public:
 
 class ANFPatternClass : public ANFPatternClass_
 {
-	N_DECLARE_DISPOSABLE_STRUCT_CLASS(ANFPatternClass)
+	N_DECLARE_EQUATABLE_DISPOSABLE_STRUCT_CLASS(ANFPatternClass)
 
 public:
 	ANFPatternClass(BdifFPatternClass value, const NStringWrapper & vendorValue)
@@ -136,7 +136,7 @@ public:
 
 class ANFCore : public ANFCore_
 {
-	N_DECLARE_STRUCT_CLASS(ANFCore)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFCore)
 
 public:
 	ANFCore(NUShort x, NUShort y)
@@ -148,7 +148,7 @@ public:
 
 class ANFDelta : public ANFDelta_
 {
-	N_DECLARE_STRUCT_CLASS(ANFDelta)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFDelta)
 
 public:
 	ANFDelta(NUShort x, NUShort y)
@@ -160,7 +160,7 @@ public:
 
 class ANFPMinutia : public ANFPMinutia_
 {
-	N_DECLARE_STRUCT_CLASS(ANFPMinutia)
+	N_DECLARE_EQUATABLE_STRUCT_CLASS(ANFPMinutia)
 
 public:
 	ANFPMinutia(NUInt x, NUInt y, NUShort theta, NByte quality, BdifFPMinutiaType type)
@@ -184,13 +184,14 @@ N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANFPMinutia)
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
+#include <Core/NNoDeprecate.h>
 class ANType9Record : public ANAsciiRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType9Record, ANAsciiRecord)
 
 public:
-	class PositionCollection : public ::Neurotec::Collections::NCollectionBase<BdifFPPosition, ANType9Record,
-		ANType9RecordGetPositionCount, ANType9RecordGetPosition>
+	class PositionCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFPPosition, ANType9Record,
+		ANType9RecordGetPositionCount, ANType9RecordGetPosition, ANType9RecordGetPositions>
 	{
 		PositionCollection(const ANType9Record & owner)
 		{
@@ -199,12 +200,8 @@ public:
 
 		friend class ANType9Record;
 	public:
-		NInt GetAll(BdifFPPosition * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType9RecordGetPositionsEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<BdifFPPosition, ANType9Record,
+			ANType9RecordGetPositionCount, ANType9RecordGetPosition, ANType9RecordGetPositions>::GetAll;
 
 		void Set(NInt index, BdifFPPosition value)
 		{
@@ -213,8 +210,8 @@ public:
 
 		NInt Add(BdifFPPosition value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType9RecordAddPosition(this->GetOwnerHandle(), value));
+			NInt index;
+			NCheck(ANType9RecordAddPositionEx(this->GetOwnerHandle(), value, &index));
 			return index;
 		}
 
@@ -225,7 +222,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType9RecordRemovePosition(this->GetOwnerHandle(), index));
+			NCheck(ANType9RecordRemovePositionAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -251,8 +248,8 @@ public:
 
 		NInt Add(const ANFPatternClass & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType9RecordAddPatternClass(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType9RecordAddPatternClassEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -263,7 +260,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType9RecordRemovePatternClass(this->GetOwnerHandle(), index));
+			NCheck(ANType9RecordRemovePatternClassAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -272,8 +269,8 @@ public:
 		}
 	};
 
-	class CoreCollection : public ::Neurotec::Collections::NCollectionBase<ANFCore, ANType9Record,
-		ANType9RecordGetCoreCount, ANType9RecordGetCore>
+	class CoreCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFCore, ANType9Record,
+		ANType9RecordGetCoreCount, ANType9RecordGetCore, ANType9RecordGetCores>
 	{
 		CoreCollection(const ANType9Record & owner)
 		{
@@ -281,13 +278,9 @@ public:
 		}
 
 		friend class ANType9Record;
-	protected:
-		NInt GetAll(ANFCore * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType9RecordGetCoresEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+	public:
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFCore, ANType9Record,
+			ANType9RecordGetCoreCount, ANType9RecordGetCore, ANType9RecordGetCores>::GetAll;
 
 		void Set(NInt index, const ANFCore & value)
 		{
@@ -296,8 +289,8 @@ public:
 
 		NInt Add(const ANFCore & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType9RecordAddCore(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType9RecordAddCoreEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -308,7 +301,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType9RecordRemoveCore(this->GetOwnerHandle(), index));
+			NCheck(ANType9RecordRemoveCoreAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -317,8 +310,8 @@ public:
 		}
 	};
 
-	class DeltaCollection : public ::Neurotec::Collections::NCollectionBase<ANFDelta, ANType9Record,
-		ANType9RecordGetDeltaCount, ANType9RecordGetDelta>
+	class DeltaCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFDelta, ANType9Record,
+		ANType9RecordGetDeltaCount, ANType9RecordGetDelta, ANType9RecordGetDeltas>
 	{
 		DeltaCollection(const ANType9Record & owner)
 		{
@@ -327,12 +320,8 @@ public:
 
 		friend class ANType9Record;
 	public:
-		NInt GetAll(ANFDelta * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType9RecordGetDeltasEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFDelta, ANType9Record,
+			ANType9RecordGetDeltaCount, ANType9RecordGetDelta, ANType9RecordGetDeltas>::GetAll;
 
 		void Set(NInt index, const ANFDelta & value)
 		{
@@ -341,8 +330,8 @@ public:
 
 		NInt Add(const ANFDelta & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType9RecordAddDelta(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType9RecordAddDeltaEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -353,7 +342,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType9RecordRemoveDelta(this->GetOwnerHandle(), index));
+			NCheck(ANType9RecordRemoveDeltaAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -362,8 +351,8 @@ public:
 		}
 	};
 
-	class MinutiaCollection : public ::Neurotec::Collections::NCollectionBase<ANFPMinutia, ANType9Record,
-		ANType9RecordGetMinutiaCount, ANType9RecordGetMinutia>
+	class MinutiaCollection : public ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPMinutia, ANType9Record,
+		ANType9RecordGetMinutiaCount, ANType9RecordGetMinutia, ANType9RecordGetMinutiae>
 	{
 		MinutiaCollection(const ANType9Record & owner)
 		{
@@ -371,13 +360,9 @@ public:
 		}
 
 		friend class ANType9Record;
-	protected:
-		NInt GetAll(ANFPMinutia * arValues, NInt valuesLength) const
-		{
-			NInt count;
-			NCheck(count = ANType9RecordGetMinutiaeEx(this->GetOwnerHandle(), arValues, valuesLength));
-			return count;
-		}
+	public:
+		using ::Neurotec::Collections::NCollectionWithAllOutBase<ANFPMinutia, ANType9Record,
+			ANType9RecordGetMinutiaCount, ANType9RecordGetMinutia, ANType9RecordGetMinutiae>::GetAll;
 
 		void Set(NInt index, const ANFPMinutia & value)
 		{
@@ -386,8 +371,8 @@ public:
 
 		NInt Add(const ANFPMinutia & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType9RecordAddMinutia(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType9RecordAddMinutiaEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -398,7 +383,7 @@ public:
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType9RecordRemoveMinutia(this->GetOwnerHandle(), index));
+			NCheck(ANType9RecordRemoveMinutiaAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -415,7 +400,7 @@ public:
 		}
 
 		friend class ANType9Record;
-	protected:
+	public:
 		NInt GetCount(NInt baseIndex) const
 		{
 			NInt value;
@@ -435,11 +420,12 @@ public:
 			return value;
 		}
 
-		NInt GetAll(NInt baseIndex, BdifFPMinutiaNeighbor * arValues, NInt valuesLength) const
+		NArrayWrapper<BdifFPMinutiaNeighbor> GetAll(NInt baseIndex) const
 		{
-			NInt count;
-			NCheck(count = ANType9RecordGetMinutiaNeighborsEx(this->GetOwnerHandle(), baseIndex, arValues, valuesLength));
-			return count;
+			BdifFPMinutiaNeighbor::NativeType * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(ANType9RecordGetMinutiaNeighbors(this->GetOwnerHandle(), baseIndex, &arValues, &valueCount));
+			return NArrayWrapper<BdifFPMinutiaNeighbor>(arValues, valueCount);
 		}
 
 		void Set(NInt baseIndex, NInt index, const BdifFPMinutiaNeighbor & value)
@@ -449,8 +435,8 @@ public:
 
 		NInt Add(NInt baseIndex, const BdifFPMinutiaNeighbor & value)
 		{
-			NInt index = this->GetCount(baseIndex);
-			NCheck(ANType9RecordAddMinutiaNeighbor(this->GetOwnerHandle(), baseIndex, &value));
+			NInt index;
+			NCheck(ANType9RecordAddMinutiaNeighborEx(this->GetOwnerHandle(), baseIndex, &value, &index));
 			return index;
 		}
 
@@ -461,7 +447,7 @@ public:
 
 		void RemoveAt(NInt baseIndex, NInt index)
 		{
-			NCheck(ANType9RecordRemoveMinutiaNeighbor(this->GetOwnerHandle(), baseIndex, index));
+			NCheck(ANType9RecordRemoveMinutiaNeighborAt(this->GetOwnerHandle(), baseIndex, index));
 		}
 
 		void Clear(NInt baseIndex)
@@ -470,10 +456,35 @@ public:
 		}
 	};
 
+private:
+	static HANType9Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType9Record handle;
+		NCheck(ANType9RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType9Record Create(NVersion version, NInt idc, bool fmt, const NFRecord & nfRecord, NUInt flags)
+	{
+		HANType9Record handle;
+		NCheck(ANType9RecordCreateFromNFRecord(version.GetValue(), idc, fmt ? NTrue : NFalse, nfRecord.GetHandle(), flags, &handle));
+		return handle;
+	}
+
 public:
 	static NType ANFPMinutiaeMethodNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(ANFPMinutiaeMethod), true);
+	}
+
+	explicit ANType9Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANAsciiRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType9Record(NVersion version, NInt idc, bool fmt, const NFRecord & nfRecord, NUInt flags = 0)
+		: ANAsciiRecord(Create(version, idc, fmt, nfRecord, flags), true)
+	{
 	}
 
 	NFRecord ToNFRecord(NUInt flags = 0) const
@@ -502,11 +513,21 @@ public:
 		return value != 0;
 	}
 
+	void SetMinutiaeFormat(NBool value)
+	{
+		NCheck(ANType9RecordSetMinutiaeFormat(GetHandle(), value));
+	}
+
 	bool GetHasMinutiae() const
 	{
 		NBool value;
 		NCheck(ANType9RecordHasMinutiae(GetHandle(), &value));
 		return value != 0;
+	}
+
+	void SetHasMinutiae(bool value)
+	{
+		NCheck(ANType9RecordSetHasMinutiae(GetHandle(), value ? NTrue : NFalse));
 	}
 
 	bool GetHasMinutiaeRidgeCounts() const
@@ -521,6 +542,11 @@ public:
 		NBool value;
 		NCheck(ANType9RecordHasMinutiaeRidgeCountsIndicator(GetHandle(), &value));
 		return value != 0;
+	}
+
+	void SetHasMinutiaeRidgeCounts(bool hasMinutiaeRidgeCountsIndicator, bool rdg)
+	{
+		NCheck(ANType9RecordSetHasMinutiaeRidgeCounts(GetHandle(), hasMinutiaeRidgeCountsIndicator ? NTrue : NFalse, rdg ? NTrue : NFalse));
 	}
 
 	bool GetOfrs(ANOfrs * pValue) const
@@ -617,6 +643,7 @@ public:
 		return MinutiaNeighborsCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

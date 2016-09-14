@@ -38,7 +38,9 @@ NResult N_API NFTemplateSetRecordCapacity(HNFTemplate hTemplate, NInt value);
 NResult N_API NFTemplateSetRecord(HNFTemplate hTemplate, NInt index, HNFRecord hValue);
 NResult N_API NFTemplateAddRecordEx(HNFTemplate hTemplate, HNFRecord hValue, NInt * pIndex);
 NResult N_API NFTemplateInsertRecord(HNFTemplate hTemplate, NInt index, HNFRecord hValue);
+N_DEPRECATED("function is deprecated, use NFTemplateRemoveRecordAt instead")
 NResult N_API NFTemplateRemoveRecord(HNFTemplate hTemplate, NInt index);
+NResult N_API NFTemplateRemoveRecordAt(HNFTemplate hTemplate, NInt index);
 NResult N_API NFTemplateClearRecords(HNFTemplate hTemplate);
 
 NResult N_API NFTemplateIsPalm(HNFTemplate hTemplate, NBool * pValue);

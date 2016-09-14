@@ -61,16 +61,27 @@ N_DECLARE_TYPE(ANDeviceMonitoringMode)
 
 NResult N_API ANImageAsciiBinaryRecordToNImage(HANImageAsciiBinaryRecord hRecord, NUInt flags, HNImage * phImage);
 
-NResult N_API ANImageAsciiBinaryRecordGetHorzLineLength(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
-NResult N_API ANImageAsciiBinaryRecordGetVertLineLength(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
-NResult N_API ANImageAsciiBinaryRecordGetScaleUnits(HANImageAsciiBinaryRecord hRecord, BdifScaleUnits * pValue);
-NResult N_API ANImageAsciiBinaryRecordGetHorzPixelScale(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
-NResult N_API ANImageAsciiBinaryRecordGetVertPixelScale(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
-NResult N_API ANImageAsciiBinaryRecordGetCompressionAlgorithm(HANImageAsciiBinaryRecord hRecord, ANImageCompressionAlgorithm * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetImage(HANImageAsciiBinaryRecord hRecord, HNImage hImage, NUInt flags);
 
+NResult N_API ANImageAsciiBinaryRecordGetHorzLineLength(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetHorzLineLength(HANImageAsciiBinaryRecord hRecord, NUShort value);
+NResult N_API ANImageAsciiBinaryRecordGetVertLineLength(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetVertLineLength(HANImageAsciiBinaryRecord hRecord, NUShort value);
+NResult N_API ANImageAsciiBinaryRecordGetScaleUnits(HANImageAsciiBinaryRecord hRecord, BdifScaleUnits * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetScaleUnits(HANImageAsciiBinaryRecord hRecord, BdifScaleUnits value);
+NResult N_API ANImageAsciiBinaryRecordGetHorzPixelScale(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetHorzPixelScale(HANImageAsciiBinaryRecord hRecord, NUShort value);
+NResult N_API ANImageAsciiBinaryRecordGetVertPixelScale(HANImageAsciiBinaryRecord hRecord, NUShort * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetVertPixelScale(HANImageAsciiBinaryRecord hRecord, NUShort value);
+
+NResult N_API ANImageAsciiBinaryRecordGetCompressionAlgorithm(HANImageAsciiBinaryRecord hRecord, ANImageCompressionAlgorithm * pValue);
 NResult N_API ANImageAsciiBinaryRecordGetVendorCompressionAlgorithmN(HANImageAsciiBinaryRecord hRecord, HNString * phValue);
+NResult N_API ANImageAsciiBinaryRecordSetCompressionAlgorithm(HANImageAsciiBinaryRecord hRecord, ANImageCompressionAlgorithm value, HNString hVendorValue);
+
 NResult N_API ANImageAsciiBinaryRecordGetBitsPerPixel(HANImageAsciiBinaryRecord hRecord, NByte * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetBitsPerPixel(HANImageAsciiBinaryRecord hRecord, NByte value);
 NResult N_API ANImageAsciiBinaryRecordGetColorSpace(HANImageAsciiBinaryRecord hRecord, ANImageColorSpace * pValue);
+NResult N_API ANImageAsciiBinaryRecordSetColorSpace(HANImageAsciiBinaryRecord hRecord, ANImageColorSpace value);
 NResult N_API ANImageAsciiBinaryRecordGetScanHorzPixelScale(HANImageAsciiBinaryRecord hRecord, NInt * pValue);
 NResult N_API ANImageAsciiBinaryRecordSetScanHorzPixelScale(HANImageAsciiBinaryRecord hRecord, NInt value);
 NResult N_API ANImageAsciiBinaryRecordGetScanVertPixelScale(HANImageAsciiBinaryRecord hRecord, NInt * pValue);

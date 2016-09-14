@@ -18,10 +18,17 @@ N_DECLARE_OBJECT_TYPE(ANImageBinaryRecord, ANBinaryRecord)
 NResult N_API ANImageBinaryRecordToNImage(HANImageBinaryRecord hRecord, NUInt flags, HNImage * phImage);
 
 NResult N_API ANImageBinaryRecordGetImageScanResolution(HANImageBinaryRecord hRecord, NBool * pValue);
+NResult N_API ANImageBinaryRecordSetImageScanResolution(HANImageBinaryRecord hRecord, NBool value);
+
 NResult N_API ANImageBinaryRecordGetImageScanResolutionValue(HANImageBinaryRecord hRecord, NUInt * pValue);
 NResult N_API ANImageBinaryRecordGetImageResolution(HANImageBinaryRecord hRecord, NUInt * pValue);
+
 NResult N_API ANImageBinaryRecordGetHorzLineLength(HANImageBinaryRecord hRecord, NUShort * pValue);
+NResult N_API ANImageBinaryRecordSetHorzLineLength(HANImageBinaryRecord hRecord, NUShort value);
 NResult N_API ANImageBinaryRecordGetVertLineLength(HANImageBinaryRecord hRecord, NUShort * pValue);
+NResult N_API ANImageBinaryRecordSetVertLineLength(HANImageBinaryRecord hRecord, NUShort value);
+
+NResult N_API ANImageBinaryRecordSetImage(HANImageBinaryRecord hRecord, HNImage hImage, NUInt flags);
 
 #ifdef N_CPP
 }

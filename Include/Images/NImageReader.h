@@ -27,8 +27,6 @@ NResult N_API NImageReaderRead(HNImageReader hReader, NUInt flags, HNImageInfo *
 NResult N_API NImageReaderReadInfo(HNImageReader hReader, NUInt flags, HNImageInfo * phInfo);
 NResult N_API NImageReaderGetReadSize(HNImageReader hReader, NSizeType * pSize);
 
-N_DEPRECATED("function is deprecated, use NImageReaderGetFormatEx instead")
-NResult N_API NImageReaderGetFormat(HNImageReader hReader, HNImageFormat * phValue);
 NResult N_API NImageReaderGetFormatEx(HNImageReader hReader, HNImageFormat * phValue);
 
 #ifdef N_CPP

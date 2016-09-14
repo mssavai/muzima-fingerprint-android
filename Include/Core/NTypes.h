@@ -265,13 +265,12 @@ N_DECLARE_TYPE(NPointer)
 	#define NULL 0
 #endif
 
-#ifdef N_MSVC
+#if defined(N_MSVC) && !defined(N_NVCC)
 #define N_UNREFERENCED_PARAMETER(parameter) (parameter)
-#define N_UNUSED_VARIABLE(variable)
 #else
 #define N_UNREFERENCED_PARAMETER(parameter) (void)(parameter)
-#define N_UNUSED_VARIABLE(variable) (void)(variable)
 #endif
+#define N_UNUSED_VARIABLE(variable) N_UNREFERENCED_PARAMETER(variable)
 
 typedef void * NHandle;
 N_DECLARE_TYPE(NHandle)
@@ -283,17 +282,17 @@ N_DECLARE_TYPE(NHandle)
 
 #define NMakeWord(low, high) ((NUShort)(((NByte)(low)) | ((high) << 8)))
 #define NHiByte(value) ((NByte)((value) >> 8))
-#define NLoByte(value) ((NByte)(value))
+#define NLoByte(value) ((NByte)((value) & N_BYTE_MAX))
 
 #define NMakeDWord(low, high) ((NUInt)(((NUShort)(low)) | ((high) << 16)))
 #define NHiWord(value) ((NUShort)((value) >> 16))
-#define NLoWord(value) ((NUShort)(value))
+#define NLoWord(value) ((NUShort)((value) & N_USHORT_MAX))
 
 #ifndef N_NO_INT_64
 
 #define NMakeQWord(low, high) ((NULong)(((NUInt)(low)) | (((NULong)(high)) << 32)))
 #define NHiDWord(value) ((NUInt)((value) >> 32))
-#define NLoDWord(value) ((NUInt)(value))
+#define NLoDWord(value) ((NUInt)((value) & N_UINT_MAX))
 
 #endif
 
@@ -564,6 +563,25 @@ NResult N_API NReverseBufferBits(void * pDstBuffer, const void * pSrcBuffer, NSi
 			if (N_FOREACH_DCR_n != 0) break;\
 			N_CHECK((pGet)(hObject, N_FOREACH_DCR_i, &var));\
 			{
+
+#define N_FOREACH_HM(keyType, keyVar, keySize, valueType, valueVar, valueSize, hashmap)\
+			{\
+			const void * posToken = NULL;\
+			for (NHashMapGetNext(&(hashmap), &posToken, (keyType), (keyVar), (keySize), (valueType), (valueVar), (valueSize));\
+					(posToken) != NULL;\
+					NHashMapGetNext(&(hashmap), &posToken, (keyType), (keyVar), (keySize), (valueType), (valueVar), (valueSize)))\
+				{\
+					{
+
+#define N_FOREACH_HMP(keyTypeOf, keyVar, keySize, valueTypeOf, valueVar, valueSize, hashmap)\
+			{\
+			const void * posToken = NULL;\
+			for (NHashMapGetNextP(&(hashmap), &posToken, (keyTypeOf), (keyVar), (keySize), (valueTypeOf), (valueVar), (valueSize));\
+					(posToken) != NULL;\
+					NHashMapGetNextP(&(hashmap), &posToken, (keyTypeOf), (keyVar), (keySize), (valueTypeOf), (valueVar), (valueSize)))\
+				{\
+					{
+
 
 #ifndef N_NO_UNICODE
 	#define N_FUNC_AW_IMPL_A_ALWAYS(funcAW) \
@@ -1693,7 +1711,7 @@ NResult N_API NBooleanTryParseVN(HNString hValue, const NChar * szFormat, NBoole
 #define NInt16TryParse(szValue, szFormat, pValue, pResult) NInt16TryParseStrOrChars(szValue, -1, szFormat, pValue, pResult)
 #define NInt16TryParseCharsA(arValue, valueLength, szFormat, pValue, pResult) NInt16TryParseStrOrCharsA(arValue, valueLength, szFormat, pValue, pResult)
 #define NInt16TryParseCharsW(arValue, valueLength, szFormat, pValue, pResult) NInt16TryParseStrOrCharsW(arValue, valueLength, szFormat, pValue, pResult)
-#define NInt16TryParseChars(arValue, valueLength, style, pValue, pResult) NInt16TryParseStrOrChars(arValue, valueLength, szFormat, pValue, pResult)
+#define NInt16TryParseChars(arValue, valueLength, szFormat, pValue, pResult) NInt16TryParseStrOrChars(arValue, valueLength, szFormat, pValue, pResult)
 #define NUInt32TryParseA(szValue, szFormat, pValue, pResult) NUInt32TryParseStrOrCharsA(szValue, -1, szFormat, pValue, pResult)
 #define NUInt32TryParseW(szValue, szFormat, pValue, pResult) NUInt32TryParseStrOrCharsW(szValue, -1, szFormat, pValue, pResult)
 #define NUInt32TryParse(szValue, szFormat, pValue, pResult) NUInt32TryParseStrOrChars(szValue, -1, szFormat, pValue, pResult)
@@ -2177,12 +2195,12 @@ NResult N_API NBooleanParseVN(HNString hValue, const NChar * szFormat, NBoolean 
 #define NInt16ParseCharsA(arValue, valueLength, szFormat, pValue) NInt16ParseStrOrCharsA(arValue, valueLength, szFormat, pValue)
 #define NInt16ParseCharsW(arValue, valueLength, szFormat, pValue) NInt16ParseStrOrCharsW(arValue, valueLength, szFormat, pValue)
 #define NInt16ParseChars(arValue, valueLength, szFormat, pValue) NInt16ParseStrOrChars(arValue, valueLength, szFormat, pValue)
-#define NUInt32ParseA(szValue, szFormat, pValue) NUInt32ParseStrOrCharsA(szValue, -1, style, pValue)
-#define NUInt32ParseW(szValue, szFormat, pValue) NUInt32ParseStrOrCharsW(szValue, -1, style, pValue)
-#define NUInt32Parse(szValue, szFormat, pValue) NUInt32ParseStrOrChars(szValue, -1, style, pValue)
-#define NUInt32ParseCharsA(arValue, valueLength, szFormat, pValue) NUInt32ParseStrOrCharsA(arValue, valueLength, style, pValue)
-#define NUInt32ParseCharsW(arValue, valueLength, szFormat, pValue) NUInt32ParseStrOrCharsW(arValue, valueLength, style, pValue)
-#define NUInt32ParseChars(arValue, valueLength, szFormat, pValue) NUInt32ParseStrOrChars(arValue, valueLength, style, pValue)
+#define NUInt32ParseA(szValue, szFormat, pValue) NUInt32ParseStrOrCharsA(szValue, -1, szFormat, pValue)
+#define NUInt32ParseW(szValue, szFormat, pValue) NUInt32ParseStrOrCharsW(szValue, -1, szFormat, pValue)
+#define NUInt32Parse(szValue, szFormat, pValue) NUInt32ParseStrOrChars(szValue, -1, szFormat, pValue)
+#define NUInt32ParseCharsA(arValue, valueLength, szFormat, pValue) NUInt32ParseStrOrCharsA(arValue, valueLength, szFormat, pValue)
+#define NUInt32ParseCharsW(arValue, valueLength, szFormat, pValue) NUInt32ParseStrOrCharsW(arValue, valueLength, szFormat, pValue)
+#define NUInt32ParseChars(arValue, valueLength, szFormat, pValue) NUInt32ParseStrOrChars(arValue, valueLength, szFormat, pValue)
 #define NInt32ParseA(szValue, szFormat, pValue) NInt32ParseStrOrCharsA(szValue, -1, szFormat, pValue)
 #define NInt32ParseW(szValue, szFormat, pValue) NInt32ParseStrOrCharsW(szValue, -1, szFormat, pValue)
 #define NInt32Parse(szValue, szFormat, pValue) NInt32ParseStrOrChars(szValue, -1, szFormat, pValue)
@@ -2225,9 +2243,9 @@ NResult N_API NBooleanParseVN(HNString hValue, const NChar * szFormat, NBoolean 
 #define NSizeTypeParseCharsA(arValue, valueLength, szFormat, pValue) NSizeTypeParseStrOrCharsA(arValue, valueLength, szFormat, pValue)
 #define NSizeTypeParseCharsW(arValue, valueLength, szFormat, pValue) NSizeTypeParseStrOrCharsW(arValue, valueLength, szFormat, pValue)
 #define NSizeTypeParseChars(arValue, valueLength, szFormat, pValue) NSizeTypeParseStrOrChars(arValue, valueLength, szFormat, pValue)
-#define NSSizeTypeParseA(szValue, szFormat, pValue) NSSizeTypeParseStrOrCharsA(szValue, -1, style, pValue)
-#define NSSizeTypeParseW(szValue, szFormat, pValue) NSSizeTypeParseStrOrCharsW(szValue, -1, style, pValue)
-#define NSSizeTypeParse(szValue, szFormat, pValue) NSSizeTypeParseStrOrChars(szValue, -1, style, pValue)
+#define NSSizeTypeParseA(szValue, szFormat, pValue) NSSizeTypeParseStrOrCharsA(szValue, -1, szFormat, pValue)
+#define NSSizeTypeParseW(szValue, szFormat, pValue) NSSizeTypeParseStrOrCharsW(szValue, -1, szFormat, pValue)
+#define NSSizeTypeParse(szValue, szFormat, pValue) NSSizeTypeParseStrOrChars(szValue, -1, szFormat, pValue)
 #define NSSizeTypeParseCharsA(arValue, valueLength, szFormat, pValue) NSSizeTypeParseStrOrCharsA(arValue, valueLength, szFormat, pValue)
 #define NSSizeTypeParseCharsW(arValue, valueLength, szFormat, pValue) NSSizeTypeParseStrOrCharsW(arValue, valueLength, szFormat, pValue)
 #define NSSizeTypeParseChars(arValue, valueLength, szFormat, pValue) NSSizeTypeParseStrOrChars(arValue, valueLength, szFormat, pValue)
@@ -2286,6 +2304,10 @@ NResult N_API NGuidParseW(const NWChar * szValue, const NWChar * szFormat, struc
 NResult N_API NGuidParse(const NChar * szValue, const NChar * szFormat, NGuid * pValue);
 #endif
 #define NGuidParse N_FUNC_AW(NGuidParse)
+
+NResult N_API NGuidNewGuid(struct NGuid_ * pValue);
+NResult N_API NGuidInitFromByteArray(const NByte * pSrcArray, NInt srcLength, struct NGuid_ * pValue);
+NResult N_API NGuidToByteArray(const struct NGuid_ * pValue, NByte * pDstArray, NInt dstLength);
 
 NResult N_API NURationalToStringN(const struct NURational_ * pValue, HNString hFormat, HNString * phValue);
 NResult N_API NURationalToStringA(const struct NURational_ * pValue, const NAChar * szFormat, HNString * phValue);

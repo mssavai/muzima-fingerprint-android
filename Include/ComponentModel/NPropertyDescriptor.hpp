@@ -74,7 +74,7 @@ public:
 		typename NTypeTraits<T>::NativeType value;
 		NBool hasValue;
 		NCheck(NPropertyDescriptorGetValue(GetHandle(), component.GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &value, sizeof(value), 1, pHasValue ? &hasValue : NULL));
-		T v = NTypeTraits<T>::FromNative(value);
+		T v = NTypeTraits<T>::FromNative(value, true);
 		if (pHasValue) *pHasValue = hasValue != 0;
 		return v;
 	}
@@ -92,7 +92,7 @@ public:
 	template<typename T> void SetValue(const NObject & component, const T & value, NAttributes attributes = naNone, bool hasValue = true) const
 	{
 		typename NTypeTraits<T>::NativeType v = NTypeTraits<T>::ToNative(value);
-		NCheck(NPropertyDescriptorSetValue(GetHandle(), component.GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &value, sizeof(value), 1, hasValue ? NTrue : NFalse));
+		NCheck(NPropertyDescriptorSetValue(GetHandle(), component.GetHandle(), NTypeTraits<T>::GetNativeType().GetHandle(), attributes, &v, sizeof(v), 1, hasValue ? NTrue : NFalse));
 	}
 
 	bool CanResetValue(const NObject & component) const

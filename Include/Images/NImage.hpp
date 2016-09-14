@@ -11,9 +11,6 @@ namespace Neurotec { namespace Images
 using ::Neurotec::IO::NFileAccess;
 using ::Neurotec::Media::HNVideoFormat;
 #include <Images/NImage.h>
-#include <Images/NMonochromeImage.h>
-#include <Images/NGrayscaleImage.h>
-#include <Images/NRgbImage.h>
 }}
 #if defined(N_FRAMEWORK_MFC)
 	#include <afxstr.h>
@@ -488,6 +485,15 @@ public:
 			left, top, width, height, flags));
 	}
 
+	void CopyFromYCbCrData(const ::Neurotec::IO::NBuffer & planeY, NInt rowStrideY, NInt pixelStrideY,
+		const ::Neurotec::IO::NBuffer &  planeCb, NInt rowStrideCb, NInt pixelStrideCb,
+		const ::Neurotec::IO::NBuffer &  planeCr, NInt rowStrideCr, NInt pixelStrideCr)
+	{
+		NCheck(NImageCopyFromYCbCrDataN(GetHandle(), planeY.GetHandle(), rowStrideY, pixelStrideY,
+			planeCb.GetHandle(), rowStrideCb, pixelStrideCb,
+			planeCr.GetHandle(), rowStrideCr, pixelStrideCr));
+	}
+
 	void CopyTo(const NPixelFormat & dstPixelFormat, NUInt dstWidth, NUInt dstHeight,
 		NSizeType dstStride, const ::Neurotec::IO::NBuffer & dstPixels, NUInt dstLeft, NUInt dstTop, NUInt flags = 0) const
 	{
@@ -827,29 +833,12 @@ inline NImage NImage::FromStream(const ::Neurotec::IO::NStream & stream, const N
 #if defined(N_FRAMEWORK_QT)
 inline QImage NImage::ToBitmap() const
 {
-	::std::auto_ptr<NRgbImage> rgbImage(ToRgb());
 	NUInt width = GetWidth();
 	NUInt height = GetHeight();
 	QImage image(width, height, QImage::Format_RGB32);
-	uchar * dstBits = image.bits();
-	uchar * srcBits = (uchar *)rgbImage->GetPixelsPtr();
-	NSizeType stride = rgbImage->GetStride();
-	for (uint y = 0; y < height; y++)
-	{
-		int dstOffset_y = y * 4 * width;
-		int srcOffset_y = y * stride;
-		for (uint x = 0; x < width; x++)
-		{
-			int dstOffset = dstOffset_y + x * 4;
-			int srcOffset = srcOffset_y + x * 3;
-			dstBits[dstOffset    ] = srcBits[srcOffset + 2];
-			dstBits[dstOffset + 1] = srcBits[srcOffset + 1];
-			dstBits[dstOffset + 2] = srcBits[srcOffset    ];
-			dstBits[dstOffset + 3] = 0xFF;
-		}
-	}
-    image.setDotsPerMeterX(rgbImage->GetHorzResolution() * 100 / 2.54);
-    image.setDotsPerMeterY(rgbImage->GetVertResolution() * 100 / 2.54);
+	CopyTo(NPF_RGB_A_8U, width, height, width * 4, image.bits(), width * height * 4, 0, 0, 0);
+	image.setDotsPerMeterX(GetHorzResolution() * 100 / 2.54);
+	image.setDotsPerMeterY(GetVertResolution() * 100 / 2.54);
 	return image;
 }
 #endif

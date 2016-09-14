@@ -1,4 +1,4 @@
-#include <Biometrics/Standards/IirIris.hpp>
+#include <Biometrics/Standards/IirIrisImage.hpp>
 
 #ifndef II_RECORD_HPP_INCLUDED
 #define II_RECORD_HPP_INCLUDED
@@ -18,66 +18,38 @@ N_DEFINE_ENUM_TYPE_TRAITS(Neurotec::Biometrics::Standards, IirImageTransformatio
 
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
-
 #undef IIR_VERSION_1_0
 #undef IIR_VERSION_2_0
-#undef IIR_MAX_IRIS_IMAGE_COUNT
+#undef IIR_VERSION_ANSI_1_0
+#undef IIR_VERSION_ISO_1_0
+#undef IIR_VERSION_ISO_2_0
 
-const NVersion IIR_VERSION_1_0(0x0100);
-const NVersion IIR_VERSION_2_0(0x0200);
-const NInt IIR_MAX_IRIS_IMAGE_COUNT = (2 * IIRI_MAX_IRIS_IMAGE_COUNT);
+#undef IIR_MAX_IRIS_IMAGE_COUNT_PER_IRIS_1_0
+#undef IIR_MAX_IRIS_IMAGE_COUNT_1_0
+#undef IIR_MAX_IRIS_IMAGE_COUNT_2_0
+#undef IIR_PROCESS_IRIS_FIRST_IRIS_IMAGE_ONLY
+
+#undef IIR_VERSION_ANSI_CURRENT
+#undef IIR_VERSION_ISO_CURRENT
+
+const NVersion IIR_VERSION_ANSI_1_0(0x0100);
+const NVersion IIR_VERSION_ISO_1_0(0x0100);
+const NVersion IIR_VERSION_ISO_2_0(0x0200);
+
+const NVersion IIR_VERSION_ANSI_CURRENT(IIR_VERSION_ANSI_1_0);
+const NVersion IIR_VERSION_ISO_CURRENT(IIR_VERSION_ISO_2_0);
+
+const NInt IIR_MAX_IRIS_IMAGE_COUNT_PER_IRIS_1_0 = N_USHORT_MAX;
+const NInt IIR_MAX_IRIS_IMAGE_COUNT_1_0 = (2 * IIR_MAX_IRIS_IMAGE_COUNT_PER_IRIS_1_0);
+const NInt IIR_MAX_IRIS_IMAGE_COUNT_2_0 = N_USHORT_MAX;
+
+const NInt IIR_PROCESS_IRIS_FIRST_IRIS_IMAGE_ONLY = 0x00001000;
 
 class IIRecord : public NObject
 {
 	N_DECLARE_OBJECT_CLASS(IIRecord, NObject)
 
 public:
-	class IrisCollection : public ::Neurotec::Collections::NCollectionBase<IirIris, IIRecord,
-		IIRecordGetIrisCount, IIRecordGetIris>
-	{
-		IrisCollection(const IIRecord & owner)
-		{
-			SetOwner(owner);
-		}
-
-		friend class IIRecord;
-	public:
-		NInt GetCapacity() const
-		{
-			NInt value;
-			NCheck(IIRecordGetIrisCapacity(this->GetOwnerHandle(), &value));
-			return value;
-		}
-
-		void SetCapacity(NInt value)
-		{
-			NCheck(IIRecordSetIrisCapacity(this->GetOwnerHandle(), value));
-		}
-
-		void RemoveAt(NInt index)
-		{
-			NCheck(IIRecordRemoveIrisAt(this->GetOwnerHandle(), index));
-		}
-
-		void Clear()
-		{
-			NCheck(IIRecordClearIrises(this->GetOwnerHandle()));
-		}
-
-		IirIris Add(BdifEyePosition irisPosition, NUInt flags = 0)
-		{
-			HIirIris hIris;
-			NCheck(IIRecordAddIris(this->GetOwnerHandle(), irisPosition, flags | N_OBJECT_REF_RET, &hIris));
-			return FromHandle<IirIris>(hIris, true);
-		}
-
-		IirIris Add(BdifEyePosition irisPosition, const ::Neurotec::Images::NImage & image, ::Neurotec::Biometrics::Standards::IirImageFormat imageFormat, NUInt flags = 0)
-		{
-			HIirIris hIris;
-			NCheck(IIRecordAddIrisFromNImageEx(this->GetOwnerHandle(), irisPosition, image.GetHandle(), imageFormat, flags | N_OBJECT_REF_RET, &hIris));
-			return FromHandle<IirIris>(hIris, true);
-		}
-	};
 
 	class IrisImageCollection : public ::Neurotec::Collections::NCollectionBase<IirIrisImage, IIRecord,
 		IIRecordGetIrisImageCount, IIRecordGetIrisImage>
@@ -89,6 +61,25 @@ public:
 
 		friend class IIRecord;
 	public:
+		NInt GetCapacity() const
+		{
+			NInt value;
+			NCheck(IIRecordGetIrisImageCapacity(this->GetOwnerHandle(), &value));
+			return value;
+		}
+
+		void SetCapacity(NInt value)
+		{
+			NCheck(IIRecordSetIrisImageCapacity(this->GetOwnerHandle(), value));
+		}
+
+		NInt Add(const IirIrisImage & value)
+		{
+			NInt index;
+			NCheck(IIRecordAddIrisImageEx(this->GetOwnerHandle(), value.GetHandle(), &index));
+			return index;
+		}
+
 		void RemoveAt(NInt index)
 		{
 			NCheck(IIRecordRemoveIrisImageAt(this->GetOwnerHandle(), index));
@@ -101,10 +92,10 @@ public:
 	};
 
 private:
-	static HIIRecord Create(NUInt flags)
+	static HIIRecord Create(BdifStandard standard, NVersion version, NUInt flags)
 	{
 		HIIRecord handle;
-		NCheck(IIRecordCreateEx(flags, &handle));
+		NCheck(IIRecordCreateEx2(standard, version.GetValue(), flags, &handle));
 		return handle;
 	}
 
@@ -157,8 +148,8 @@ public:
 		return NObject::GetObject<NType>(N_TYPE_OF(IirImageTransformation), true);
 	}
 
-	IIRecord(NUInt flags = 0)
-		: NObject(Create(flags), true)
+	IIRecord(BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(standard, version, flags), true)
 	{
 	}
 
@@ -172,8 +163,14 @@ public:
 	{
 	}
 
-	IIRecord(const IIRecord & srcRecord, BdifStandard standard, NUInt flags = 0)
-		: NObject(Create(srcRecord, standard, IIR_VERSION_1_0, flags), true)
+	IIRecord(const IIRecord & srcRecord, BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(srcRecord, standard, version, flags), true)
+	{
+	}
+
+	IIRecord(const ::Neurotec::Images::NImage & image, IirImageFormat imageFormat, BdifEyePosition irisPosition, 
+		BdifStandard standard, NVersion version, NUInt flags = 0)
+		: NObject(Create(image, imageFormat, irisPosition, standard, version, flags), true)
 	{
 	}
 
@@ -184,21 +181,11 @@ public:
 		return value;
 	}
 
-	void SetStandard(BdifStandard value)
-	{
-		NCheck(IIRecordSetStandard(GetHandle(), value));
-	}
-
 	NVersion GetVersion() const
 	{
 		NVersion_ value;
 		NCheck(IIRecordGetVersion(GetHandle(), &value));
 		return NVersion(value);
-	}
-
-	void SetVersion(const NVersion value)
-	{
-		NCheck(IIRecordSetVersion(GetHandle(), value.GetValue()));
 	}
 
 	NUInt GetCbeffProductId() const
@@ -391,16 +378,6 @@ public:
 		NCheck(IIRecordSetGuid(GetHandle(), &value));
 	}
 
-	IrisCollection GetIrises()
-	{
-		return IrisCollection(*this);
-	}
-
-	const IrisCollection GetIrises() const
-	{
-		return IrisCollection(*this);
-	}
-
 	IrisImageCollection GetIrisImages()
 	{
 		return IrisImageCollection(*this);
@@ -411,7 +388,6 @@ public:
 		return IrisImageCollection(*this);
 	}
 };
-
 }}}
 
 #endif // !II_RECORD_HPP_INCLUDED

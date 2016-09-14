@@ -57,7 +57,7 @@ public:
 	NObject GetChildSubject()
 	{
 		HNObject hValue;
-		NCheck(NBiometricGetAttributesChildSubject(GetHandle(), &hValue));
+		NCheck(NBiometricAttributesGetChildSubject(GetHandle(), &hValue));
 		return FromHandle<NObject>(hValue);
 	}
 };

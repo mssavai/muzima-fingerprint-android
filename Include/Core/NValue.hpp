@@ -96,13 +96,6 @@ private:
 		return hValue;
 	}
 
-	static NValue FromObject(const NType & type, const NObject & value, NAttributes attributes)
-	{
-		HNValue hValue;
-		NCheck(NValueCreateFromObject(type.GetHandle(), value.GetHandle(), attributes, &hValue));
-		return FromHandle<NValue>(hValue);
-	}
-
 public:
 	static NValue FromValue(const NType & type, const void * pValue, NSizeType valueSize, bool hasValue = true, NAttributes attributes = naNone)
 	{
@@ -146,9 +139,18 @@ public:
 		return FromHandle<NValue>(hValue, true);
 	}
 
-	static NValue FromObject(const NType & type, const NObject & value)
+	static NValue FromObject(const NType & type, const NObject & value, NAttributes attributes = naNone)
 	{
-		return FromObject(type, value, naNone);
+		HNValue hValue;
+		NCheck(NValueCreateFromObject(type.GetHandle(), value.GetHandle(), attributes, &hValue));
+		return FromHandle<NValue>(hValue);
+	}
+
+	static NValue FromObject(const NObject & value, NAttributes attributes = naNone)
+	{
+		HNValue hValue;
+		NCheck(NValueCreateFromObject(value.GetNativeType().GetHandle(), value.GetHandle(), attributes, &hValue));
+		return FromHandle<NValue>(hValue);
 	}
 
 	static NValue FromCallback(const NType & type, const NCallback & value, NAttributes attributes = naNone)
@@ -414,6 +416,14 @@ public:
 		return FromHandle<NObject>(hValue, true);
 	}
 
+	template<typename T>
+	T ToObject(NAttributes attributes = naNone, const NStringWrapper & format = NString()) const
+	{
+		HNObject hValue;
+		NCheck(NValueToObject(GetHandle(), T::NativeTypeOf().GetHandle(), attributes, format.GetHandle(), &hValue));
+		return FromHandle<T>((typename T::HandleType)hValue, true);
+	}
+
 	NCallback ToCallback(const NType & type, NAttributes attributes = naNone, const NStringWrapper & format = NString()) const
 	{
 		HNCallback hValue;
@@ -467,7 +477,7 @@ public:
 		NCheck(NNameValuePairCreateN(key.GetHandle(), value.GetHandle(), this));
 	}
 
-	NString GetKey() const
+	NString GetName() const
 	{
 		return NString(hKey, false);
 	}
@@ -492,6 +502,7 @@ public:
 
 }
 
+N_DEFINE_DISPOSABLE_STRUCT_TYPE_TRAITS(Neurotec, NKeyValuePair);
 N_DEFINE_DISPOSABLE_STRUCT_TYPE_TRAITS(Neurotec, NNameValuePair);
 
 #include <Core/NTypes.hpp>

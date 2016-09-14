@@ -2,6 +2,7 @@
 #define WX_NFRICTIONRIDGEVIEW_HPP_INCLUDED
 
 #include <list>
+#include <algorithm>
 
 #include <wx/tipwin.h>
 
@@ -42,8 +43,15 @@ public:
 		PROCESSED_IMAGE,
 	};
 
+	enum QualityVisualStyle
+	{
+		NONE = 0,
+		TEXT = 1,
+		STARS = 2,
+	};
+
 	wxNFrictionRidgeView(wxWindow *parent, wxWindowID winid = wxID_ANY)
-		: wxNView(parent, winid), m_minColor(0, 230, 0), m_maxColor(255, 255, 255), m_record(NULL), m_frictionRidge(NULL)
+		: wxNView(parent, winid), m_minColor(0, 230, 0), m_maxColor(255, 255, 255), m_record(NULL), m_showPatternClassConfidence(false), m_showWrongHandWarning(true), m_qualityStyle(STARS), m_boundingRectColor(wxColor(255, 0, 0)), m_frictionRidge(NULL)
 	{
 		m_drawFeatures = NTrue;
 		m_shownImage = ORIGINAL_IMAGE;
@@ -72,10 +80,17 @@ public:
 
 	virtual ~wxNFrictionRidgeView()
 	{
+		Clear();
 	}
 
 	void Clear()
 	{
+		if (!m_frictionRidge.IsNull())
+		{
+			m_frictionRidge.RemovePropertyChangedCallback(&wxNFrictionRidgeView::OnPropertyChangedCallback, this);
+			m_frictionRidge.GetObjects().RemoveCollectionChangedCallback(&wxNFrictionRidgeView::OnCollectionChanged, this);
+		}
+
 		m_frictionRidge = NULL;
 		m_record = NULL;
 		m_originalBitmap = wxBitmap();
@@ -101,6 +116,20 @@ public:
 		return m_shownImage;
 	}
 
+	void SetBoundingRectColor(const wxColor & value)
+	{
+		if (value != m_boundingRectColor)
+		{
+			m_boundingRectColor = value;
+			Refresh();
+		}
+	}
+
+	wxColor GetBoundingRectColor()
+	{
+		return m_boundingRectColor;
+	}
+
 	void SetShownImage(ShownImage shownImage)
 	{
 		m_shownImage = shownImage;
@@ -116,6 +145,48 @@ public:
 		}
 		wxRect imageRect = GetImageRect();
 		Refresh(false, &imageRect);
+	}
+
+	void SetShowPatternClassConfidence(bool value)
+	{
+		if (value != m_showPatternClassConfidence)
+		{
+			m_showPatternClassConfidence = value;
+			Refresh();
+		}
+	}
+
+	bool GetShowWrongHandWarning()
+	{
+		return m_showWrongHandWarning;
+	}
+
+	void SetShowWrongHandWarning(bool value)
+	{
+		if (value != m_showWrongHandWarning)
+		{
+			m_showWrongHandWarning = value;
+			Refresh();
+		}
+	}
+
+	bool GetShowPatternClassConfidence()
+	{
+		return m_showPatternClassConfidence;
+	}
+
+	void SetQualityVisualStyle(QualityVisualStyle value)
+	{
+		if (value != m_qualityStyle)
+		{
+			m_qualityStyle = value;
+			Refresh();
+		}
+	}
+
+	QualityVisualStyle GetQualityVisualStyle()
+	{
+		return m_qualityStyle;
 	}
 
 	void SetProcessedImageMinColor(::Neurotec::Images::NRgb color)
@@ -320,6 +391,52 @@ public:
 		return results;
 	}
 
+	void SetFrictionRidge(const ::Neurotec::Biometrics::NFrictionRidge & frictionRidge)
+	{
+		Clear();
+
+		m_frictionRidge = frictionRidge;
+
+		if (m_frictionRidge.GetHandle())
+		{
+			unsigned int maxWidth = 1, maxHeight = 1;
+
+			::Neurotec::Images::NImage image = m_frictionRidge.GetImage();
+			m_originalBitmap = image.GetHandle() ? wxBitmap(image.ToBitmap()) : wxBitmap();
+			maxWidth = image.GetHandle() && image.GetWidth() > maxWidth ? image.GetWidth() : maxWidth;
+			maxHeight = image.GetHandle() && image.GetHeight() > maxHeight ? image.GetHeight() : maxHeight;
+
+			image = m_frictionRidge.GetBinarizedImage();
+			if (image.GetHandle())
+			{
+				::Neurotec::Images::NImage wrappedImage = ::Neurotec::Images::NImages::GetGrayscaleColorWrapper(image, m_minColor, m_maxColor);
+				m_processedBitmap = wxBitmap(wrappedImage.ToBitmap());
+				SetViewSize(wrappedImage.GetWidth(), wrappedImage.GetHeight());
+				maxWidth = wrappedImage.GetWidth() > maxWidth ? wrappedImage.GetWidth() : maxWidth;
+				maxHeight = wrappedImage.GetHeight() > maxHeight ? wrappedImage.GetHeight() : maxHeight;
+			}
+			else
+				m_processedBitmap = wxBitmap();
+
+			if (m_frictionRidge.GetObjects().GetCount() > 0)
+			{
+				m_record = m_frictionRidge.GetObjects().Get(0).GetTemplate();
+				if (m_record.GetHandle() && m_originalBitmap.GetRefData() == NULL && m_processedBitmap.GetRefData() == NULL)
+				{
+					maxWidth = (unsigned int)(m_record.GetWidth() * 500.0 / m_record.GetHorzResolution());
+					maxHeight = (unsigned int)(m_record.GetHeight() * 500.0 / m_record.GetVertResolution());
+				}
+			}
+
+			SetViewSize(maxWidth, maxHeight);
+
+			m_frictionRidge.AddPropertyChangedCallback(&wxNFrictionRidgeView::OnPropertyChangedCallback, this);
+			m_frictionRidge.GetObjects().AddCollectionChangedCallback(&wxNFrictionRidgeView::OnCollectionChanged, this);
+
+			GetContextMenu()->Enable(ID_SHOWN_IMAGE_SUBMENU, m_originalBitmap.GetRefData() && m_processedBitmap.GetRefData());
+		}
+	}
+
 private:
 #if wxUSE_GRAPHICS_CONTEXT == 1
 	static void DrawDir(wxGraphicsPath *path, int x, int y, int angle, int length)
@@ -357,6 +474,74 @@ private:
 		}
 	}
 
+
+	wxGraphicsPath CreateStarPath(wxGraphicsContext * gc)
+	{
+		wxGraphicsPath gp = gc->CreatePath();
+		gp.MoveToPoint(150.22026, 16.299561);
+		gp.AddCurveToPoint(160.45916, 16.299561, 187.25066, 102.09715, 195.5341, 108.11542);
+		gp.AddCurveToPoint(203.81754, 114.13369, 293.69493, 113.10102, 296.85892, 122.83879);
+		gp.AddCurveToPoint(300.02292, 132.57656, 226.70359, 184.5697, 223.5396, 194.30747);
+		gp.AddCurveToPoint(220.37561, 204.04524, 249.13137, 289.2046, 240.84793, 295.22287);
+		gp.AddCurveToPoint(232.56449, 301.24114, 160.45916, 247.57709, 150.22026, 247.57709);
+		gp.AddCurveToPoint(139.98137, 247.57709, 67.876021, 301.24114, 59.592581, 295.22287);
+		gp.AddCurveToPoint(51.309141, 289.2046, 80.064915, 204.04524, 76.900923, 194.30747);
+		gp.AddCurveToPoint(73.736931, 184.5697, 0.41760828, 132.57655, 3.5816007, 122.83878);
+		gp.AddCurveToPoint(6.7455931, 113.10101, 96.622978, 114.13369, 104.90642, 108.11542);
+		gp.AddCurveToPoint(113.18986, 102.09715, 139.98137, 16.299561, 150.22026, 16.299561);
+		gp.CloseSubpath();
+		return gp;
+	}
+
+	void DrawQualityAndPatternClass(wxGraphicsContext * gc, const ::Neurotec::Biometrics::NFAttributes & attributes, const ::Neurotec::Geometry::NRect & rect)
+	{
+		wxString text = GetAttributesString(attributes);
+		if (text != wxEmptyString)
+		{
+			gc->DrawText(text, rect.X + 3, rect.Y + rect.Height + 3);
+		}
+
+		::Neurotec::Biometrics::NfiqQuality quality = attributes.GetNfiqQuality();
+		if (m_qualityStyle == STARS && quality != ::Neurotec::Biometrics::nfqUnknown)
+		{
+			int starCount = 6 - (int)quality;
+
+			wxGraphicsMatrix m = gc->GetTransform();
+			m.Translate(rect.X, rect.Y);
+
+			wxGraphicsPath star = CreateStarPath(gc);
+			wxRect2DDouble bounds = star.GetBox();
+			double boundsWidth = bounds.GetRight() - bounds.GetLeft();
+			double boundsHeight = bounds.GetBottom() - bounds.GetTop();
+			double width = rect.Width / 2.0;
+			double height = rect.Height;
+			double scale = std::min(height / boundsHeight, std::min(width * 0.20, 30.0) / boundsWidth);
+			m.Translate(3, height - boundsHeight * scale - 3);
+			m.Scale(scale, scale);
+
+			gc->SetTransform(m);
+			for (int i = 0; i < 5; i++)
+			{
+				bool isSilver = i + 1 > starCount;
+				if (i > 0)
+				{
+					wxGraphicsMatrix offset = gc->CreateMatrix();
+					offset.Translate(boundsWidth, 0);
+					star.Transform(offset);
+				}
+
+				wxColor centerColor = isSilver ? wxColor(255, 255, 255) : wxColor(255, 255, 0);
+				wxColor edgeColor = isSilver ? wxColor(0xC0, 0xC0, 0xC0) : wxColor(0xDA, 0xA5, 0x20);
+				wxGraphicsGradientStops gs(edgeColor, edgeColor);
+				gs.Add(centerColor, 0.5f);
+				bounds = star.GetBox();
+				wxGraphicsBrush gb = gc->CreateLinearGradientBrush(bounds.GetLeft(), bounds.GetTop(), bounds.GetRight(), bounds.GetBottom(), gs);
+				gc->SetBrush(gb);
+				gc->FillPath(star);
+			}
+		}
+	}
+
 	virtual void OnDraw(wxGraphicsContext *gc)
 	{
 		wxBitmap *bitmapList[2] = { NULL, NULL };
@@ -371,20 +556,79 @@ private:
 			bitmapList[1] = &m_originalBitmap;
 		}
 
-		double imageScaleX = m_record.GetHandle() ? 500.0 / m_record.GetHorzResolution() : 1.0;
-		double imageScaleY = m_record.GetHandle() ? 500.0 / m_record.GetVertResolution() : 1.0;
-
 		for (int i = 0; i < 2; i++)
 		{
 			if (bitmapList[i] != NULL && bitmapList[i]->GetRefData())
 			{
-				gc->DrawBitmap(*bitmapList[i], 0, 0, bitmapList[i]->GetWidth() * imageScaleX, bitmapList[i]->GetHeight() * imageScaleY);
+				gc->DrawBitmap(*bitmapList[i], 0, 0, bitmapList[i]->GetWidth(), bitmapList[i]->GetHeight());
 				break;
+			}
+		}
+
+		if (!m_frictionRidge.IsNull())
+		{
+			bool infoPainted = false;
+			::Neurotec::NArrayWrapper< ::Neurotec::Biometrics::NFAttributes> attributes = m_frictionRidge.GetObjects().GetAll();
+
+			for (::Neurotec::NArrayWrapper< ::Neurotec::Biometrics::NFAttributes>::iterator it = attributes.begin(); it != attributes.end(); it++)
+			{
+				::Neurotec::Geometry::NRect rect = it->GetBoundingRect();
+				NFloat rotation = it->GetRotation();
+				if (rect.Width != 0 && rect.Height != 0)
+				{
+					wxGraphicsMatrix oldTransform = gc->GetTransform();
+					double atX = rect.X + rect.Width / 2.0;
+					double atY = rect.Y + rect.Height / 2.0;
+					double angle = (90 - rotation) * M_PI / 180;
+					gc->Translate(atX, atY);
+					gc->Rotate(angle);
+					gc->Translate(-atX, -atY);
+
+					gc->SetPen(wxPen(m_boundingRectColor));
+					gc->SetBrush(wxNullBrush);
+					gc->DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height);
+					DrawQualityAndPatternClass(gc, *it, rect);
+					gc->SetTransform(oldTransform);
+					infoPainted = true;
+				}
+			}
+
+			if (!infoPainted && attributes.GetCount() == 1)
+			{
+				double w, h;
+				wxSize sz = GetImageRect().GetSize();
+				::Neurotec::Geometry::NRect rect;
+				::Neurotec::Biometrics::NFAttributes first = attributes[0];
+				wxString text = GetAttributesString(first);
+				gc->GetTextExtent(text, &w, &h);
+				rect.X = 0;
+				rect.Y = 0;
+				rect.Width = sz.GetWidth() / GetZoom();
+				rect.Height = sz.GetHeight() / GetZoom() - h - 3;
+				wxGraphicsMatrix oldTransform = gc->GetTransform();
+				DrawQualityAndPatternClass(gc, first, rect);
+				gc->SetTransform(oldTransform);
+			}
+			if (m_showWrongHandWarning && NFinger::NativeTypeOf().IsInstanceOfType(m_frictionRidge))
+			{
+				NFinger currentFinger = NObjectDynamicCast<NFinger>(m_frictionRidge);
+				if(currentFinger.GetWrongHandWarning())
+				{
+					wxSize sz = GetImageRect().GetSize();
+					float scale = 800.0f / sz.GetWidth();
+					wxFont font(wxFontInfo(16 * scale).FaceName("Arial"));
+					gc->SetFont(font, wxColor(250,190,0));
+					gc->DrawText("Warning: Possibly wrong hand", 10, 10);
+				}
 			}
 		}
 
 		if (m_drawFeatures && m_record.GetHandle())
 		{
+			double recordScaleX = m_record.GetHandle() ? m_record.GetHorzResolution() / 500.0 : 1.0;
+			double recordScaleY = m_record.GetHandle() ? m_record.GetVertResolution() / 500.0 : 1.0;
+			gc->Scale(recordScaleX, recordScaleY);
+
 			wxPen singularPointsPen(wxColour(255, 0, 0), 3);
 			gc->SetPen(singularPointsPen);
 
@@ -437,15 +681,10 @@ private:
 					m_record.GetMinutiae().Get(it->Index2).Y);
 			}
 
-			NInt minutiaNeighborCount = 0;
-			NFMinutiaNeighbor minutiaNeighbors[8];
+			NArrayWrapper<NFMinutiaNeighbor> minutiaNeighbors = NArrayWrapper<NFMinutiaNeighbor>(0);
 			if (m_selectedMinutia >= 0)
 			{
-				minutiaNeighborCount = m_record.GetMinutiaeNeighbors().GetCount(m_selectedMinutia);
-				if (minutiaNeighborCount > 0)
-				{
-					m_record.GetMinutiaeNeighbors().GetAll(m_selectedMinutia, minutiaNeighbors, 8);
-				}
+				minutiaNeighbors = m_record.GetMinutiaeNeighbors().GetAll(m_selectedMinutia);
 			}
 
 			wxGraphicsPath minutiaPath = gc->CreatePath();
@@ -462,7 +701,7 @@ private:
 				}
 				else
 				{
-					for (int j = 0; j < minutiaNeighborCount; j++)
+					for (int j = 0; j < minutiaNeighbors.GetCount(); j++)
 					{
 						if (i == minutiaNeighbors[j].Index)
 						{
@@ -606,15 +845,10 @@ private:
 					m_record.GetMinutiae().Get(it->Index2).Y);
 			}
 
-			NInt minutiaNeighborCount = 0;
-			NFMinutiaNeighbor minutiaNeighbors[8];
+			NArrayWrapper<NFMinutiaNeighbor> minutiaNeighbors = NArrayWrapper<NFMinutiaNeighbor>(0);
 			if (m_selectedMinutia >= 0)
 			{
-				minutiaNeighborCount = m_record.GetMinutiaeNeighbors().GetCount(m_selectedMinutia);
-				if (minutiaNeighborCount > 0)
-				{
-					m_record.GetMinutiaeNeighbors().GetAll(m_selectedMinutia, minutiaNeighbors, 8);
-				}
+				minutiaNeighbors = m_record.GetMinutiaeNeighbors().GetAll(m_selectedMinutia);
 			}
 
 			wxPen minutiaPen(wxColour(255, 0, 0));
@@ -632,9 +866,9 @@ private:
 				}
 				else
 				{
-					for (int j = 0; j < minutiaNeighborCount; j++)
+					for (NArrayWrapper<NFMinutiaNeighbor>::iterator j = minutiaNeighbors.begin(); j < minutiaNeighbors.end(); j++)
 					{
-						if (i == minutiaNeighbors[j].Index)
+						if (i == j->Index)
 						{
 							dc.SetPen(neighborMinutiaPen);
 							break;
@@ -650,6 +884,41 @@ private:
 	}
 #endif
 
+	wxString GetAttributesQualityString(const ::Neurotec::Biometrics::NFAttributes & attributes)
+	{
+		::Neurotec::Biometrics::NfiqQuality quality = attributes.GetNfiqQuality();
+		if (quality == ::Neurotec::Biometrics::nfqUnknown) return wxEmptyString;
+		wxString qualityString = ::Neurotec::NEnum::ToString(::Neurotec::Biometrics::NBiometricTypes::NfiqQualityNativeTypeOf(), quality);
+		return wxString::Format(wxT("Nfiq Quality: %s"), qualityString.c_str());
+	}
+
+	wxString GetAttributesPatternClassString(const ::Neurotec::Biometrics::NFAttributes & attributes)
+	{
+		wxString text = wxEmptyString;
+		::Neurotec::Biometrics::NFPatternClass pattern = attributes.GetPatternClass();
+		::Neurotec::NByte confidence = attributes.GetPatternClassConfidence();
+		if (pattern != ::Neurotec::Biometrics::nfpcUnknown && confidence > 0 && confidence <= 100)
+		{
+			wxString patternString = ::Neurotec::NEnum::ToString(::Neurotec::Biometrics::NBiometricTypes::NFPatternClassNativeTypeOf(), pattern);
+			text = wxString::Format(wxT("Pattern class: %s"), patternString.c_str());
+			if (m_showPatternClassConfidence) text += wxString::Format(wxT("(%d)"), confidence);
+		}
+		return text;
+	}
+
+	virtual wxString GetAttributesString(const ::Neurotec::Biometrics::NFAttributes & attributes)
+	{
+		wxString text = wxEmptyString;
+		if (m_qualityStyle == TEXT)
+		{
+			text = GetAttributesQualityString(attributes);
+		}
+		if (text != wxEmptyString) text += wxT("\n");
+		text += GetAttributesPatternClassString(attributes);
+		return text;
+	}
+
+
 	virtual void OnMouseMove(wxMouseEvent& event)
 	{
 		if (event.Dragging())
@@ -660,11 +929,14 @@ private:
 		{
 			const int minutiaSize = 8;
 
+			double recordScaleX = m_record.GetHorzResolution() / 500.0;
+			double recordScaleY = m_record.GetVertResolution() / 500.0;
+
 			wxRect imageRect = GetImageRect();
 			int featureX = event.GetX() - imageRect.x;;
-			featureX = (int)((double)featureX / GetZoomFactor());
+			featureX = (int)((double)featureX / GetZoomFactor() / recordScaleX);
 			int featureY = event.GetY() - imageRect.y;
-			featureY = (int)((double)featureY / GetZoomFactor());
+			featureY = (int)((double)featureY / GetZoomFactor() / recordScaleY);
 			NInt minutiaCount;
 			minutiaCount = m_record.GetMinutiae().GetCount();
 			int minDistance = minutiaSize;
@@ -737,7 +1009,6 @@ private:
 		}
 	}
 
-
 	void OnToggleDrawFeatures(wxCommandEvent& event)
 	{
 		m_drawFeatures = event.IsChecked();
@@ -757,8 +1028,8 @@ private:
 			m_shownImage = PROCESSED_IMAGE;
 			break;
 		}
-		wxRect imageRect = GetImageRect();
-		Refresh(false, &imageRect);
+
+		Refresh(false);
 	}
 
 	void OnClearView(wxCommandEvent &/*event*/)
@@ -772,19 +1043,26 @@ private:
 		{
 		case ID_PROPERTY_IMAGE:
 			{
-				std::auto_ptr<wxImage> image(dynamic_cast<wxImage *>(event.GetEventObject()));
+#ifdef N_CPP11
+				typedef std::unique_ptr<wxImage> SmartPtrImage;
+#else
+				typedef std::auto_ptr<wxImage> SmartPtrImage;
+#endif
+				SmartPtrImage image(dynamic_cast<wxImage *>(event.GetEventObject()));
 				m_originalBitmap = image.get() ? wxBitmap(*(image.get())) : wxBitmap();
 				SetViewSize(image.get() ? image->GetWidth() : 1, image.get() ? image->GetHeight() : 1);
+				GetContextMenu()->Enable(ID_SHOWN_IMAGE_SUBMENU, m_originalBitmap.GetRefData() && m_processedBitmap.GetRefData());
 			}
 			break;
 		case ID_PROPERTY_PROCESSED_IMAGE:
 			{
-				::Neurotec::Images::NImage image = m_frictionRidge.GetProcessedImage();
+				::Neurotec::Images::NImage image = m_frictionRidge.GetBinarizedImage();
 				if (image.GetHandle())
 				{
 					::Neurotec::Images::NImage wrappedImage = ::Neurotec::Images::NImages::GetGrayscaleColorWrapper(image, m_minColor, m_maxColor);
 					m_processedBitmap = wxBitmap(wrappedImage.ToBitmap());
 					SetViewSize(wrappedImage.GetWidth(), wrappedImage.GetHeight());
+					GetContextMenu()->Enable(ID_SHOWN_IMAGE_SUBMENU, !m_originalBitmap.IsNull());
 				}
 				else
 				{
@@ -797,9 +1075,12 @@ private:
 			if (m_frictionRidge.GetObjects().GetCount() > 0)
 			{
 				m_record = m_frictionRidge.GetObjects().Get(0).GetTemplate();
-				if (m_record.GetHandle())
-					SetViewSize((int)(m_record.GetWidth() * 500.0 / m_record.GetHorzResolution()),
-						(int)(m_record.GetHeight() * 500.0 / m_record.GetVertResolution()));
+				if (m_record.GetHandle() && m_originalBitmap.GetRefData() == NULL)
+				{
+					int w = (int)(m_record.GetWidth() * 500.0 / m_record.GetHorzResolution());
+					int h = (int)(m_record.GetHeight() * 500.0 / m_record.GetVertResolution());
+					SetViewSize(w, h);
+				}
 			}
 			else
 				m_record = NULL;
@@ -822,7 +1103,7 @@ private:
 				event.SetEventObject(new wxImage(image.ToBitmap()));
 			wxPostEvent(static_cast<wxEvtHandler *>(args.GetParam()), event);
 		}
-		else if (args.GetPropertyName() == N_T("ProcessedImage"))
+		else if (args.GetPropertyName() == N_T("BinarizedImage"))
 		{
 			wxCommandEvent event(wxEVT_NFR_PROPERTY_CHANGED, ID_PROPERTY_PROCESSED_IMAGE);
 			wxPostEvent(static_cast<wxEvtHandler *>(args.GetParam()), event);
@@ -852,56 +1133,12 @@ private:
 	SpanningTree m_spanningTree;
 	bool m_drawFeatures;
 	ShownImage m_shownImage;
+	bool m_showPatternClassConfidence;
+	bool m_showWrongHandWarning;
+	QualityVisualStyle m_qualityStyle;
+	wxColor m_boundingRectColor;
 
 protected:
-	void SetFrictionRidge(::Neurotec::Biometrics::NFrictionRidge frictionRidge)
-	{
-		Clear();
-
-		m_frictionRidge = frictionRidge;
-
-		if (m_frictionRidge.GetHandle())
-		{
-			unsigned int maxWidth = 1, maxHeight = 1;
-
-			::Neurotec::Images::NImage image = m_frictionRidge.GetImage();
-			m_originalBitmap = image.GetHandle() ? wxBitmap(image.ToBitmap()) : wxBitmap();
-			maxWidth = image.GetHandle() && image.GetWidth() > maxWidth ? image.GetWidth() : maxWidth;
-			maxHeight = image.GetHandle() && image.GetHeight() > maxHeight ? image.GetHeight() : maxHeight;
-
-			image = m_frictionRidge.GetProcessedImage();
-			if (image.GetHandle())
-			{
-				::Neurotec::Images::NImage wrappedImage = ::Neurotec::Images::NImages::GetGrayscaleColorWrapper(image, m_minColor, m_maxColor);
-				m_processedBitmap = wxBitmap(wrappedImage.ToBitmap());
-				SetViewSize(wrappedImage.GetWidth(), wrappedImage.GetHeight());
-				maxWidth = wrappedImage.GetWidth() > maxWidth ? wrappedImage.GetWidth() : maxWidth;
-				maxHeight = wrappedImage.GetHeight() > maxHeight ? wrappedImage.GetHeight() : maxHeight;
-			}
-			else
-				m_processedBitmap = wxBitmap();
-
-			if (m_frictionRidge.GetObjects().GetCount() > 0)
-			{
-				m_record = m_frictionRidge.GetObjects().Get(0).GetTemplate();
-				if (m_record.GetHandle())
-				{
-					unsigned int rWidth = (unsigned int)(m_record.GetWidth() * 500.0 / m_record.GetHorzResolution());
-					unsigned int rHeight = (unsigned int)(m_record.GetHeight() * 500.0 / m_record.GetVertResolution());
-
-					maxWidth = rWidth > maxWidth ? rWidth : maxWidth;
-					maxHeight = rHeight > maxHeight ? rHeight : maxHeight;
-				}
-			}
-
-			SetViewSize(maxWidth, maxHeight);
-
-			m_frictionRidge.AddPropertyChangedCallback(&wxNFrictionRidgeView::OnPropertyChangedCallback, this);
-			m_frictionRidge.GetObjects().AddCollectionChangedCallback(&wxNFrictionRidgeView::OnCollectionChanged, this);
-
-			GetContextMenu()->Enable(ID_SHOWN_IMAGE_SUBMENU, m_originalBitmap.GetRefData() && m_processedBitmap.GetRefData());
-		}
-	}
 
 	Neurotec::Biometrics::NFrictionRidge GetFrictionRidge()
 	{

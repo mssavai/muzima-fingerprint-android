@@ -56,18 +56,6 @@ NResult N_API NPluginManagerGetPluginByName(HNPluginManager hPluginManager, cons
 NResult N_API NPluginManagerGetDisabledPluginCount(HNPluginManager hPluginManager, NInt * pValue);
 
 NResult N_API NPluginManagerGetDisabledPluginN(HNPluginManager hPluginManager, NInt index, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NPluginManagerGetDisabledPluginN instead")
-NResult N_API NPluginManagerGetDisabledPluginA(HNPluginManager hPluginManager, NInt index, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NPluginManagerGetDisabledPluginN instead")
-NResult N_API NPluginManagerGetDisabledPluginW(HNPluginManager hPluginManager, NInt index, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NPluginManagerGetDisabledPlugin(HNPluginManager hPluginManager, NInt index, NChar * szValue, NInt valueSize);
-#endif
-#define NPluginManagerGetDisabledPlugin N_FUNC_AW(NPluginManagerGetDisabledPlugin)
 
 NResult N_API NPluginManagerGetDisabledPlugins(HNPluginManager hPluginManager, HNString * * parhValues, NInt * pValueCount);
 
@@ -104,18 +92,6 @@ NResult N_API NPluginManagerPlugAll(HNPluginManager hPluginManager);
 NResult N_API NPluginManagerUnplugAll(HNPluginManager hPluginManager);
 
 NResult N_API NPluginManagerGetPluginSearchPathN(HNPluginManager hPluginManager, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NPluginManagerGetPluginSearchPathN instead")
-NResult N_API NPluginManagerGetPluginSearchPathA(HNPluginManager hPluginManager, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NPluginManagerGetPluginSearchPathN instead")
-NResult N_API NPluginManagerGetPluginSearchPathW(HNPluginManager hPluginManager, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NPluginManagerGetPluginSearchPath(HNPluginManager hPluginManager, NChar * szValue, NInt valueSize);
-#endif
-#define NPluginManagerGetPluginSearchPath N_FUNC_AW(NPluginManagerGetPluginSearchPath)
 
 NResult N_API NPluginManagerSetPluginSearchPathN(HNPluginManager hPluginManager, HNString hValue);
 #ifndef N_NO_ANSI_FUNC
@@ -130,18 +106,6 @@ NResult N_API NPluginManagerSetPluginSearchPath(HNPluginManager hPluginManager, 
 #define NPluginManagerSetPluginSearchPath N_FUNC_AW(NPluginManagerSetPluginSearchPath)
 
 NResult N_API NPluginManagerGetInterfaceTypeN(HNPluginManager hPluginManager, HNString * phValue);
-#ifndef N_NO_ANSI_FUNC
-N_DEPRECATED("function is deprecated, use NPluginManagerGetInterfaceTypeN instead")
-NResult N_API NPluginManagerGetInterfaceTypeA(HNPluginManager hPluginManager, NAChar * szValue, NInt valueSize);
-#endif
-#ifndef N_NO_UNICODE
-N_DEPRECATED("function is deprecated, use NPluginManagerGetInterfaceTypeN instead")
-NResult N_API NPluginManagerGetInterfaceTypeW(HNPluginManager hPluginManager, NWChar * szValue, NInt valueSize);
-#endif
-#ifdef N_DOCUMENTATION
-NResult N_API NPluginManagerGetInterfaceType(HNPluginManager hPluginManager, NChar * szValue, NInt valueSize);
-#endif
-#define NPluginManagerGetInterfaceType N_FUNC_AW(NPluginManagerGetInterfaceType)
 
 NResult N_API NPluginManagerGetInterfaceVersions(HNPluginManager hPluginManager, NVersionRange_ * arValues, NInt valuesLength);
 NResult N_API NPluginManagerAllowsUnplug(HNPluginManager hPluginManager, NBool * pValue);
@@ -154,50 +118,6 @@ NResult N_API NPluginManagerAddDisabledPluginsCollectionChanged(HNPluginManager 
 NResult N_API NPluginManagerAddDisabledPluginsCollectionChangedCallback(HNPluginManager hPluginManager, N_COLLECTION_CHANGED_CALLBACK_ARG(HNString, pCallback), void * pParam);
 NResult N_API NPluginManagerRemoveDisabledPluginsCollectionChanged(HNPluginManager hPluginManager, HNCallback hCallback);
 NResult N_API NPluginManagerRemoveDisabledPluginsCollectionChangedCallback(HNPluginManager hPluginManager, N_COLLECTION_CHANGED_CALLBACK_ARG(HNString, pCallback), void * pParam);
-
-typedef NResult (N_CALLBACK NPluginManagerPluginCallback)(HNPluginManager hPluginManager, HNPlugin hPlugin, void * pParam);
-N_DECLARE_TYPE(NPluginManagerPluginCallback)
-
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerAddPluginsChanging(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerAddPluginsChangingCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerRemovePluginsChanging(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerRemovePluginsChangingCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerAddPluginsCollectionChanged instead"))
-NResult N_API NPluginManagerAddPluginsChanged(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerAddPluginsCollectionChangedCallback instead"))
-NResult N_API NPluginManagerAddPluginsChangedCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerRemovePluginsCollectionChanged instead"))
-NResult N_API NPluginManagerRemovePluginsChanged(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerRemovePluginsCollectionChangedCallback instead"))
-NResult N_API NPluginManagerRemovePluginsChangedCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerAddPluginsCollectionChanged instead"))
-NResult N_API NPluginManagerAddPluginAdded(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerAddPluginsCollectionChangedCallback instead"))
-NResult N_API NPluginManagerAddPluginAddedCallback(HNPluginManager hPluginManager, NPluginManagerPluginCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerRemovePluginsCollectionChanged instead"))
-NResult N_API NPluginManagerRemovePluginAdded(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerRemovePluginsCollectionChangedCallback instead"))
-NResult N_API NPluginManagerRemovePluginAddedCallback(HNPluginManager hPluginManager, NPluginManagerPluginCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerAddDisabledPluginsChanging(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerAddDisabledPluginsChangingCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerRemoveDisabledPluginsChanging(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, do not use"))
-NResult N_API NPluginManagerRemoveDisabledPluginsChangingCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerAddDisabledPluginsCollectionChanged instead"))
-NResult N_API NPluginManagerAddDisabledPluginsChanged(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerAddDisabledPluginsCollectionChangedCallback instead"))
-NResult N_API NPluginManagerAddDisabledPluginsChangedCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerRemoveDisabledPluginsCollectionChanged instead"))
-NResult N_API NPluginManagerRemoveDisabledPluginsChanged(HNPluginManager hPluginManager, HNCallback hCallback);
-N_DEPRECATED(N_T("function is deprecated, use NPluginManagerRemoveDisabledPluginsCollectionChangedCallback instead"))
-NResult N_API NPluginManagerRemoveDisabledPluginsChangedCallback(HNPluginManager hPluginManager, NObjectCallback pCallback, void * pParam);
 
 #ifdef N_CPP
 }

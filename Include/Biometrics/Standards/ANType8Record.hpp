@@ -55,10 +55,12 @@ N_DEFINE_STRUCT_TYPE_TRAITS(Neurotec::Biometrics::Standards, ANPenVector)
 namespace Neurotec { namespace Biometrics { namespace Standards
 {
 
+#include <Core/NNoDeprecate.h>
 class ANType8Record : public ANImageBinaryRecord
 {
 	N_DECLARE_OBJECT_CLASS(ANType8Record, ANImageBinaryRecord)
 
+public:
 	class PenVectorCollection : public ::Neurotec::Collections::NCollectionBase<ANPenVector, ANType8Record,
 		ANType8RecordGetPenVectorCount, ANType8RecordGetPenVector>
 	{
@@ -69,9 +71,12 @@ class ANType8Record : public ANImageBinaryRecord
 
 		friend class ANType8Record;
 	public:
-		NInt GetAll(ANPenVector * arValues, NInt valuesLength) const
+		NArrayWrapper<ANPenVector> GetAll() const
 		{
-			return NCheck(ANType8RecordGetPenVectorsEx(this->GetOwnerHandle(), arValues, valuesLength));
+			ANPenVector::NativeType * arValues = NULL;
+			NInt valueCount = 0;
+			NCheck(ANType8RecordGetPenVectors(this->GetOwnerHandle(), &arValues, &valueCount));
+			return NArrayWrapper<ANPenVector>(arValues, valueCount);
 		}
 
 		void Set(NInt index, const ANPenVector & value)
@@ -81,8 +86,8 @@ class ANType8Record : public ANImageBinaryRecord
 
 		NInt Add(const ANPenVector & value)
 		{
-			NInt index = this->GetCount();
-			NCheck(ANType8RecordAddPenVector(this->GetOwnerHandle(), &value));
+			NInt index;
+			NCheck(ANType8RecordAddPenVectorEx(this->GetOwnerHandle(), &value, &index));
 			return index;
 		}
 
@@ -93,7 +98,7 @@ class ANType8Record : public ANImageBinaryRecord
 
 		void RemoveAt(NInt index)
 		{
-			NCheck(ANType8RecordRemovePenVector(this->GetOwnerHandle(), index));
+			NCheck(ANType8RecordRemovePenVectorAt(this->GetOwnerHandle(), index));
 		}
 
 		void Clear()
@@ -102,7 +107,44 @@ class ANType8Record : public ANImageBinaryRecord
 		}
 	};
 
+private:
+	static HANType8Record Create(NVersion version, NInt idc, NUInt flags)
+	{
+		HANType8Record handle;
+		NCheck(ANType8RecordCreate(version.GetValue(), idc, flags, &handle));
+		return handle;
+	}
+
+	static HANType8Record Create(NVersion version, NInt idc, ANSignatureType st, const ANPenVector * arPenVectors, NInt penVectorCount, NUInt flags)
+	{
+		HANType8Record handle;
+		NCheck(ANType8RecordCreateFromVectors(version.GetValue(), idc, st, arPenVectors, penVectorCount, flags, &handle));
+		return handle;
+	}
+
+	static HANType8Record Create(NVersion version, NInt idc, ANSignatureType st, ANSignatureRepresentationType srt, NBool isr,
+		const ::Neurotec::Images::NImage & image, NUInt flags)
+	{
+		HANType8Record handle;
+		NCheck(ANType8RecordCreateFromNImage(version.GetValue(), idc, st, srt, isr, image.GetHandle(), flags, &handle));
+		return handle;
+	}
 public:
+	explicit ANType8Record(NVersion version, NInt idc, NUInt flags = 0)
+		: ANImageBinaryRecord(Create(version, idc, flags), true)
+	{
+	}
+
+	ANType8Record(NVersion version, NInt idc, ANSignatureType st, ANSignatureRepresentationType srt, NBool isr, const ::Neurotec::Images::NImage & image, NUInt flags = 0)
+		: ANImageBinaryRecord(Create(version, idc, st, srt, isr, image, flags), true)
+	{
+	}
+
+	ANType8Record(NVersion version, NInt idc, ANSignatureType st, const ANPenVector * arPenVectors, NInt penVectorCount, NUInt flags = 0)
+		: ANImageBinaryRecord(Create(version, idc, st, arPenVectors, penVectorCount, flags), true)
+	{
+	}
+
 	static NType ANSignatureTypeNativeTypeOf()
 	{
 		return NObject::GetObject<NType>(N_TYPE_OF(ANSignatureType), true);
@@ -120,6 +162,7 @@ public:
 		return value;
 	}
 
+
 	void SetSignatureType(ANSignatureType value)
 	{
 		NCheck(ANType8RecordSetSignatureType(GetHandle(), value));
@@ -132,6 +175,11 @@ public:
 		return value;
 	}
 
+	void SetSignatureRepresentationType(ANSignatureRepresentationType value)
+	{
+		NCheck(ANType8RecordSetSignatureRepresentationType(GetHandle(), value));
+	}
+
 	PenVectorCollection GetPenVectors()
 	{
 		return PenVectorCollection(*this);
@@ -142,6 +190,7 @@ public:
 		return PenVectorCollection(*this);
 	}
 };
+#include <Core/NReDeprecate.h>
 
 }}}
 

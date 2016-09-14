@@ -182,6 +182,16 @@ public:
 		SetProperty(N_T("CurrentBiometricCompletedTimeout"), value);
 	}
 
+	NBiographicDataSchema GetCustomDataSchema() const
+	{
+		return GetProperty<NBiographicDataSchema>(N_T("CustomDataSchema"));
+	}
+
+	void SetCustomDataSchema(const NBiographicDataSchema & value)
+	{
+		SetProperty(N_T("CustomDataSchema"), value);
+	}
+
 	NBiometricType GetBiometricTypes() const
 	{
 		NBiometricType value;
@@ -353,6 +363,16 @@ public:
 	const RemoteConnectionCollection GetRemoteConnections() const
 	{
 		return RemoteConnectionCollection(*this);
+	}
+
+	bool GetFingersCheckForDuplicatesWhenCapturing() const
+	{
+		return GetProperty<bool>(N_T("Fingers.CheckForDuplicatesWhenCapturing"));
+	}
+
+	void SetFingersCheckForDuplicatesWhenCapturing(bool value)
+	{
+		SetProperty(N_T("Fingers.CheckForDuplicatesWhenCapturing"), value);
 	}
 };
 

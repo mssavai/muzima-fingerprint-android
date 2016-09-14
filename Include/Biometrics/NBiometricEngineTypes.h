@@ -36,6 +36,23 @@ typedef enum NTemplateSize_
 
 N_DECLARE_TYPE(NTemplateSize)
 
+typedef enum BiometricTemplateFormat_
+{
+	btfProprietary = 0,
+	btfMocCompact = 1,
+	btfMocNormal = 2
+} BiometricTemplateFormat;
+
+N_DECLARE_TYPE(BiometricTemplateFormat)
+
+typedef enum NFingerMatcherType_
+{
+	nfmtRobust = 1,
+	nfmtProprietary = 2,
+	nfmtFusion = nfmtRobust | nfmtProprietary
+} NFingerMatcherType;
+N_DECLARE_TYPE(NFingerMatcherType)
+
 N_DECLARE_STATIC_OBJECT_TYPE(NBiometricEngineTypes)
 
 #ifdef N_CPP

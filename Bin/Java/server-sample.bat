@@ -1,1 +1,0 @@
-javaw -jar server-sample.jar

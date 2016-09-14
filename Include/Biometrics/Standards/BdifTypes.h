@@ -2,6 +2,7 @@
 #define BDIF_TYPES_H_INCLUDED
 
 #include <Core/NTypes.h>
+#include <IO/NBuffer.h>
 
 #ifdef N_CPP
 extern "C"
@@ -48,10 +49,19 @@ NResult N_API BdifQualityBlockToString(const BdifQualityBlock * pValue, const NC
 #endif
 #define BdifQualityBlockToString N_FUNC_AW(BdifQualityBlockToString)
 
+typedef enum BdifCertificationSchemeId_
+{
+	bcsiAFISSystems = 1,
+	bcsiPersonalVerification = 2,
+	bcsiOpticalFingerprintScanners = 3
+} BdifCertificationSchemeId;
+
+N_DECLARE_TYPE(BdifCertificationSchemeId)
+
 struct BdifCertificationBlock_
 {
 	NUShort certificationAuthorityId;
-	NByte certificationSchemeId;
+	BdifCertificationSchemeId certificationSchemeId;
 };
 #ifndef BDIF_TYPES_HPP_INCLUDED
 typedef struct BdifCertificationBlock_ BdifCertificationBlock;
@@ -68,6 +78,32 @@ NResult N_API BdifCertificationBlockToStringW(const struct BdifCertificationBloc
 NResult N_API BdifCertificationBlockToString(const BdifCertificationBlock * pValue, const NChar * szFormat, HNString * phValue);
 #endif
 #define BdifQualityBlockToString N_FUNC_AW(BdifQualityBlockToString)
+
+struct BdifCaptureDateTime_
+{
+	NUShort year;
+	NByte month;
+	NByte day;
+	NByte hour;
+	NByte minute;
+	NByte second;
+	NUShort millisecond;
+};
+#ifndef BDIF_TYPES_HPP_INCLUDED
+typedef struct BdifCaptureDateTime_ BdifCaptureDateTime;
+#endif
+
+N_DECLARE_TYPE(BdifCaptureDateTime)
+
+NResult N_API BdifCaptureDateTimeToStringN(const struct BdifCaptureDateTime_ * pValue, HNString hFormat, HNString * phValue);
+NResult N_API BdifCaptureDateTimeToStringA(const struct BdifCaptureDateTime_ * pValue, const NAChar * szFormat, HNString * phValue);
+#ifndef N_NO_UNICODE
+NResult N_API BdifCaptureDateTimeToStringW(const struct BdifCaptureDateTime_ * pValue, const NWChar * szFormat, HNString * phValue);
+#endif
+#ifdef N_DOCUMENTATION
+NResult N_API BdifCaptureDateTimeToString(const BdifCaptureDateTime * pValue, const NChar * szFormat, HNString * phValue);
+#endif
+#define BdifCaptureDateTimeToString N_FUNC_AW(BdifCaptureDateTimeToString)
 
 typedef enum BdifFPPosition_
 {
@@ -147,7 +183,8 @@ typedef enum BdifFPImpressionType_
 	bfpitLiveScanNonOpticalContactlessPlain = 26,
 	bfpitLiveScanNonOpticalContactlessRolled = 27,
 	bfpitOther = 28,
-	bfpitUnknown = 29
+	bfpitUnknown = 29,
+	bfpitVerticalRoll = 30
 } BdifFPImpressionType;
 
 N_DECLARE_TYPE(BdifFPImpressionType)
@@ -172,6 +209,109 @@ typedef enum BdifFPatternClass_
 } BdifFPatternClass;
 
 N_DECLARE_TYPE(BdifFPatternClass)
+
+typedef enum BdifFPCaptureDeviceTechnology_
+{
+	bfpcdtUndefined = 0,
+	bfpcdtWhiteLightOpticalTir = 1,
+	bfpcdtWhiteLightOpticalDirectViewOnPlaten = 2,
+	bfpcdtWhiteLightOpticalTouchless = 3,
+	bfpcdtMonochromaticVisibleOpticalTir = 4,
+	bfpcdtMonochromaticVisibleOpticalDirectViewOnPlaten = 5,
+	bfpcdtMonochromaticVisibleOpticalTouchless = 6,
+	bfpcdtMonochromaticIrOpticalTir = 7,
+	bfpcdtMonochromaticIrOpticalDirectViewOnPlaten = 8,
+	bfpcdtMonochromaticIrOpticalTouchless = 9,
+	bfpcdtMultispectralOpticalTir = 10,
+	bfpcdtMultispectralOpticalDirectViewOnPlaten = 11,
+	bfpcdtMultispectralOpticalTouchless = 12,
+	bfpcdtElectroLuminescent = 13,
+	bfpcdtSemiconductorCapacitive = 14,
+	bfpcdtSemiconductorRf = 15,
+	bfpcdtSemiconductorThermal = 16,
+	bfpcdtPressureSensitive = 17,
+	bfpcdtUltrasound = 18,
+	bfpcdtMechanical = 19,
+	bfpcdtGlassFiber = 20
+} BdifFPCaptureDeviceTechnology;
+
+N_DECLARE_TYPE(BdifFPCaptureDeviceTechnology)
+
+typedef enum BdifFPExtendedDataTypeId_
+{
+	bfpedtiReservedForFuture = 0,
+	bfpedtiSegmentation = 1,
+	bfpedtiAnnotation = 2,
+	bfpedtiComment = 3
+} BdifFPExtendedDataTypeId;
+
+N_DECLARE_TYPE(BdifFPExtendedDataTypeId)
+
+typedef enum BdifFPAnnotationCode_
+{
+	bfpacAmputatedFinger = 1,
+	bfpacUnusableImage = 2
+} BdifFPAnnotationCode;
+
+N_DECLARE_TYPE(BdifFPAnnotationCode)
+
+struct BdifFPAnnotation_
+{
+	BdifFPPosition fingerPosition;
+	BdifFPAnnotationCode annotationCode;
+};
+#ifndef BDIF_TYPES_HPP_INCLUDED
+typedef struct BdifFPAnnotation_ BdifFPAnnotation;
+#endif
+
+N_DECLARE_TYPE(BdifFPAnnotation)
+
+NResult N_API BdifFPAnnotationToStringN(const struct BdifFPAnnotation_ * pValue, HNString hFormat, HNString * phValue);
+NResult N_API BdifFPAnnotationToStringA(const struct BdifFPAnnotation_ * pValue, const NAChar * szFormat, HNString * phValue);
+#ifndef N_NO_UNICODE
+NResult N_API BdifFPAnnotationToStringW(const struct BdifFPAnnotation_ * pValue, const NWChar * szFormat, HNString * phValue);
+#endif
+#ifdef N_DOCUMENTATION
+NResult N_API BdifFPAnnotationToString(const BdifFPAnnotation * pValue, const NChar * szFormat, HNString * phValue);
+#endif
+#define BdifFPAnnotationToString N_FUNC_AW(BdifFPAnnotationToString)
+
+typedef enum BdifFPSegmentationStatus_
+{
+	bfpssUnknown = 0,
+	bfpssSuccessful = 1,
+	bfpssMultiFingerImpression = 2,
+	bfpssFailed = 3
+} BdifFPSegmentationStatus;
+
+N_DECLARE_TYPE(BdifFPSegmentationStatus)
+
+struct BdifFPExtendedData_
+{
+	NUShort code;
+	HNBuffer hData;
+};
+#ifndef BDIF_TYPES_HPP_INCLUDED
+typedef struct BdifFPExtendedData_ BdifFPExtendedData;
+#endif
+
+N_DECLARE_TYPE(BdifFPExtendedData)
+
+NResult N_API BdifFPExtendedDataCreateN(NUShort code, HNBuffer hData, struct BdifFPExtendedData_ * pValue);
+
+NResult N_API BdifFPExtendedDataToStringN(const struct BdifFPExtendedData_ * pValue, HNString hFormat, HNString * phValue);
+NResult N_API BdifFPExtendedDataToStringA(const struct BdifFPExtendedData_ * pValue, const NAChar * szFormat, HNString * phValue);
+#ifndef N_NO_UNICODE
+NResult N_API BdifFPExtendedDataToStringW(const struct BdifFPExtendedData_ * pValue, const NWChar * szFormat, HNString * phValue);
+#endif
+#ifdef N_DOCUMENTATION
+NResult N_API BdifFPExtendedDataToString(const BdifFPExtendedData_ * pValue, const NChar * szFormat, HNString * phValue);
+#endif
+#define BdifFPExtendedDataToString N_FUNC_AW(BdifFPExtendedDataToString)
+
+NResult N_API BdifFPExtendedDataDispose(struct BdifFPExtendedData_ * pValue);
+NResult N_API BdifFPExtendedDataCopy(const struct BdifFPExtendedData_ * pSrcValue, struct BdifFPExtendedData_ * pDstValue);
+NResult N_API BdifFPExtendedDataSet(const struct BdifFPExtendedData_ * pSrcValue, struct BdifFPExtendedData_ * pDstValue);
 
 typedef enum BdifFPMinutiaType_
 {
@@ -204,6 +344,14 @@ NResult N_API BdifFPMinutiaNeighborToStringW(const struct BdifFPMinutiaNeighbor_
 NResult N_API BdifFPMinutiaNeighborToString(const BdifFPMinutiaNeighbor * pValue, const NChar * szFormat, HNString * phValue);
 #endif
 #define BdifFPMinutiaNeighborToString N_FUNC_AW(BdifFPMinutiaNeighborToString)
+
+typedef enum BdifFPMinutiaRidgeEndingType_
+{
+	bfpmretValleySkeletonBifurcationPoints = 0,
+	bfpmretRidgeSkeletonEndPoints = 1
+} BdifFPMinutiaRidgeEndingType;
+
+N_DECLARE_TYPE(BdifFPMinutiaRidgeEndingType)
 
 typedef enum BdifGender_
 {
@@ -260,7 +408,7 @@ typedef enum BdifFaceProperties_
 	bfpNotSpecified = 0,
 	bfpSpecified = 0x000001,
 	bfpGlasses = 0x000002,
-	bfpMoustache = 0x000004,
+	bfpMustache = 0x000004,
 	bfpBeard = 0x000008,
 	bfpTeethVisible = 0x000010,
 	bfpBlink = 0x000020,
@@ -270,6 +418,7 @@ typedef enum BdifFaceProperties_
 	bfpBothEyePatch = 0x000200,
 	bfpDarkGlasses = 0x000400,
 	bfpDistortingCondition = 0x000800,
+	bfpHeadCoverings = 0x001000,
 	bfpHat = 0x01000000,
 	bfpScarf = 0x02000000,
 	bfpNoEar = 0x04000000
@@ -293,9 +442,26 @@ typedef enum BdifFaceExpression_
 
 N_DECLARE_TYPE(BdifFaceExpression)
 
+typedef enum BdifFaceExpressionBitMask_
+{
+	bfebmUnspecified = 0x0000,
+	bfebmSpecified = 0x0001,
+	bfebmNeutral = 0x0002,
+	bfebmSmile = 0x0004,
+	bfebmRaisedBrows = 0x0008,
+	bfebmEyesAway = 0x0010,
+	bfebmSquinting = 0x0020,
+	bfebmFrowning = 0x0040,
+	bfebmVendor = 0x8000
+} BdifFaceExpressionBitMask;
+
+N_DECLARE_TYPE(BdifFaceExpressionBitMask)
+
 typedef enum BdifFaceFeaturePointType_
 {
-	bffptPoint2D = 1
+	bffptPoint2D = 1,
+	bffptAnthropometric2DLandmark = 2,
+	bffptAnthropometric3DLandmark = 3
 } BdifFaceFeaturePointType;
 
 N_DECLARE_TYPE(BdifFaceFeaturePointType)
@@ -322,6 +488,50 @@ NResult N_API BdifFaceFeaturePointToStringW(const struct BdifFaceFeaturePoint_ *
 NResult N_API BdifFaceFeaturePointToString(const BdifFaceFeaturePoint * pValue, const NChar * szFormat, HNString * phValue);
 #endif
 #define BdifFaceFeaturePointToString N_FUNC_AW(BdifFaceFeaturePointToString)
+
+typedef enum BdifFaceTemporalSemantics_
+{
+	bftsOneRepresentationIsPresent = 0,
+	bftsRelationshipUnspecified = 1,
+	bftsIrregularIntervalsSingleSession = 2,
+	bftsIrregularIntervalsMultipleSessions = 3,
+	bftsNumberOfMilliseconds = 4,
+	bftsRegularIntervalsExceedingFFFE = 0xFFFF
+} BdifFaceTemporalSemantics;
+
+N_DECLARE_TYPE(BdifFaceTemporalSemantics)
+
+typedef enum BdifFaceSpatialSamplingRateLevel_
+{
+	bfssrl180 = 0,
+	bfssrl181To240 = 1,
+	bfssrl241To300 = 2,
+	bfssrl301To370 = 3,
+	bfssrl371To480 = 4,
+	bfssrl481To610 = 5,
+	bfssrl611To750 = 6,
+	bfssrl751 = 7
+} BdifFaceSpatialSamplingRateLevel;
+
+N_DECLARE_TYPE(BdifFaceSpatialSamplingRateLevel)
+
+typedef enum BdifFacePostAcquisitionProcessing_
+{
+	bfpapNoPostAcquisitionProcessing = 0x0000,
+	bfpapRotated = 0x0001,
+	bfpapCropped = 0x0002,
+	bfpapDownsampled = 0x0004,
+	bfpapWhiteBalanceAdjusted = 0x0008,
+	bfpapMultiplyCompressed = 0x0010,
+	bfpapInterpolated = 0x0020,
+	bfpapContrastStretched = 0x0040,
+	bfpapPoseCorrected = 0x0080,
+	bfpapMultiViewImage = 0x0100,
+	bfpapAgeProgressed = 0x0200,
+	bfpapSuperResolutionProcessed = 0x0400
+} BdifFacePostAcquisitionProcessing;
+
+N_DECLARE_TYPE(BdifFacePostAcquisitionProcessing)
 
 typedef enum BdifImageSourceType_
 {
@@ -374,7 +584,13 @@ N_DECLARE_TYPE(BdifIrisScanType)
 #define BDIF_ALLOW_QUALITY                 0x00000004
 #define BDIF_ALLOW_OUT_OF_BOUNDS_FEATURES  0x00000008
 
+#define BDIF_MAX_QUALITY_BLOCK_COUNT 255
+
+#define BDIF_QUALITY_NOT_REPORTED 254
+#define BDIF_QUALITY_COMPUTATION_FAILED 255
+
 NBool N_API BdifStandardIsValid(BdifStandard value);
+NBool N_API BdifStandardIsSpecified(BdifStandard value);
 NBool N_API BdifCertificationFlagIsValid(NByte value);
 
 NFloat N_API BdifAngleToDegrees(NInt value, BdifStandard standard);
@@ -400,6 +616,10 @@ NResult N_API BdifQualityToStringW(NByte value, const NWChar * szFormat, HNStrin
 NResult N_API BdifQualityToString(NByte value, const NChar * szFormat, HNString * phValue);
 #endif
 #define BdifQualityToString N_FUNC_AW(BdifQualityToString)
+
+NUInt N_API BdifMakeFormat(NUShort owner, NUShort type);
+NUShort N_API BdifGetFormatOwner(NUInt format);
+NUShort N_API BdifGetFormatType(NUInt format);
 
 N_DECLARE_STATIC_OBJECT_TYPE(BdifTypes)
 

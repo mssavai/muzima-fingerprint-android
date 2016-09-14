@@ -2120,6 +2120,12 @@ public:
 	}
 #endif
 
+	~NStringWrapper()
+	{
+		if (ownsHandle)
+			NStringFree(handle);
+	}
+
 	HNString GetHandle() const
 	{
 		return handle;
